@@ -23,7 +23,7 @@ function CartList({ cartItems }) {
           Clear Cart
         </button>
 
-        {isOpen && <ConfirmDelete onClose={close} />}
+        {isOpen && cartItems.length > 0 && <ConfirmDelete onClose={close} />}
       </div>
       {cartItems.length ? (
         <div>

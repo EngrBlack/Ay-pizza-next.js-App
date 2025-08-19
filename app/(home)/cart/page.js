@@ -1,5 +1,4 @@
-import { getCurrentUser } from "@/app/_libs/authActions";
-import { getCartItemsById } from "@/app/_libs/cartActions";
+import { getCartItems, increaseCartItem } from "@/app/_libs/cartActions";
 import Heading from "../../_components/Heading";
 import CartList from "./CartList";
 import CartSummary from "./CartSummary";
@@ -9,8 +8,8 @@ export const metadata = {
 };
 
 async function page() {
-  const user = await getCurrentUser();
-  const cartItems = (await getCartItemsById(user?.id)) || [];
+  const cartItems = (await getCartItems()) || [];
+  console.log(cartItems);
 
   return (
     <section className="bg-cream-200">

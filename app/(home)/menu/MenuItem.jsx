@@ -7,9 +7,14 @@ import { formatCurrency } from "../../_helper/helper";
 import MenuDetails from "./MenuDetails";
 import MenuModal from "./MenuModal";
 import { useRouter } from "next/navigation";
+import { addToCart } from "@/app/_libs/cartActions";
+import { useTransition } from "react";
+import SpinnerMini from "@/app/_components/SpinnerMini";
+import toast from "react-hot-toast";
 
 function MenuItem({ menu }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const { name, base_price: basePrice, size, image, id: menuId } = menu;
 
   const maxPrice = Number(
@@ -17,6 +22,17 @@ function MenuItem({ menu }) {
       ?.map((el) => el.price)
       ?.reduce((max, current) => (current > max ? current : max))
   );
+
+  function handleAddToCart() {
+    startTransition(async () => {
+      try {
+        await addToCart(menuId);
+        toast.success("Added to cart!");
+      } catch (error) {
+        toast.error(`Could not add to Cart: ${error.message}`);
+      }
+    });
+  }
 
   return (
     <li className=" flex gap-2 sm:gap-4 border-2 border-cream-100 rounded-md p-2 pr-4 shadow-lg hover:shadow-2xl hover:border-orangered-100 trans group">
@@ -66,11 +82,18 @@ function MenuItem({ menu }) {
           ) : (
             <Button
               type="danger"
+              onClick={handleAddToCart}
               icon={<HiOutlineShoppingCart />}
               position="right"
               className="flex items-center "
             >
-              <span>Add To </span>
+              {isPending ? (
+                <div className="px-2">
+                  <SpinnerMini className="border-cream-200 " />
+                </div>
+              ) : (
+                <span>Add To </span>
+              )}
             </Button>
           )}
         </div>

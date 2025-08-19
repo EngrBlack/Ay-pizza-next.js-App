@@ -3,17 +3,19 @@ import Button from "../../_components/Button";
 import { formatCurrency } from "../../_helper/helper";
 import UpdateItemQuantity from "../../_components/UpdateItemQuantity";
 import Image from "next/image";
+import RemoveCartItem from "./RemoveCartItem";
 
 function CartItem({ cart }) {
   const {
-    menu_id: { discount, image, name },
+    id,
+    menu_id: { discount, image, name, base_price: basePrice },
     quantity,
     total_price: totalPrice,
     selected_toppings: selectedToppings,
   } = cart;
 
   const size = cart?.selected_size?.name;
-  const price = cart?.selected_size?.price;
+  const price = Number(cart?.selected_size?.price) || Number(basePrice);
 
   const toppingsList = (selectedToppings || [])
     .map((topping) => topping.name)
@@ -44,7 +46,7 @@ function CartItem({ cart }) {
           <p className="text-orangered-200 font-bold text-sm sm:text-base lg:text-lg mb-2">
             {discount
               ? formatCurrency((price - discount) * quantity)
-              : formatCurrency(totalPrice)}
+              : formatCurrency(price * quantity)}
           </p>
           <span className="text-brown-200 line-through text-[13px]">
             {discount && formatCurrency(price * quantity)}
@@ -60,12 +62,9 @@ function CartItem({ cart }) {
           </span>
         </p>
 
-        <button className="place-self-center  flex items-center justify-center gap-0.5 sm:gap-1 text-xs md:text-sm border border-brown text-brown rounded py-1 sm:py-1.5  px-2 sm:px-3 md:px-2 hover:bg-brown hover:text-cream-200 trans ease-in-out md:w-full ">
-          <HiTrash />
-          <span>REMOVE</span>
-        </button>
+        <RemoveCartItem cartId={id} />
         <p className=" text-xs place-self-center">Available</p>
-        <UpdateItemQuantity quantity={quantity} />
+        <UpdateItemQuantity quantity={quantity} cartId={id} />
       </div>
     </div>
   );
