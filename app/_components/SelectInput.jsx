@@ -8,6 +8,7 @@ function SelectInput({
   name,
   id,
   disabled,
+  className,
 }) {
   return (
     <div className="relative  w-full  border-1 border-brown-100 bg-white rounded transition-all duration-300 hover:border-brown-300 focus-within:border-brown-300 overflow-hidden text-brown-300 ">
@@ -17,7 +18,7 @@ function SelectInput({
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="appearance-none bg-cream-100 w-full pr-10 pl-3 py-2 h-10 text-brown-300 text-sm focus:outline-none cursor-pointer"
+        className={`appearance-none bg-cream-100 w-full pr-10 pl-3 py-2 h-10 text-brown-300 text-sm focus:outline-none cursor-pointer capitalize ${className}`}
         aria-label="Select option"
       >
         {children}

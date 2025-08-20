@@ -4,6 +4,68 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "./authActions";
 import { supabase } from "./supabase";
 
+export async function addToCart(
+  menuId,
+  quantity = 1,
+  selectedSize = null,
+  selectedToppings = []
+) {
+  const user = await getCurrentUser();
+  const userId = user?.id;
+
+  if (!userId) throw new Error("User must be logged in to add to cart");
+
+  // 1) Check if item with same menu_id + size + toppings already exists
+  const { data: existingItem } = await supabase
+    .from("carts")
+    .select("id, quantity, selected_size, selected_toppings")
+    .eq("menu_id", menuId)
+    .eq("user_id", userId)
+    .maybeSingle(); // safer than .single() in case no row
+
+  if (existingItem) {
+    // if size/toppings match → increase quantity
+    const sameSize =
+      JSON.stringify(existingItem.selected_size) ===
+      JSON.stringify(selectedSize);
+    const sameToppings =
+      JSON.stringify(existingItem.selected_toppings || []) ===
+      JSON.stringify(selectedToppings || []);
+
+    if (sameSize && sameToppings) {
+      const newQty = existingItem.quantity + quantity;
+      const { data, error } = await supabase
+        .from("carts")
+        .update({ quantity: newQty })
+        .eq("id", existingItem.id)
+        .select()
+        .single();
+
+      if (error) throw new Error(error.message);
+      revalidatePath("/menu");
+      return data;
+    }
+  }
+
+  // 2) Otherwise insert a brand-new row
+  const { data, error } = await supabase
+    .from("carts")
+    .insert({
+      menu_id: menuId,
+      user_id: userId,
+      quantity,
+      selected_size: selectedSize,
+      selected_toppings: selectedToppings,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error("Could not add to cart");
+
+  revalidatePath("/menu");
+  return data;
+}
+
 export async function getCartItems() {
   const user = await getCurrentUser();
   const userId = user?.id;
@@ -47,41 +109,41 @@ export async function removeCartItem(id) {
   return true;
 }
 
-export async function addToCart(menuId, quantity = 1) {
-  const user = await getCurrentUser();
-  const userId = user?.id;
-  if (!userId) throw new Error("User must be logged in to add to cart");
+// export async function addToCart(menuId, quantity = 1) {
+//   const user = await getCurrentUser();
+//   const userId = user?.id;
+//   if (!userId) throw new Error("User must be logged in to add to cart");
 
-  // 1) Check if item already exists
-  const { data: existingItem } = await supabase
-    .from("carts")
-    .select("id, quantity")
-    .eq("menu_id", menuId)
-    .eq("user_id", userId)
-    .single();
+//   // 1) Check if item already exists
+//   const { data: existingItem } = await supabase
+//     .from("carts")
+//     .select("id, quantity")
+//     .eq("menu_id", menuId)
+//     .eq("user_id", userId)
+//     .single();
 
-  if (existingItem) {
-    // Item already in cart, so just increase quantity
-    const newQty = existingItem.quantity + quantity;
-    return await supabase
-      .from("carts")
-      .update({ quantity: newQty })
-      .eq("id", existingItem.id)
-      .select()
-      .single();
-  }
+//   if (existingItem) {
+//     // Item already in cart, so just increase quantity
+//     const newQty = existingItem.quantity + quantity;
+//     return await supabase
+//       .from("carts")
+//       .update({ quantity: newQty })
+//       .eq("id", existingItem.id)
+//       .select()
+//       .single();
+//   }
 
-  // 2) Otherwise insert new row
-  const { data, error } = await supabase
-    .from("carts")
-    .insert({ menu_id: menuId, user_id: userId, quantity })
-    .select()
-    .single();
+//   // 2) Otherwise insert new row
+//   const { data, error } = await supabase
+//     .from("carts")
+//     .insert({ menu_id: menuId, user_id: userId, quantity })
+//     .select()
+//     .single();
 
-  if (error) throw new Error("Could not add to cart");
-  revalidatePath("/menu");
-  return data;
-}
+//   if (error) throw new Error("Could not add to cart");
+//   revalidatePath("/menu");
+//   return data;
+// }
 
 export async function increaseCartItem(id) {
   const user = await getCurrentUser();

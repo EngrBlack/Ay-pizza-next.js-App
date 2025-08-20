@@ -18,7 +18,6 @@ function MenuItem({ menu, carts }) {
   const [isPending, startTransition] = useTransition();
   const { name, base_price: basePrice, size, image, id: menuId } = menu;
 
-  console.log(carts);
   const cartItem = carts.find((item) => item?.menu_id?.id === menuId);
   const isInCart = Boolean(cartItem);
   const quantity = cartItem?.quantity;
@@ -79,7 +78,11 @@ function MenuItem({ menu, carts }) {
               <Button>Customise</Button>
             </MenuModal.Open>
             <MenuModal.Window openWindowName="menuDetails">
-              <MenuDetails menuId={menuId} />
+              <MenuDetails
+                menuId={menuId}
+                quantity={quantity}
+                cartId={cartItem?.id}
+              />
             </MenuModal.Window>
           </MenuModal>
 

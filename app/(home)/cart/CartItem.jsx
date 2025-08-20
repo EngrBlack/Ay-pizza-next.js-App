@@ -8,7 +8,6 @@ function CartItem({ cart }) {
     id,
     menu_id: { discount, image, name, base_price: basePrice },
     quantity,
-    total_price: totalPrice,
     selected_toppings: selectedToppings,
   } = cart;
 
@@ -37,7 +36,9 @@ function CartItem({ cart }) {
           </h2>
           <p className="text-xs sm:text-sm md:text-base capitalize">
             Size :{" "}
-            <span className="text-brown-200">{size ? size : "Null"}</span>
+            <span className="text-brown-200">
+              {size ? size.split("_").join(" ") : "Null"}
+            </span>
           </p>
         </div>
         <div className="row-span-2 text-xs place-self-end-safe self-start">
