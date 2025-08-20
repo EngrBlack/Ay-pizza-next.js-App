@@ -11,11 +11,17 @@ import { addToCart } from "@/app/_libs/cartActions";
 import { useTransition } from "react";
 import SpinnerMini from "@/app/_components/SpinnerMini";
 import toast from "react-hot-toast";
+import UpdateItemQuantity from "@/app/_components/UpdateItemQuantity";
 
-function MenuItem({ menu }) {
+function MenuItem({ menu, carts }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { name, base_price: basePrice, size, image, id: menuId } = menu;
+
+  console.log(carts);
+  const cartItem = carts.find((item) => item?.menu_id?.id === menuId);
+  const isInCart = Boolean(cartItem);
+  const quantity = cartItem?.quantity;
 
   const maxPrice = Number(
     size
@@ -55,7 +61,7 @@ function MenuItem({ menu }) {
             onClick={() => router.push("/wishlist")}
           />
 
-          <div className="col-span-2 text-brown font-medium text-[13px] sm:text-base lg:text-[17px] xl:text-lg 2xl:text-xl">
+          <div className="col-span-2 text-brown font-medium text-base lg:text-[17px] xl:text-lg 2xl:text-xl">
             {size ? (
               <>
                 <span>{formatCurrency(Number(basePrice))}</span> &mdash;
@@ -79,7 +85,7 @@ function MenuItem({ menu }) {
 
           {size ? (
             <Button type="danger">Select Option</Button>
-          ) : (
+          ) : !isInCart ? (
             <Button
               type="danger"
               onClick={handleAddToCart}
@@ -95,6 +101,8 @@ function MenuItem({ menu }) {
                 <span>Add To </span>
               )}
             </Button>
+          ) : (
+            <UpdateItemQuantity quantity={quantity} cartId={cartItem?.id} />
           )}
         </div>
       </div>

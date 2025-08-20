@@ -1,8 +1,8 @@
 import Heading from "@/app/_components/Heading";
-import Spinner from "@/app/_components/Spinner";
 import { getMenus } from "@/app/_libs/menuActions";
-import { Suspense } from "react";
+import EmptyMenu from "./EmptyMenu";
 import MenuList from "./MenuList";
+import { getCartItems } from "@/app/_libs/cartActions";
 
 export const metadata = {
   title: "Menu",
@@ -11,6 +11,8 @@ export const metadata = {
 export const revalidate = 3600;
 
 async function page({ searchParams }) {
+  const cartItems = await getCartItems();
+
   // FILTER
   const filterValue = searchParams?.category || "all";
 
@@ -33,9 +35,15 @@ async function page({ searchParams }) {
       <div className=" px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
         <Heading>our menu</Heading>
         <div className="relative">
-          <Suspense fallback={<Spinner />} key={filterValue}>
-            <MenuList menus={menus || []} count={count || 0} />
-          </Suspense>
+          {menus.length > 0 ? (
+            <MenuList
+              menus={menus || []}
+              count={count || 0}
+              carts={cartItems}
+            />
+          ) : (
+            <EmptyMenu />
+          )}
         </div>
       </div>
     </section>

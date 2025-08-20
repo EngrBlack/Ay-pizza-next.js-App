@@ -6,9 +6,10 @@ export const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
 export function formatCurrency(value) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
+    minimumFractionDigits: 0,
   }).format(value);
 }
 

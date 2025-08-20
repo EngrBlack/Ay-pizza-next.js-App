@@ -1,11 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { HiArrowLeft, HiArrowRightCircle } from "react-icons/hi2";
 import { formatCurrency } from "../../_helper/helper";
-import Button from "../../_components/Button";
-import { useRouter } from "next/navigation";
 
-function CartSummary() {
+function CartSummary({ totalCartPrice }) {
   const router = useRouter();
   return (
     <div className="grow-2 border-2 border-cream-100 shadow-lg p-6  px-4 pb-12 sm:pb-12 md:pb-12 sm:p-8 md:p-6 rounded-sm">
@@ -14,7 +13,7 @@ function CartSummary() {
       </h1>
       <div className="flex justify-between items-center font-bold mb-6 text-xl md:text-lg">
         <p>Subtotal:</p>
-        <p>{formatCurrency(50400)}</p>
+        <p>{formatCurrency(totalCartPrice)}</p>
       </div>
 
       <div className="flex flex-col gap-6">

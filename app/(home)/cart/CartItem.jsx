@@ -1,8 +1,6 @@
-import { HiTrash } from "react-icons/hi2";
-import Button from "../../_components/Button";
-import { formatCurrency } from "../../_helper/helper";
-import UpdateItemQuantity from "../../_components/UpdateItemQuantity";
 import Image from "next/image";
+import UpdateItemQuantity from "../../_components/UpdateItemQuantity";
+import { formatCurrency } from "../../_helper/helper";
 import RemoveCartItem from "./RemoveCartItem";
 
 function CartItem({ cart }) {
@@ -42,8 +40,8 @@ function CartItem({ cart }) {
             <span className="text-brown-200">{size ? size : "Null"}</span>
           </p>
         </div>
-        <div className="row-span-2 text-xs">
-          <p className="text-orangered-200 font-bold text-sm sm:text-base lg:text-lg mb-2">
+        <div className="row-span-2 text-xs place-self-end-safe self-start">
+          <p className="text-orangered-200 font-bold text-base lg:text-lg ">
             {discount
               ? formatCurrency((price - discount) * quantity)
               : formatCurrency(price * quantity)}

@@ -6,6 +6,7 @@ import { Pacifico, Rowdies } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { getCurrentUser } from "../_libs/authActions";
 import "../globals.css";
+import { getCartItems } from "../_libs/cartActions";
 
 export const pacifico = Pacifico({
   weight: "400",
@@ -33,13 +34,14 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const session = await getCurrentUser();
   const user = session?.user_metadata;
+  const cartItems = (await getCartItems()) || [];
 
   return (
     <html lang="en" className="h-full">
       <body
         className={`${rowdies.variable} ${pacifico.variable}  antialiased h-full flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto`}
       >
-        <Navigation user={user} />
+        <Navigation user={user} cartItems={cartItems} />
         <main className="grow bg-cream-200 font">{children}</main>
         <Footer />
         <ScrollToTopOnRoute />

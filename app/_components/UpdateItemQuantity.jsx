@@ -16,7 +16,7 @@ function UpdateItemQuantity({ quantity, cartId }) {
       >
         -
       </button>
-      <p className="text-sm sm:text-base">{Number(quantity)}</p>
+      <p className="text-sm sm:text-base">{quantity}</p>
       <button
         onClick={handleIncreaseItem}
         className="border-1 w-6 h-6 p-1 sm:p-3 grid place-content-center rounded-full hover:bg-cream-200 hover:text-orangered-100 trans cursor-pointer"

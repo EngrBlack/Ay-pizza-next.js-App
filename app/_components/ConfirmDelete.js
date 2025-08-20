@@ -5,7 +5,7 @@ import Button from "./Button";
 import { createPortal } from "react-dom";
 import { useOutsideClick } from "../_hooks/useOutsideClick";
 
-function ConfirmDelete({ onClose }) {
+function ConfirmDelete({ onClose, onDelete }) {
   const ref = useOutsideClick(onClose, true);
 
   return createPortal(
@@ -30,7 +30,15 @@ function ConfirmDelete({ onClose }) {
           <Button type="reset" onClick={onClose}>
             Cancel
           </Button>
-          <Button type="danger" position="right" icon={<HiTrash />}>
+          <Button
+            onClick={() => {
+              onDelete();
+              onClose();
+            }}
+            type="danger"
+            position="right"
+            icon={<HiTrash />}
+          >
             Delete
           </Button>
         </div>

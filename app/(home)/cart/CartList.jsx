@@ -4,17 +4,27 @@ import { useState } from "react";
 import CartItem from "./CartItem";
 import ConfirmDelete from "../../_components/ConfirmDelete";
 import EmptyCart from "./EmptyCart";
-// import EmptyCart from "./EmptyCart";
+import { clearCartItems } from "@/app/_libs/cartActions";
+import toast from "react-hot-toast";
 
-function CartList({ cartItems }) {
+function CartList({ cartItems, totalCartQuantity }) {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
 
+  async function handleClearCart() {
+    try {
+      await clearCartItems();
+      toast.success("Your Cart is cleared");
+    } catch (error) {
+      toast.error(`Could not clear cart: ${error?.message}`);
+    }
+  }
+
   return (
-    <div className="grow-1 border-2 border-cream-100 shadow-lg p-3 py-4 sm:p-6 lg:p-8 rounded-sm">
+    <div className="grow-1 border-2 border-cream-100 shadow-lg p-4 py-4 sm:p-6 lg:p-8 rounded-sm">
       <div className="flex  items-center justify-between border-b-1 border-brown-50 pb-2 sm:pb-3 mb-2 lg:mb-4">
         <h1 className=" sm:text-2xl md:text-xl lg:text-2xl  font-extrabold text-orangered-200">
-          Your Shopping Cart (12)
+          Your Shopping Cart ({totalCartQuantity})
         </h1>
         <button
           className="text-orangered-100 text-xs hover:text-brown hover:underline trans md:text-base"
@@ -23,7 +33,9 @@ function CartList({ cartItems }) {
           Clear Cart
         </button>
 
-        {isOpen && cartItems.length > 0 && <ConfirmDelete onClose={close} />}
+        {isOpen && cartItems.length > 0 && (
+          <ConfirmDelete onClose={close} onDelete={handleClearCart} />
+        )}
       </div>
       {cartItems.length ? (
         <div>

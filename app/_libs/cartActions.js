@@ -7,19 +7,34 @@ import { supabase } from "./supabase";
 export async function getCartItems() {
   const user = await getCurrentUser();
   const userId = user?.id;
-
   if (!userId) {
     throw new Error("User must be logged in to get cart items");
   }
-
   const { data, error } = await supabase
     .from("carts")
     .select("*, menu_id(*)")
     .eq("user_id", userId)
     .order("created_at", { ascending: true });
-
   if (error) throw new Error("Cart items could not be found");
-  console.log(supabase.__proto__.constructor.VERSION);
+  return data;
+}
+
+export async function clearCartItems() {
+  const user = await getCurrentUser();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in to clear cart");
+
+  const { data, error } = await supabase
+    .from("carts")
+    .delete()
+    .eq("user_id", userId)
+    .select();
+
+  if (error) {
+    console.error("Error clearing cart:", error);
+    throw new Error(`Could not clear cart: ${error?.message}`);
+  }
+  revalidatePath("/cart");
   return data;
 }
 
@@ -35,19 +50,36 @@ export async function removeCartItem(id) {
 export async function addToCart(menuId, quantity = 1) {
   const user = await getCurrentUser();
   const userId = user?.id;
-
   if (!userId) throw new Error("User must be logged in to add to cart");
 
-  const { data, error } = await supabase
+  // 1) Check if item already exists
+  const { data: existingItem } = await supabase
     .from("carts")
-    .upsert(
-      { user_id: userId, menu_id: menuId, quantity }
-      // { onConflict: "user_id, menu_id" }
-    )
+    .select("id, quantity")
+    .eq("menu_id", menuId)
+    .eq("user_id", userId)
     .single();
 
-  if (error) throw new Error("Could not add to cart: " + error.message);
+  if (existingItem) {
+    // Item already in cart, so just increase quantity
+    const newQty = existingItem.quantity + quantity;
+    return await supabase
+      .from("carts")
+      .update({ quantity: newQty })
+      .eq("id", existingItem.id)
+      .select()
+      .single();
+  }
 
+  // 2) Otherwise insert new row
+  const { data, error } = await supabase
+    .from("carts")
+    .insert({ menu_id: menuId, user_id: userId, quantity })
+    .select()
+    .single();
+
+  if (error) throw new Error("Could not add to cart");
+  revalidatePath("/menu");
   return data;
 }
 
@@ -74,7 +106,7 @@ export async function increaseCartItem(id) {
     .select()
     .single();
 
-  if (error) throw new Error("Could not increase quantity");
+  if (error) throw new Error(`Could not increase quantity: ${error?.message}`);
   revalidatePath("/cart");
   return data;
 }
@@ -105,26 +137,42 @@ export async function decreaseCartItem(id) {
     .select()
     .single();
 
-  if (error) throw new Error("Could not decrease quantity");
+  if (error) throw new Error(`Could not decrease quantity: ${error?.message}`);
   revalidatePath("/cart");
   return data;
 }
 
+// export async function createBooking(newBooking) {
+//   const { data, error } = await supabase
+//     .from("bookings")
+//     .insert([newBooking])
+//     // So that the newly created object gets returned!
+//     .select()
+//     .single();
+
+//   if (error) {
+//     console.error(error);
+//     throw new Error("Booking could not be created");
+//   }
+
+//   return data;
+// }
+
 // Calculate cart prices
 
-const calcPrice = (items = []) => {
-  const itemsPrice = items.reduce(
-    (accu, curItem) => accu + Number(curItem?.price) * curItem.quantity,
-    0
-  );
-  const deliveryPrice = itemsPrice > 1000 ? 0 : 100;
-  const taxPrice = 0.15 * itemsPrice;
-  const totalPrice = itemsPrice + deliveryPrice + taxPrice;
+// const calcPrice = (items = []) => {
+//   const itemsPrice = items.reduce(
+//     (accu, curItem) => accu + Number(curItem?.price) * curItem.quantity,
+//     0
+//   );
+//   const deliveryPrice = itemsPrice > 1000 ? 0 : 100;
+//   const taxPrice = 0.15 * itemsPrice;
+//   const totalPrice = itemsPrice + deliveryPrice + taxPrice;
 
-  return {
-    itemsPrice: itemsPrice.toFixed(2),
-    deliveryPrice: deliveryPrice.toFixed(2),
-    taxPrice: taxPrice.toFixed(2),
-    totalPrice: totalPrice.toFixed(2),
-  };
-};
+//   return {
+//     itemsPrice: itemsPrice.toFixed(2),
+//     deliveryPrice: deliveryPrice.toFixed(2),
+//     taxPrice: taxPrice.toFixed(2),
+//     totalPrice: totalPrice.toFixed(2),
+//   };
+// };

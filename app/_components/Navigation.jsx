@@ -8,11 +8,11 @@ import {
   HiArrowRight,
   HiBars3BottomLeft,
   HiHome,
-  HiMiniShoppingCart,
   HiMiniXMark,
   HiPhone,
 } from "react-icons/hi2";
 import Button from "./Button";
+import CartButton from "./CartButton";
 import Logo from "./Logo";
 import UserProfile from "./UserProfile";
 
@@ -23,7 +23,7 @@ const navItems = [
   { href: "/contact", icon: <HiPhone />, label: "Contact" },
 ];
 
-function Navigation({ user }) {
+function Navigation({ user, cartItems }) {
   const [openNav, setOpenNav] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
@@ -100,14 +100,7 @@ function Navigation({ user }) {
           </li>
         </ul>
         <div className="flex  items-center gap-3 sm:gap-4 ml-2 relative ">
-          <Button
-            onClick={() => router.push("/cart")}
-            position="right"
-            icon={<HiMiniShoppingCart />}
-          >
-            Cart
-          </Button>
-
+          <CartButton cartItems={cartItems} />
           <UserProfile user={user} />
         </div>
       </nav>

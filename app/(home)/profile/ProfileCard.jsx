@@ -3,7 +3,8 @@ import { formatDate } from "@/app/_helper/helper";
 import Image from "next/image";
 import { HiCalendar, HiEnvelope, HiPhone } from "react-icons/hi2";
 
-function ProfileCard() {
+function ProfileCard({ user }) {
+  const fullName = user?.user_metadata?.fullName;
   return (
     <div className=" rounded border-2 border-cream-100 px-4 md:px-6 py-8 shadow-lg hover:shadow-2xl trans flex flex-col gap-6 md:gap-8">
       <div className="flex flex-col  items-center gap-2 ">
@@ -18,7 +19,7 @@ function ProfileCard() {
         </figure>
         <h3 className="font-rowdies">Engr Black</h3>
         <p className="bg-gradient-to-r from-gradient-1 to-gradient-2 text-cream-200 rounded-full py-0.5 px-3 font-pacifico tracking-widest md:text-xl">
-          Fabian Peace
+          {fullName}
         </p>
       </div>
 
