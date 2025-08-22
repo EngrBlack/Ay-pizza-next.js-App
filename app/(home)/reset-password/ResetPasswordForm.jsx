@@ -36,7 +36,7 @@ function ResetPasswordForm() {
           "Password updated! you are now been logged In Automatically."
         );
         reset();
-        router.push("/");
+        router.push("/login");
       } else {
         toast.error(res?.status || "Failed to reset password.");
       }

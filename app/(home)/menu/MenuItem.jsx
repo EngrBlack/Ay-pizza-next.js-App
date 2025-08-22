@@ -1,17 +1,20 @@
 "use client";
 
+import UpdateItemQuantity from "@/app/_components/UpdateItemQuantity";
+import { addToCart } from "@/app/_libs/cartActions";
 import Image from "next/image";
-import { HiOutlineHeart, HiOutlineShoppingCart } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import toast from "react-hot-toast";
+import {
+  HiArrowPath,
+  HiOutlineHeart,
+  HiOutlineShoppingCart,
+} from "react-icons/hi2";
 import Button from "../../_components/Button";
 import { formatCurrency } from "../../_helper/helper";
 import MenuDetails from "./MenuDetails";
 import MenuModal from "./MenuModal";
-import { useRouter } from "next/navigation";
-import { addToCart } from "@/app/_libs/cartActions";
-import { useTransition } from "react";
-import SpinnerMini from "@/app/_components/SpinnerMini";
-import toast from "react-hot-toast";
-import UpdateItemQuantity from "@/app/_components/UpdateItemQuantity";
 
 function MenuItem({ menu, carts }) {
   const router = useRouter();
@@ -97,9 +100,7 @@ function MenuItem({ menu, carts }) {
               className="flex items-center "
             >
               {isPending ? (
-                <div className="px-2">
-                  <SpinnerMini className="border-cream-200 " />
-                </div>
+                <HiArrowPath className="animate-spin text-xl" />
               ) : (
                 <span>Add To </span>
               )}

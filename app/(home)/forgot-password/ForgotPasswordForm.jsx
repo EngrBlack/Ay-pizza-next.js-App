@@ -31,7 +31,7 @@ function ForgotPasswordForm() {
 
       if (res?.status === "success") {
         toast.success("Password reset link sent to your Email");
-        reset(); // ✅ reset after successful submission
+        reset();
       } else {
         toast.error(res?.status || "Invalid email, Please try again.");
       }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi2";
-import "../globals.css";
+import "./globals.css";
 
 export default function NotFound() {
   return (

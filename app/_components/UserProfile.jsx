@@ -2,13 +2,14 @@ import Image from "next/image";
 import { useState } from "react";
 import ProfileNavigation from "./ProfileNavigation";
 
-function UserProfile({ user }) {
+function UserProfile({ session }) {
   const [isOpen, setIsOpen] = useState(false);
   const onCloseNav = () => setIsOpen((open) => !open);
+  const user = session?.user;
 
   return (
     <>
-      {user?.email || user?.fullName ? (
+      {user?.email || user?.name ? (
         <div
           onClick={onCloseNav}
           className="flex items-center gap-2 font-rowdies cursor-pointer"
@@ -22,10 +23,11 @@ function UserProfile({ user }) {
             />
           </div>
           <p>
-            {user?.fullName
+            UG
+            {/* {user?.name
               .split(" ")
               .map((name) => name.at(0))
-              .join("")}
+              .join("")} */}
           </p>
         </div>
       ) : (

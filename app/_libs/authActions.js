@@ -1,9 +1,47 @@
 "use server";
 
+import { signIn, signOut } from "@/app/_libs/auth";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+
+export async function signInWithCredentials(formData) {
+  const data = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+
+  try {
+    const result = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      return {
+        status: "error",
+        message: result.error || "Invalid email or password",
+      };
+    }
+
+    return { status: "success", message: "Login successful" };
+  } catch (err) {
+    return { status: "error", message: err.message || "Login failed" };
+  }
+}
+
+export async function logInWithGoogle() {
+  await signIn("google", { redirectTo: "/" });
+}
+
+export async function logOut() {
+  try {
+    await signOut({ redirect: false });
+    return { status: "success" };
+  } catch (err) {
+    return { status: "error", message: "Logout failed" };
+  }
+}
 
 export async function signUp(formData) {
   const supabase = await createClient();
@@ -50,100 +88,6 @@ export async function signUp(formData) {
   };
 }
 
-export async function login(formData) {
-  const supabase = await createClient();
-
-  const credentials = {
-    email: formData.get("email"),
-    password: formData.get("password"),
-  };
-
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: credentials.email,
-    password: credentials.password,
-  });
-
-  if (error) {
-    return {
-      status: error.message,
-      user: null,
-    };
-  }
-
-  const { data: existingUser } = await supabase
-    .from("users_profile")
-    .select("*")
-    .eq("email", credentials.email)
-    .single();
-
-  // NOTE: existingUser will be undefined if not found - this is fine.
-  if (!existingUser) {
-    const { error: insertError } = await supabase.from("users_profile").insert({
-      email: data?.user?.email,
-      fullName: data?.user?.user_metadata?.fullName || null,
-    });
-
-    if (insertError) {
-      return { status: insertError.message, user: null };
-    }
-  }
-
-  // Make sure revalidatePath is imported from 'next/cache'
-  revalidatePath("/", "layout");
-
-  return {
-    status: "success",
-    user: data?.user,
-  };
-}
-
-export async function getCurrentUser() {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error || !data?.user) return null;
-
-  return data.user; // return the user object directly
-}
-
-export async function logOut() {
-  const supabase = await createClient();
-  const { error } = await supabase.auth.signOut();
-
-  if (error) return { status: "error", message: error.message };
-
-  revalidatePath("/", "layout");
-  return { status: "success" };
-}
-
-export async function loginWithGoogle() {
-  const supabase = await createClient();
-
-  const origin = headers().get("origin");
-  console.log("origin:", origin); // should now log the correct domain
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: {
-      redirectTo: `${origin}/auth/callback`,
-      queryParams: {
-        access_type: "offline",
-        prompt: "consent",
-      },
-    },
-  });
-
-  if (error) {
-    console.error("OAuth error:", error.message);
-    return { status: error.message };
-  }
-
-  if (data?.url) {
-    redirect(data.url);
-  }
-}
-
 export async function forgotPassword(formData) {
   const supabase = await createClient();
 
@@ -162,8 +106,4 @@ export async function forgotPassword(formData) {
   }
 
   return { status: "success" };
-}
-
-export async function revalidateRoot() {
-  revalidatePath("/", "layout");
 }

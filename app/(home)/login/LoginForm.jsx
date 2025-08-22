@@ -6,7 +6,7 @@ import Logo from "@/app/_components/Logo";
 import { emailValid, passwordValid } from "@/app/_helper/helper";
 
 import SpinnerMini from "@/app/_components/SpinnerMini";
-import { login } from "@/app/_libs/authActions";
+import { login, signInWithCredentials } from "@/app/_libs/authActions";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -15,9 +15,13 @@ import { HiEnvelope, HiLockClosed } from "react-icons/hi2";
 import LoginWithGoogle from "./LoginWithGoogle";
 import Link from "next/link";
 import InputCheck from "@/app/_components/InputCheck";
+import { useActionState } from "react";
 
 function LoginForm() {
   const router = useRouter();
+  // const [data, action] = useActionState(signInWithCredentials, {
+  //   success: false,
+  // });
 
   const {
     register,
@@ -29,22 +33,19 @@ function LoginForm() {
   async function onSubmit(data) {
     const { email, password } = data;
 
-    // Convert plain object to FormData for server action
     const formData = new FormData();
     formData.append("email", email);
     formData.append("password", password);
 
     try {
-      const res = await login(formData);
+      const res = await signInWithCredentials(formData);
 
       if (res?.status === "success") {
-        toast.success("login successfully!");
+        toast.success("Login successfully!");
         reset();
-        router.push("/cart");
+        router.push("/menu");
       } else {
-        toast.error(
-          res?.message || "Invalid email or password, Please try again."
-        );
+        toast.error("Invalid email or password, Please try again.");
       }
     } catch (error) {
       toast.error(error.message || "An unexpected error occurred.");

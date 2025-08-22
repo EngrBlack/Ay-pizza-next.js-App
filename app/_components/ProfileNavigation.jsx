@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import {
   HiArrowLeftEndOnRectangle,
   HiArrowRightEndOnRectangle,
@@ -10,9 +12,7 @@ import {
   HiUser,
 } from "react-icons/hi2";
 import { useOutsideClick } from "../_hooks/useOutsideClick";
-import { logOut, signOutAction } from "../_libs/authActions";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { logOut } from "../_libs/authActions";
 
 const linkData = [
   { href: "/profile", icon: <HiUser />, label: "My Account" },
@@ -31,11 +31,12 @@ function ProfileNavigation({ onCloseNav, user }) {
   async function handleLogOut() {
     onCloseNav();
     const res = await logOut();
+
     if (res.status === "success") {
       toast.success("Logged out successfully");
-      router.push("/login");
+      router.push("/");
     } else {
-      toast.error(res.message);
+      toast.error(res.message || "Something went wrong");
     }
   }
 
@@ -56,7 +57,7 @@ function ProfileNavigation({ onCloseNav, user }) {
         </li>
       ))}
 
-      {user?.email || user?.fullName ? (
+      {user?.email || user?.name ? (
         <button
           onClick={handleLogOut}
           className="flex items-center gap-2 hover:bg-brown hover:text-cream-200 rounded-xs py-1.5 px-2 pr-5 md:pr-12 whitespace-nowrap w-full"

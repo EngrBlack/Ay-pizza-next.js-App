@@ -62,6 +62,7 @@ function MenuDetails({ menuId, quantity, cartId }) {
           <figure className="col-span-2 md:col-span-1 rounded-md overflow-hidden aspect-3/2 md:aspect-square md:h-full relative">
             <Image
               fill
+              quality={50}
               src={menuItem?.image || "/pizza-1jpg"}
               alt={menuItem?.name || "Menu item"}
               className="w-full h-full object-cover"

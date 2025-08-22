@@ -2,26 +2,10 @@ import BtnScrollToTop from "@/app/_components/BtnScrollToTop";
 import Footer from "@/app/_components/Footer";
 import Navigation from "@/app/_components/Navigation";
 import ScrollToTopOnRoute from "@/app/_components/ScrollToTopOnRoute";
-import { Pacifico, Rowdies } from "next/font/google";
+import { getCartItems } from "@/app/_libs/cartActions";
+
 import { Toaster } from "react-hot-toast";
-import { getCurrentUser } from "../_libs/authActions";
-import "../globals.css";
-import { getCartItems } from "../_libs/cartActions";
-
-export const pacifico = Pacifico({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-pacifico",
-});
-
-export const rowdies = Rowdies({
-  weight: ["300", "400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-rowdies",
-  preload: true,
-});
+import { auth } from "../_libs/auth";
 
 export const metadata = {
   title: {
@@ -32,50 +16,45 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await getCurrentUser();
-  const user = session?.user_metadata;
+  const session = await auth();
   const cartItems = (await getCartItems()) || [];
 
   return (
-    <html lang="en" className="h-full">
-      <body
-        className={`${rowdies.variable} ${pacifico.variable}  antialiased h-full flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto`}
-      >
-        <Navigation user={user} cartItems={cartItems} />
-        <main className="grow bg-cream-200 font">{children}</main>
-        <Footer />
-        <ScrollToTopOnRoute />
-        <BtnScrollToTop />
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          gutter={8}
-          containerStyle={{ margin: "20px" }}
-          toastOptions={{
-            style: {
-              background: "#fff3e0", // Cream color
-              color: "#5c3d2e", // Brown text
-              fontSize: "16px",
-              maxWidth: "500px",
-              padding: "10px 20px",
+    <div className="min-h-screen flex flex-col  bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto">
+      <Navigation session={session} cartItems={cartItems} />
+      <main className="grow bg-cream-200 font">{children}</main>
+      <Footer />
+      <ScrollToTopOnRoute />
+      <BtnScrollToTop />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerStyle={{ margin: "20px" }}
+        toastOptions={{
+          style: {
+            background: "#fff3e0", // Cream color
+            color: "#5c3d2e", // Brown text
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "10px 20px",
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#4caf50",
+              secondary: "#ffffff",
             },
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: "#4caf50",
-                secondary: "#ffffff",
-              },
+          },
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: "#f44336",
+              secondary: "#ffffff",
             },
-            error: {
-              duration: 5000,
-              iconTheme: {
-                primary: "#f44336",
-                secondary: "#ffffff",
-              },
-            },
-          }}
-        />
-      </body>
-    </html>
+          },
+        }}
+      />
+    </div>
   );
 }
