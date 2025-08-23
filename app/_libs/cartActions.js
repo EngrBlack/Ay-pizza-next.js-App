@@ -4,59 +4,68 @@ import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { auth } from "./auth";
 
-// export async function addToCart(
-//   menuId,
-//   quantity = 1,
-//   selectedSize = null,
-//   selectedToppings = []
-// ) {
-//   const { user } = await auth();
-//   const userId = user?.id;
-//   if (!userId) throw new Error("User must be logged in to add to cart");
-//   // 1) Check if item with same menu_id + size + toppings already exists
-//   const { data: existingItem } = await supabase
-//     .from("carts")
-//     .select("id, quantity, selected_size, selected_toppings")
-//     .eq("menu_id", menuId)
-//     .eq("user_id", userId)
-//     .maybeSingle(); // safer than .single() in case no row
-//   if (existingItem) {
-//     // if size/toppings match → increase quantity
-//     const sameSize =
-//       JSON.stringify(existingItem.selected_size) ===
-//       JSON.stringify(selectedSize);
-//     const sameToppings =
-//       JSON.stringify(existingItem.selected_toppings || []) ===
-//       JSON.stringify(selectedToppings || []);
-//     if (sameSize && sameToppings) {
-//       const newQty = existingItem.quantity + quantity;
-//       const { data, error } = await supabase
-//         .from("carts")
-//         .update({ quantity: newQty })
-//         .eq("id", existingItem.id)
-//         .select()
-//         .single();
-//       if (error) throw new Error(error.message);
-//       revalidatePath("/menu");
-//       return data;
-//     }
-//   }
-//   // 2) Otherwise insert a brand-new row
-//   const { data, error } = await supabase
-//     .from("carts")
-//     .insert({
-//       menu_id: menuId,
-//       user_id: userId,
-//       quantity,
-//       selected_size: selectedSize,
-//       selected_toppings: selectedToppings,
-//     })
-//     .select()
-//     .single();
-//   if (error) throw new Error("Could not add to cart");
-//   revalidatePath("/menu");
-//   return data;
-// }
+export async function addToCart(
+  menuId,
+  quantity = 1,
+  selectedSize = null,
+  selectedToppings = []
+) {
+  const { user } = await auth();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in to add to cart");
+
+  // 1) Fetch all cart items for this menu + user
+  const { data: existingItems, error: findError } = await supabase
+    .from("carts")
+    .select("id, quantity, selected_size, selected_toppings")
+    .eq("menu_id", menuId)
+    .eq("user_id", userId);
+
+  if (findError) throw new Error(findError.message);
+
+  // 2) Try to find an exact match (same size + toppings)
+  const match = existingItems?.find(
+    (item) =>
+      JSON.stringify(item.selected_size) === JSON.stringify(selectedSize) &&
+      JSON.stringify(item.selected_toppings || []) ===
+        JSON.stringify(selectedToppings || [])
+  );
+
+  // 3) If match exists → update quantity
+  if (match) {
+    const newQty = match.quantity + quantity;
+
+    const { data, error } = await supabase
+      .from("carts")
+      .update({ quantity: newQty })
+      .eq("id", match.id)
+      .select()
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    revalidatePath("/menu");
+    return data;
+  }
+
+  // 4) Otherwise → insert new row
+  const { data, error } = await supabase
+    .from("carts")
+    .insert({
+      menu_id: menuId,
+      user_id: userId,
+      quantity,
+      selected_size: selectedSize,
+      selected_toppings: selectedToppings,
+    })
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/menu");
+  return data;
+}
 
 export async function getCartItems() {
   const { user } = await auth();
@@ -97,43 +106,6 @@ export async function removeCartItem(id) {
   if (error) throw new Error("Could not remove cart item");
   revalidatePath("/cart");
   return true;
-}
-
-export async function addToCart(menuId, quantity = 1) {
-  const { user } = await auth();
-  const userId = user?.id;
-
-  if (!userId) throw new Error("User must be logged in to add to cart");
-
-  // 1) Check if item already exists
-  const { data: existingItem } = await supabase
-    .from("carts")
-    .select("id, quantity")
-    .eq("menu_id", menuId)
-    .eq("user_id", userId)
-    .single();
-
-  if (existingItem) {
-    // Item already in cart, so just increase quantity
-    const newQty = existingItem.quantity + quantity;
-    return await supabase
-      .from("carts")
-      .update({ quantity: newQty })
-      .eq("id", existingItem.id)
-      .select()
-      .single();
-  }
-
-  // 2) Otherwise insert new row
-  const { data, error } = await supabase
-    .from("carts")
-    .insert({ menu_id: menuId, user_id: userId, quantity })
-    .select()
-    .single();
-
-  if (error) throw new Error("Could not add to cart");
-  revalidatePath("/menu");
-  return data;
 }
 
 export async function increaseCartItem(id) {
@@ -195,21 +167,39 @@ export async function decreaseCartItem(id) {
   return data;
 }
 
-// Calculate cart prices
+// export async function addToCart(menuId, quantity = 1) {
+//   const { user } = await auth();
+//   const userId = user?.id;
 
-// const calcPrice = (items = []) => {
-//   const itemsPrice = items.reduce(
-//     (accu, curItem) => accu + Number(curItem?.price) * curItem.quantity,
-//     0
-//   );
-//   const deliveryPrice = itemsPrice > 1000 ? 0 : 100;
-//   const taxPrice = 0.15 * itemsPrice;
-//   const totalPrice = itemsPrice + deliveryPrice + taxPrice;
+//   if (!userId) throw new Error("User must be logged in to add to cart");
 
-//   return {
-//     itemsPrice: itemsPrice.toFixed(2),
-//     deliveryPrice: deliveryPrice.toFixed(2),
-//     taxPrice: taxPrice.toFixed(2),
-//     totalPrice: totalPrice.toFixed(2),
-//   };
-// };
+//   // 1) Check if item already exists
+//   const { data: existingItem } = await supabase
+//     .from("carts")
+//     .select("id, quantity")
+//     .eq("menu_id", menuId)
+//     .eq("user_id", userId)
+//     .single();
+
+//   if (existingItem) {
+//     // Item already in cart, so just increase quantity
+//     const newQty = existingItem.quantity + quantity;
+//     return await supabase
+//       .from("carts")
+//       .update({ quantity: newQty })
+//       .eq("id", existingItem.id)
+//       .select()
+//       .single();
+//   }
+
+//   // 2) Otherwise insert new row
+//   const { data, error } = await supabase
+//     .from("carts")
+//     .insert({ menu_id: menuId, user_id: userId, quantity })
+//     .select()
+//     .single();
+
+//   if (error) throw new Error("Could not add to cart");
+//   revalidatePath("/menu");
+//   return data;
+// }

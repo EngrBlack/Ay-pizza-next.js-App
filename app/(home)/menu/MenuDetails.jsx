@@ -24,7 +24,9 @@ function MenuDetails({ menuId, quantity, cartId }) {
 
   const sizes = menuItem?.size || [];
   console.log(sizes);
-  const selectedSizeObj = sizes.find((s) => s.name === selectedSize);
+  const selectedSizeObj =
+    sizes.find((s) => s.name === selectedSize) || sizes[0];
+  console.log(selectedSizeObj);
 
   function handleAddToCart() {
     startTransition(async () => {
@@ -54,7 +56,7 @@ function MenuDetails({ menuId, quantity, cartId }) {
   }, [menuId]);
 
   return (
-    <div className=" grid gap-2 md:grid-cols-2 md:gap-3 xl:gap-4 relative">
+    <div className=" grid gap-2 md:grid-cols-2 md:gap-3 xl:gap-4 relative w-full">
       {isLoading ? (
         <Spinner />
       ) : (
@@ -62,7 +64,6 @@ function MenuDetails({ menuId, quantity, cartId }) {
           <figure className="col-span-2 md:col-span-1 rounded-md overflow-hidden aspect-3/2 md:aspect-square md:h-full relative">
             <Image
               fill
-              quality={50}
               src={menuItem?.image || "/pizza-1jpg"}
               alt={menuItem?.name || "Menu item"}
               className="w-full h-full object-cover"
@@ -163,9 +164,6 @@ function MenuDetails({ menuId, quantity, cartId }) {
                 </span>
               )}
             </Button>
-            {quantity > 0 && (
-              <UpdateItemQuantity quantity={quantity} cartId={cartId} />
-            )}
           </div>
         </>
       )}
