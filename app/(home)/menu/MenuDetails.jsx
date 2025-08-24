@@ -21,17 +21,27 @@ function MenuDetails({ menuId, quantity, cartId }) {
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
+  const [selectedToppings, setSelectedToppings] = useState([]);
+  console.log(selectedToppings);
 
   const sizes = menuItem?.size || [];
-  console.log(sizes);
+
   const selectedSizeObj =
     sizes.find((s) => s.name === selectedSize) || sizes[0];
-  console.log(selectedSizeObj);
+
+  function handleToggleTopping(topping) {
+    setSelectedToppings(
+      (prev) =>
+        prev.some((t) => t.name === topping.name)
+          ? prev.filter((t) => t.name !== topping.name) // remove
+          : [...prev, topping] // add
+    );
+  }
 
   function handleAddToCart() {
     startTransition(async () => {
       try {
-        await addToCart(menuId, 1, selectedSizeObj);
+        await addToCart(menuId, 1, selectedSizeObj, selectedToppings);
         toast.success("Added to cart!");
       } catch (error) {
         toast.error(`Could not add to Cart: ${error.message}`);
@@ -39,11 +49,16 @@ function MenuDetails({ menuId, quantity, cartId }) {
     });
   }
 
+  const toppings = menuItem?.toppings;
+
+  console.log(toppings);
+
   useEffect(() => {
     async function getMenuItem() {
       try {
         setIsLoading(true);
         const res = await getMenuById(menuId);
+
         setMenuItem(res);
       } catch (error) {
         console.error("Failed to fetch menu item:", error);
@@ -119,14 +134,21 @@ function MenuDetails({ menuId, quantity, cartId }) {
                 />
               </div>
               <div
-                className={`flex flex-col gap-2  trans transform ${
+                className={`flex flex-col gap-3  trans transform ${
                   openToppings
                     ? "translate-y-0 opacity-100 sm:overflow-y-scroll max-fit sm:max-h-44 lg:max-h-50"
                     : "-translate-y-full opacity-0 max-h-0 overflow-hidden"
                 }`}
               >
-                {Array.from({ length: 5 }, (_, i) => (
-                  <MenuToppings key={i} openToppings={openToppings} />
+                {toppings?.map((topping) => (
+                  <MenuToppings
+                    key={topping.name}
+                    topping={topping}
+                    checked={selectedToppings.some(
+                      (t) => t.name === topping.name
+                    )}
+                    onToggle={() => handleToggleTopping(topping)}
+                  />
                 ))}
               </div>
             </div>

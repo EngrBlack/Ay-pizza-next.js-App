@@ -1,15 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useState } from "react";
 import CartItem from "./CartItem";
 import ConfirmDelete from "../../_components/ConfirmDelete";
 import EmptyCart from "./EmptyCart";
-import { clearCartItems } from "@/app/_libs/cartActions";
+import { clearCartItems, removeCartItem } from "@/app/_libs/cartActions";
 import toast from "react-hot-toast";
 
 function CartList({ cartItems, totalCartQuantity }) {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
+
+  const [optimisticCartItems, optimisticDelete] = useOptimistic(
+    cartItems,
+    (curCartItems, cartId) => {
+      return curCartItems.filter((item) => item.id !== cartId);
+    }
+  );
+
+  async function handleRemoveCartItem(cartId) {
+    optimisticDelete(cartId);
+    await removeCartItem(cartId);
+  }
 
   async function handleClearCart() {
     try {
@@ -39,8 +51,12 @@ function CartList({ cartItems, totalCartQuantity }) {
       </div>
       {cartItems.length ? (
         <div>
-          {cartItems?.map((cart) => (
-            <CartItem key={cart.id} cart={cart} />
+          {optimisticCartItems?.map((cart) => (
+            <CartItem
+              key={cart.id}
+              cart={cart}
+              onRemoveCartItem={handleRemoveCartItem}
+            />
           ))}
         </div>
       ) : (

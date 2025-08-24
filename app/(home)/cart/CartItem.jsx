@@ -3,7 +3,7 @@ import UpdateItemQuantity from "../../_components/UpdateItemQuantity";
 import { formatCurrency } from "../../_helper/helper";
 import RemoveCartItem from "./RemoveCartItem";
 
-function CartItem({ cart }) {
+function CartItem({ cart, onRemoveCartItem }) {
   const {
     id,
     menu_id: { discount, image, name, base_price: basePrice },
@@ -25,7 +25,7 @@ function CartItem({ cart }) {
           <Image
             width={60}
             height={60}
-            src={image}
+            src={image || "/pizza-1.jpg"}
             alt=""
             className="w-full h-full object-fit"
           />
@@ -61,7 +61,7 @@ function CartItem({ cart }) {
           </span>
         </p>
 
-        <RemoveCartItem cartId={id} />
+        <RemoveCartItem cartId={id} onRemoveCartItem={onRemoveCartItem} />
         <p className=" text-xs place-self-center">Available</p>
         <UpdateItemQuantity quantity={quantity} cartId={id} />
       </div>

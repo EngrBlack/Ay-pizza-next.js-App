@@ -3,13 +3,13 @@ import { useTransition } from "react";
 import toast from "react-hot-toast";
 import { HiArrowPath, HiTrash } from "react-icons/hi2";
 
-function RemoveCartItem({ cartId }) {
+function RemoveCartItem({ cartId, onRemoveCartItem }) {
   const [isPending, startTransition] = useTransition();
 
   function handleRemoveCartItem() {
     startTransition(async () => {
       try {
-        await removeCartItem(cartId);
+        await onRemoveCartItem(cartId);
         toast.success("Menu removed succesfully!");
       } catch (error) {
         toast.error(`Could not remove menu from Cart: ${error.message}`);

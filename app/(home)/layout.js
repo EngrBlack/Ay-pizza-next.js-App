@@ -33,8 +33,8 @@ export default async function RootLayout({ children }) {
         containerStyle={{ margin: "20px" }}
         toastOptions={{
           style: {
-            background: "#fff3e0", // Cream color
-            color: "#5c3d2e", // Brown text
+            background: "#fff3e0",
+            color: "#5c3d2e",
             fontSize: "16px",
             maxWidth: "500px",
             padding: "10px 20px",

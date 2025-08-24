@@ -37,7 +37,7 @@ function MenuItem({ menu, carts }) {
         await addToCart(menuId);
         toast.success("Added to cart!");
       } catch (error) {
-        toast.error(`Could not add to Cart: ${error.message}`);
+        toast.error(`Could not add to Cart: Sigin to add menu to Cart`);
       }
     });
   }

@@ -68,11 +68,11 @@ export async function addToCart(
 }
 
 export async function getCartItems() {
-  const { user } = await auth();
-  const userId = user?.id;
-  if (!userId) {
-    throw new Error("User must be logged in to get cart items");
-  }
+  const session = await auth();
+  if (!session?.user) return [];
+
+  const userId = session.user.id;
+
   const { data, error } = await supabase
     .from("carts")
     .select("*, menu_id(*)")
