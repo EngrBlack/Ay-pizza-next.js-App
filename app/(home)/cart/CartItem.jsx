@@ -13,6 +13,9 @@ function CartItem({ cart, onRemoveCartItem }) {
 
   const size = cart?.selected_size?.name;
   const price = Number(cart?.selected_size?.price) || Number(basePrice);
+  const toppingsPrice =
+    selectedToppings?.reduce((accu, cur) => accu + cur?.price, 0) || 0;
+  console.log(toppingsPrice);
 
   const toppingsList = (selectedToppings || [])
     .map((topping) => topping.name)
@@ -37,18 +40,18 @@ function CartItem({ cart, onRemoveCartItem }) {
           <p className="text-xs sm:text-sm md:text-base capitalize">
             Size :{" "}
             <span className="text-brown-200">
-              {size ? size.split("_").join(" ") : "Null"}
+              {size ? size.split("_").join(" ") : "Normal"}
             </span>
           </p>
         </div>
         <div className="row-span-2 text-xs place-self-end-safe self-start">
           <p className="text-orangered-200 font-bold text-base lg:text-lg ">
             {discount
-              ? formatCurrency((price - discount) * quantity)
-              : formatCurrency(price * quantity)}
+              ? formatCurrency((price - discount + toppingsPrice) * quantity)
+              : formatCurrency((price + toppingsPrice) * quantity)}
           </p>
           <span className="text-brown-200 line-through text-[13px]">
-            {discount && formatCurrency(price * quantity)}
+            {discount && formatCurrency(price + toppingsPrice * quantity)}
           </span>
         </div>
 
@@ -56,9 +59,13 @@ function CartItem({ cart, onRemoveCartItem }) {
           <span className="bg-brown-200 text-cream-100 py-0.5 px-1.5 mr-1">
             Added:
           </span>
-          <span className="text-brown-300">
-            {selectedToppings ? toppingsList : "No toppings"}
-          </span>
+          {selectedToppings.length > 0 ? (
+            <span className="text-brown-300">
+              {selectedToppings ? toppingsList : "No toppings"}
+            </span>
+          ) : (
+            <span className="text-brown-300">No toppings selected</span>
+          )}
         </p>
 
         <RemoveCartItem cartId={id} onRemoveCartItem={onRemoveCartItem} />

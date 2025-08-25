@@ -1,32 +1,24 @@
 "use client";
 
-import { BiLogoPaypal } from "react-icons/bi";
-import {
-  HiArrowLeft,
-  HiCreditCard,
-  HiEnvelope,
-  HiMiniBanknotes,
-  HiPencilSquare,
-} from "react-icons/hi2";
+import { HiArrowLeft } from "react-icons/hi2";
 
-import Link from "next/link";
-import { useState } from "react";
-import InputGroup from "@/app/_components/InputGroup";
-import InputRadio from "@/app/_components/InputRadio";
 import { formatCurrency } from "@/app/_helper/helper";
-import Modal from "@/app/_components/Modal";
-import UpdateAddress from "./UpdateAddress";
-import { useRouter } from "next/navigation";
 import { nanoid } from "nanoid";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AdditionalNote from "./AdditionalNote";
+import ContactInfo from "./ContactInfo";
+import DeliveryAddress from "./DeliveryAddress";
+import PaymentMethod from "./PaymentMethod";
 
-function CheckoutForm() {
+function CheckoutForm({ user }) {
   const router = useRouter();
   const orderId = nanoid(12);
 
   return (
     <div className="grow-1">
-      <form action="" className="flex flex-col gap-6 md:gap-3 lg:gap-5">
-        <ContactInfo />
+      <div className="flex flex-col gap-6 md:gap-3 lg:gap-5">
+        <ContactInfo user={user} />
         <DeliveryAddress />
         <PaymentMethod />
         <AdditionalNote />
@@ -52,142 +44,7 @@ function CheckoutForm() {
             </button>
           </div>
         </div>
-      </form>
-    </div>
-  );
-}
-
-function ContactInfo() {
-  return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
-      <div className="border-b-1 border-brown-100 pb-2 mb-4">
-        <h2 className="text-orangered-200 font-rowdies lg:text-xl">
-          Contact Information
-        </h2>
-        <p className="text-[13px] lg:text-base">
-          We&apos;ll use this email to send you details and updates about your
-          order.
-        </p>
       </div>
-      <InputGroup label="Email" icon={<HiEnvelope />}>
-        <input
-          type="email"
-          className="input"
-          name="email"
-          id="email"
-          required
-        />
-      </InputGroup>
-    </div>
-  );
-}
-
-function DeliveryAddress() {
-  return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
-      <div className="border-b-1 border-brown-100 pb-2 mb-4">
-        <h2 className="text-orangered-200 font-rowdies lg:text-xl">
-          Delivery Address
-        </h2>
-        <p className="text-[13px] lg:text-base">
-          Enter an address that matches your payment method.
-        </p>
-      </div>
-      <EmptyAddress />
-    </div>
-  );
-}
-
-function EmptyAddress() {
-  return (
-    <div className="text-sm leading-6 lg:text-base">
-      <p>Please Enter your Delivery Address By Click on </p>
-
-      <Modal>
-        <Modal.Open openWindowName="address">
-          <div className="flex items-center gap-2 cursor-pointer text-orangered-100 hover:underline hover:text-brown-300 trans">
-            <span>Add Address</span>
-            <HiPencilSquare />
-          </div>
-        </Modal.Open>
-        <Modal.Window openWindowName="address">
-          <UpdateAddress />
-        </Modal.Window>
-      </Modal>
-    </div>
-  );
-}
-
-function PaymentMethod() {
-  return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
-      <div className="border-b-1 border-brown-100 pb-2 mb-4">
-        <h2 className="text-orangered-200 font-rowdies lg:text-xl">
-          Payment Method
-        </h2>
-        <p className="text-[13px] lg:text-base">
-          All transaction are secure and encrypted.
-        </p>
-      </div>
-      <div className="flex flex-col gap-3">
-        <InputRadio
-          label="Credit / Debit Card"
-          id="stripe"
-          name="payment"
-          icon={<HiCreditCard />}
-        />
-        <InputRadio
-          label="Cash on Delivery"
-          id="cod"
-          name="payment"
-          icon={<HiMiniBanknotes />}
-        />
-        <InputRadio
-          label="PayPal"
-          id="paypal"
-          name="payment"
-          icon={<BiLogoPaypal />}
-        />
-      </div>
-    </div>
-  );
-}
-
-function AdditionalNote() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  function handleChange(e) {
-    setIsOpen(e.target.checked);
-  }
-
-  return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
-      <div
-        className={`${
-          isOpen ? "border-b-1 border-brown-100 mb-4 pb-2 " : ""
-        } flex items-baseline justify-between`}
-      >
-        <h2 className="text-orangered-200 font-rowdies lg:text-xl ">
-          Add a note to your order (Optional)
-        </h2>
-        <input
-          onChange={handleChange}
-          checked={isOpen}
-          type="checkbox"
-          className="mr-2 accent-orangered-200 w-4 h-4"
-          id="note"
-          name="note"
-        />
-      </div>
-      {isOpen && (
-        <textarea
-          type="text"
-          className="input w-full h-36 tracking-wide"
-          name="note"
-          id="note"
-          placeholder="Special instruction for your order..."
-        ></textarea>
-      )}
     </div>
   );
 }

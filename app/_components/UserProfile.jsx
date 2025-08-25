@@ -6,15 +6,16 @@ function UserProfile({ session }) {
   const [isOpen, setIsOpen] = useState(false);
   const onCloseNav = () => setIsOpen((open) => !open);
   const user = session?.user;
+  console.log(user);
 
   return (
     <>
       {user?.email || user?.name ? (
         <div
           onClick={onCloseNav}
-          className="flex items-center gap-2 font-rowdies cursor-pointer"
+          className="flex flex-col items-center  font-rowdies cursor-pointer"
         >
-          <div className="overflow-hidden relative border-2 border-orangered-200 rounded-full w-10 aspect-square ">
+          <div className="overflow-hidden relative border-2 border-orangered-200 rounded-full w-6 sm:w-8 aspect-square ">
             <Image
               src={user?.image || "/user.jpg"}
               fill
@@ -22,23 +23,18 @@ function UserProfile({ session }) {
               className="object-fill w-full h-full"
             />
           </div>
-          <p>
-            UG
-            {/* {user?.name
-              .split(" ")
-              .map((name) => name.at(0))
-              .join("")} */}
+          <p className="text-[10px] md:text-xs">
+            {user?.name.split(" ").at(0)}
           </p>
         </div>
       ) : (
         <div
           onClick={onCloseNav}
-          className="overflow-hidden border-2 border-orangered-200 rounded-full w-10 aspect-square "
+          className="overflow-hidden relative border-2 border-orangered-200 rounded-full w-12 md:w-14 aspect-square "
         >
           <Image
-            src="/user.jpg"
-            width={20}
-            height={20}
+            src={user?.image || "/user.jpg"}
+            fill
             alt="user"
             className="object-fill w-full h-full"
           />

@@ -1,12 +1,8 @@
 import InputCheck from "@/app/_components/InputCheck";
 import { formatCurrency } from "@/app/_helper/helper";
 import Image from "next/image";
-import { useState } from "react";
 
 function MenuToppings({ topping, checked, onToggle }) {
-  const [toppingValue, setToppingValue] = useState(false);
-  console.log(toppingValue);
-
   const toppingImages = {
     // regular toppings
     oreo: "/oreo.jpeg",

@@ -44,14 +44,22 @@ function MenuDetails({ menuId, quantity, cartId }) {
         await addToCart(menuId, 1, selectedSizeObj, selectedToppings);
         toast.success("Added to cart!");
       } catch (error) {
-        toast.error(`Could not add to Cart: ${error.message}`);
+        toast.error(`Could not add to Cart: Sign-in to add menu to Cart`);
       }
     });
   }
 
   const toppings = menuItem?.toppings;
 
-  console.log(toppings);
+  const basePrice = selectedSizeObj?.price || menuItem?.base_price || 0;
+
+  // Sum toppings prices
+  const toppingsTotal = selectedToppings.reduce(
+    (acc, topping) => acc + (Number(topping?.price) || 0),
+    0
+  );
+
+  const totalPrice = basePrice + toppingsTotal;
 
   useEffect(() => {
     async function getMenuItem() {
@@ -113,12 +121,23 @@ function MenuDetails({ menuId, quantity, cartId }) {
                 </SelectInput>
               </div>
             )}
-            <p className="col-span-2 text-sm">
-              <span className="bg-brown-200 text-cream-100 py-0.5 px-1.5 mr-1">
-                Added:
-              </span>
-              <span>chicken (Double), Chesse(Double)</span>
-            </p>
+            {selectedToppings.length > 0 && (
+              <p className="col-span-2 text-sm text-brown-300">
+                <span className="bg-brown-200 text-cream-100 py-0.5 px-1.5 mr-1">
+                  Added:
+                </span>
+                ({" "}
+                {selectedToppings?.map((top) => (
+                  <span
+                    key={top.name}
+                    className="mr-1.5 font-rowdies text-brown-300"
+                  >
+                    {top.name},
+                  </span>
+                ))}
+                )
+              </p>
+            )}
             <div>
               <div
                 className="flex justify-between items-center cursor-pointer mb-1 mt-1 sm:mt-0"
@@ -177,12 +196,8 @@ function MenuDetails({ menuId, quantity, cartId }) {
                 <span>Adding...</span>
               ) : (
                 <span className="font-bold flex items-center gap-2">
-                  <span> Add </span>
-                  {sizes.length > 0
-                    ? formatCurrency(
-                        selectedSizeObj?.price || menuItem?.base_price
-                      )
-                    : formatCurrency(menuItem?.base_price)}
+                  <span>Add</span>
+                  {formatCurrency(totalPrice)}
                 </span>
               )}
             </Button>

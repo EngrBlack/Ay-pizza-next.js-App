@@ -1,11 +1,8 @@
+import { SupabaseAdapter } from "@auth/supabase-adapter";
+import { createClient } from "@supabase/supabase-js";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { SupabaseAdapter } from "@auth/supabase-adapter";
-import { createClient } from "@supabase/supabase-js";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
-import { nanoid } from "nanoid";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -55,16 +52,23 @@ export const authConfig = {
       return !!auth?.user;
     },
 
-    async jwt({ token, user, account, trigger, session }) {
+    async jwt({ token, user, account }) {
       if (user && account) {
         token.id = user.id;
         token.role = user.role ?? "customer";
         token.name = user.name;
         token.provider = account.provider;
+
+        // Ensure user_profile exists
+        const { error } = await supabase.from("users_profile").upsert({
+          id: user.id,
+          fullName: user.name,
+          role: user.role ?? "customer",
+        });
+
+        if (error) console.error("Error inserting user_profile:", error);
       }
-      if (trigger === "update" && session?.user) {
-        token.name = session.user.name;
-      }
+
       return token;
     },
     async session({ session, token }) {
@@ -85,3 +89,67 @@ export const {
   signOut,
   handlers: { GET, POST },
 } = NextAuth(authConfig);
+
+// async jwt({ token, user, account, trigger, session }) {
+//   if (user && account) {
+//     token.id = user.id;
+//     token.role = user.role ?? "customer";
+//     token.name = user.name;
+//     token.provider = account.provider;
+
+//     // Ensure profile exists
+//     const { error } = await serviceRole
+//       .from("user_profile")
+//       .upsert({
+//         id: user.id,
+//         full_name: user.name,
+//         role: user.role ?? "customer",
+//       });
+
+//     if (error) console.error("Error inserting user_profile:", error);
+//   }
+
+//   // 🔄 Handle profile update (e.g., user changed name)
+//   if (trigger === "update" && session?.user) {
+//     token.name = session.user.name;
+//     token.role = session.user.role;
+
+//     const { error } = await serviceRole
+//       .from("user_profile")
+//       .update({
+//         full_name: session.user.name,
+//         role: session.user.role,
+//       })
+//       .eq("id", token.id);
+
+//     if (error) console.error("Error updating user_profile:", error);
+//   }
+
+//   return token;
+// }
+
+// import { useSession } from "next-auth/react";
+
+// function UpdateProfileForm() {
+//   const { data: session, update } = useSession();
+
+//   async function handleSubmit(e) {
+//     e.preventDefault();
+//     const fullName = e.target.fullName.value;
+
+//     await update({
+//       user: { name: fullName }, // triggers jwt(trigger === "update")
+//     });
+//   }
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <input
+//         name="fullName"
+//         defaultValue={session?.user?.name ?? ""}
+//         placeholder="Enter full name"
+//       />
+//       <button type="submit">Save</button>
+//     </form>
+//   );
+// }

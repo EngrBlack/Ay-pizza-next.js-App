@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { HiArrowLeft, HiArrowRightCircle } from "react-icons/hi2";
 import { formatCurrency } from "../../_helper/helper";
 
-function CartSummary({ totalCartPrice }) {
+function CartSummary({ totalCartPrice, cartItems }) {
   const router = useRouter();
   return (
     <div className="grow-2 border-2 border-cream-100 shadow-lg p-6  px-4 pb-12 sm:pb-12 md:pb-12 sm:p-8 md:p-6 rounded-sm">
@@ -26,15 +26,17 @@ function CartSummary({ totalCartPrice }) {
           <HiArrowLeft />
           <span> Continue Shopping</span>
         </button>
-        <button
-          className="button w-full"
-          onClick={() => {
-            router.push("/checkout");
-          }}
-        >
-          <span>Proceed to Checkout</span>
-          <HiArrowRightCircle />
-        </button>
+        {cartItems.length > 0 && (
+          <button
+            className="button w-full"
+            onClick={() => {
+              router.push("/checkout");
+            }}
+          >
+            <span>Proceed to Checkout</span>
+            <HiArrowRightCircle />
+          </button>
+        )}
       </div>
     </div>
   );

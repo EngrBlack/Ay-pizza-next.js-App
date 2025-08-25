@@ -1,7 +1,15 @@
+import { auth } from "@/app/_libs/auth";
 import CheckoutForm from "./CheckoutForm";
 import OrderSummary from "./OrderSummary";
+import { createAddress } from "@/app/_libs/checkoutActions";
 
-function page() {
+async function page() {
+  const session = await auth();
+  const user = session?.user;
+
+  const createduser = createAddress();
+  console.log(createduser);
+
   return (
     <section className="bg-cream-200">
       <div className="px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
@@ -12,7 +20,7 @@ function page() {
           Complete your order in just a few moment
         </p>
         <div className="mt-6 flex flex-col gap-6 md:flex-row md:gap-3 lg:gap-5 md:items-start">
-          <CheckoutForm />
+          <CheckoutForm user={user} />
           <OrderSummary />
         </div>
       </div>

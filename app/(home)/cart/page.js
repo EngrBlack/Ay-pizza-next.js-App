@@ -39,7 +39,10 @@ async function page() {
             />
           </div>
           <div className="md:basis-[43%] lg:basis-[35%]">
-            <CartSummary totalCartPrice={totalCartPrice} />
+            <CartSummary
+              cartItems={cartItems}
+              totalCartPrice={totalCartPrice}
+            />
           </div>
         </div>
       </div>

@@ -11,6 +11,8 @@ function CartList({ cartItems, totalCartQuantity }) {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
 
+  console.log(cartItems);
+
   const [optimisticCartItems, optimisticDelete] = useOptimistic(
     cartItems,
     (curCartItems, cartId) => {
@@ -36,7 +38,7 @@ function CartList({ cartItems, totalCartQuantity }) {
     <div className="grow-1 border-2 border-cream-100 shadow-lg p-4 py-4 sm:p-6 lg:p-8 rounded-sm">
       <div className="flex  items-center justify-between border-b-1 border-brown-50 pb-2 sm:pb-3 mb-2 lg:mb-4">
         <h1 className=" sm:text-2xl md:text-xl lg:text-2xl  font-extrabold text-orangered-200">
-          Your Shopping Cart ({totalCartQuantity})
+          Your Shopping Cart {cartItems?.length > 0 && `(${totalCartQuantity})`}
         </h1>
         <button
           className="text-orangered-100 text-xs hover:text-brown hover:underline trans md:text-base"
