@@ -1,6 +1,6 @@
 import Modal from "@/app/_components/Modal";
 import { HiPencilSquare } from "react-icons/hi2";
-import UpdateAddress from "./UpdateAddress";
+import CreateAddressForm from "./CreateAddressForm";
 
 function EmptyAddress() {
   return (
@@ -9,13 +9,13 @@ function EmptyAddress() {
 
       <Modal>
         <Modal.Open openWindowName="address">
-          <div className="flex items-center gap-2 cursor-pointer text-orangered-100 hover:underline hover:text-brown-300 trans">
+          <button className="flex items-center gap-2 cursor-pointer text-orangered-100 hover:underline hover:text-brown-300 trans">
             <span>Add Address</span>
             <HiPencilSquare />
-          </div>
+          </button>
         </Modal.Open>
         <Modal.Window openWindowName="address">
-          <UpdateAddress />
+          <CreateAddressForm />
         </Modal.Window>
       </Modal>
     </div>

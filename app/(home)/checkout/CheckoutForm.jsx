@@ -2,24 +2,18 @@
 
 import { HiArrowLeft } from "react-icons/hi2";
 
-import { formatCurrency } from "@/app/_helper/helper";
-import { nanoid } from "nanoid";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import AdditionalNote from "./AdditionalNote";
-import ContactInfo from "./ContactInfo";
-import DeliveryAddress from "./DeliveryAddress";
+import AdditionalNote from "./(address)/AdditionalNote";
+import ContactInfo from "./(address)/ContactInfo";
+import DeliveryAddress from "./(address)/DeliveryAddress";
 import PaymentMethod from "./PaymentMethod";
 
-function CheckoutForm({ user }) {
-  const router = useRouter();
-  const orderId = nanoid(12);
-
+function CheckoutForm({ user, userProfile }) {
   return (
     <div className="grow-1">
       <div className="flex flex-col gap-6 md:gap-3 lg:gap-5">
         <ContactInfo user={user} />
-        <DeliveryAddress />
+        <DeliveryAddress userProfile={userProfile} />
         <PaymentMethod />
         <AdditionalNote />
         <div className="space-y-4">
@@ -33,15 +27,8 @@ function CheckoutForm({ user }) {
               className="flex items-center gap-1 text-orangered-100 hover:text-brown-300 hover:underline trans"
             >
               <HiArrowLeft />
-              <span>Return to order Page</span>
+              <span>Return to order page</span>
             </Link>
-            <button
-              onClick={() => router.push(`/order/${orderId}`)}
-              type="submit"
-              className="button w-full md:w-[65%]"
-            >
-              Place Order &mdash; {formatCurrency(85000)}
-            </button>
           </div>
         </div>
       </div>

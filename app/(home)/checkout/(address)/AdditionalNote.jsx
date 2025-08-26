@@ -21,7 +21,7 @@ function AdditionalNote() {
           onChange={handleChange}
           checked={isOpen}
           type="checkbox"
-          className="mr-2 accent-orangered-200 w-4 h-4"
+          className="mr-2 accent-orangered-200 w-4 h-4 cursor-pointer"
           id="note"
           name="note"
         />

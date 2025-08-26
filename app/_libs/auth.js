@@ -63,6 +63,7 @@ export const authConfig = {
         const { error } = await supabase.from("users_profile").upsert({
           id: user.id,
           fullName: user.name,
+          email: user.email,
           role: user.role ?? "customer",
         });
 

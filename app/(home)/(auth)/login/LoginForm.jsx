@@ -19,9 +19,6 @@ import { useActionState } from "react";
 
 function LoginForm() {
   const router = useRouter();
-  // const [data, action] = useActionState(signInWithCredentials, {
-  //   success: false,
-  // });
 
   const {
     register,

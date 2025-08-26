@@ -5,6 +5,11 @@ export const tax = 50;
 export const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
+export function phoneValid(value) {
+  const regex = /^(?:\+234|0)\d{10}$/;
+  return regex.test(value);
+}
+
 export function formatCurrency(value) {
   return new Intl.NumberFormat("en-NG", {
     style: "currency",

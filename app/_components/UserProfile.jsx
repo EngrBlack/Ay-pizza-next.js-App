@@ -6,7 +6,6 @@ function UserProfile({ session }) {
   const [isOpen, setIsOpen] = useState(false);
   const onCloseNav = () => setIsOpen((open) => !open);
   const user = session?.user;
-  console.log(user);
 
   return (
     <>

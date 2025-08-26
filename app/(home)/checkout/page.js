@@ -1,14 +1,14 @@
 import { auth } from "@/app/_libs/auth";
 import CheckoutForm from "./CheckoutForm";
 import OrderSummary from "./OrderSummary";
-import { createAddress } from "@/app/_libs/checkoutActions";
+import { getUserProfile } from "@/app/_libs/checkoutActions";
+import { getCartItems } from "@/app/_libs/cartActions";
 
 async function page() {
   const session = await auth();
   const user = session?.user;
-
-  const createduser = createAddress();
-  console.log(createduser);
+  const userProfile = await getUserProfile();
+  const cartItems = await getCartItems();
 
   return (
     <section className="bg-cream-200">
@@ -20,8 +20,8 @@ async function page() {
           Complete your order in just a few moment
         </p>
         <div className="mt-6 flex flex-col gap-6 md:flex-row md:gap-3 lg:gap-5 md:items-start">
-          <CheckoutForm user={user} />
-          <OrderSummary />
+          <CheckoutForm user={user} userProfile={userProfile} />
+          <OrderSummary cartItems={cartItems} />
         </div>
       </div>
     </section>
