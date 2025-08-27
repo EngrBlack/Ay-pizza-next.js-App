@@ -9,23 +9,31 @@ export const metadata = {
 
 async function page() {
   const cartItems = (await getCartItems()) || [];
+  console.log(cartItems);
 
   const totalCartQuantity = cartItems.reduce(
     (accu, curItem) => accu + Number(curItem?.quantity),
     0
   );
 
-  const totalCartPrice = cartItems.reduce(
-    (accu, curItem) =>
-      accu +
-      Number(curItem?.quantity) *
-        Number(
-          curItem?.discount !== null
-            ? curItem?.menu_id?.base_price - curItem?.menu_id?.discount
-            : curItem?.menu_id?.base_price || curItem?.selected_size?.price
-        ),
-    0
-  );
+  const totalCartPrice = cartItems.reduce((accu, cur) => {
+    const rawBasePrice =
+      cur?.selected_size?.price ?? cur?.menu_id?.base_price ?? 0;
+
+    const basePrice = cur?.menu_id?.discount
+      ? Number(rawBasePrice) - Number(cur.menu_id.discount)
+      : Number(rawBasePrice);
+
+    const toppingsPrice =
+      cur?.selected_toppings?.reduce(
+        (sum, t) => sum + Number(t?.price || 0),
+        0
+      ) || 0;
+
+    const itemTotal = (basePrice + toppingsPrice) * (cur?.quantity || 1);
+
+    return accu + itemTotal;
+  }, 0);
 
   return (
     <section className="bg-cream-200">

@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 export const PAGE_SIZE = 10;
-export const tax = 50;
+export const tax = 0;
 export const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
@@ -29,3 +29,25 @@ export function formatDateTime(dateString) {
   const date = new Date(dateString);
   return isNaN(date) ? "" : format(date, "do MMMM, yyyy - h:mm a");
 }
+
+export const locations = [
+  { name: "Others", price: 3500 },
+  { name: "Inside UniLag ", price: 500 },
+  { name: "Pako ", price: 1000 },
+  { name: "Abule Oja", price: 1000 },
+  { name: "Akoka", price: 1000 },
+  { name: "Iwaya", price: 1000 },
+  { name: "Onike", price: 1000 },
+  { name: "Solanke", price: 1000 },
+  { name: "St dentis", price: 1000 },
+  { name: "Chemist", price: 1000 },
+  { name: "Obayan", price: 1000 },
+  { name: "Bariga", price: 1000 },
+  { name: "Shomolu", price: 1700 },
+  { name: "Folagoro", price: 1700 },
+  { name: "Bajulaiye", price: 1700 },
+  { name: "Sabo", price: 1500 },
+  { name: "Yaba", price: 1500 },
+  { name: "Onipanu", price: 2500 },
+  { name: "Gbagada", price: 3000 },
+];

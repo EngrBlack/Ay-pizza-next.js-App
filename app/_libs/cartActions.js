@@ -167,6 +167,24 @@ export async function decreaseCartItem(id) {
   return data;
 }
 
+export async function updateDeliveryPrice(formData) {
+  const { user } = await auth();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in.");
+  const deliveryPrice = formData.get("delivery-price");
+  console.log(deliveryPrice);
+
+  const { data, error } = await supabase
+    .from("carts")
+    .update({ delivery_price: deliveryPrice })
+    .eq("user_id", userId)
+    .select();
+
+  if (error) throw new Error(error.message || "Could not set delivery price.");
+
+  return data;
+}
+
 // export async function addToCart(menuId, quantity = 1) {
 //   const { user } = await auth();
 //   const userId = user?.id;

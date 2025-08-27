@@ -7,13 +7,24 @@ import AdditionalNote from "./(address)/AdditionalNote";
 import ContactInfo from "./(address)/ContactInfo";
 import DeliveryAddress from "./(address)/DeliveryAddress";
 import PaymentMethod from "./PaymentMethod";
+import DeliveryMethod from "./DeliveryMethod";
+import { useState } from "react";
 
 function CheckoutForm({ user, userProfile }) {
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] =
+    useState("delivery");
+
   return (
     <div className="grow-1">
       <div className="flex flex-col gap-6 md:gap-3 lg:gap-5">
         <ContactInfo user={user} />
-        <DeliveryAddress userProfile={userProfile} />
+        <DeliveryMethod
+          selectedDeliveryMethod={selectedDeliveryMethod}
+          setSelectedDeliveryMethod={setSelectedDeliveryMethod}
+        />
+        {selectedDeliveryMethod === "delivery" && (
+          <DeliveryAddress userProfile={userProfile} />
+        )}
         <PaymentMethod />
         <AdditionalNote />
         <div className="space-y-4">

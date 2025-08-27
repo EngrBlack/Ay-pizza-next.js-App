@@ -1,10 +1,35 @@
 import Modal from "@/app/_components/Modal";
+import SelectInput from "@/app/_components/SelectInput";
+import { useClosestLocation } from "@/app/_context/LocationProvider";
+import { formatCurrency, locations } from "@/app/_helper/helper";
 import { HiPencilSquare } from "react-icons/hi2";
 import EmptyAddress from "./EmptyAddress";
 import UpdateAddressForm from "./UpdateAddressForm";
+import { updateDeliveryPrice } from "@/app/_libs/cartActions";
+import toast from "react-hot-toast";
 
 function DeliveryAddress({ userProfile }) {
   const { address } = userProfile;
+
+  const { selectedLocation, setSelectedLocation } = useClosestLocation();
+
+  async function handleDeliveryPrice(e) {
+    const { value } = e.target;
+    setSelectedLocation(value);
+
+    const deliveryPrice =
+      locations.find((location) => location.name === value)?.price || 0;
+
+    const formData = new FormData();
+    formData.append("delivery-price", deliveryPrice);
+
+    try {
+      await updateDeliveryPrice(formData);
+      toast.success(`Delivery fee added: ${formatCurrency(deliveryPrice)}`);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   return (
     <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
@@ -44,6 +69,20 @@ function DeliveryAddress({ userProfile }) {
           </p>
         </div>
       )}
+
+      <div>
+        <p className="font-rowdies text-brown-300 mt-2 ">
+          Please select location/Delivery Fee :
+        </p>
+        <SelectInput value={selectedLocation} onChange={handleDeliveryPrice}>
+          <option>----- Select Location ------</option>
+          {locations.map((location) => (
+            <option key={location.name} value={location.name}>{`${
+              location.name
+            } - ${formatCurrency(location.price)}`}</option>
+          ))}
+        </SelectInput>
+      </div>
     </div>
   );
 }

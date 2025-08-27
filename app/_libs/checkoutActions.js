@@ -62,7 +62,28 @@ export async function paymentMethod(formData) {
     .select()
     .single();
 
-  if (error) throw new Error(error.message || "Could not user profile.");
+  if (error) throw new Error(error.message || "Could not add address.");
+
+  return data;
+}
+
+export async function deliveryMethod(formData) {
+  const { user } = await auth();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in.");
+
+  const deliveryMethod = formData.get("delivery-method");
+  if (!deliveryMethod) throw new Error("No delivery method provided.");
+
+  const { data, error } = await supabase
+    .from("users_profile")
+    .update({ delivery_method: deliveryMethod })
+    .eq("id", userId)
+    .select()
+    .single();
+
+  if (error)
+    throw new Error(error.message || "Could not update delivery-method.");
 
   return data;
 }

@@ -15,7 +15,10 @@ function CartItem({ cart, onRemoveCartItem }) {
   const price = Number(cart?.selected_size?.price) || Number(basePrice);
   const toppingsPrice =
     selectedToppings?.reduce((accu, cur) => accu + cur?.price, 0) || 0;
-  console.log(toppingsPrice);
+
+  // const subtotal = formatCurrency(
+  //   (price + toppingsPrice) * quantity
+  // );
 
   const toppingsList = (selectedToppings || [])
     .map((topping) => topping.name)
@@ -51,7 +54,7 @@ function CartItem({ cart, onRemoveCartItem }) {
               : formatCurrency((price + toppingsPrice) * quantity)}
           </p>
           <span className="text-brown-200 line-through text-[13px]">
-            {discount && formatCurrency(price + toppingsPrice * quantity)}
+            {discount && formatCurrency((price + toppingsPrice) * quantity)}
           </span>
         </div>
 

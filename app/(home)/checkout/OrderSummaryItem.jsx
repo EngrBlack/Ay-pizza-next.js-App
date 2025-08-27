@@ -40,7 +40,10 @@ function OrderSummaryItem({ cartItem }) {
             </span>
 
             {toppings.map((topping) => (
-              <span className="text-brown-300 mr-0.5">{`${topping?.name},`}</span>
+              <span
+                key={topping.name}
+                className="text-brown-300 mr-0.5"
+              >{`${topping?.name},`}</span>
             ))}
           </p>
         )}

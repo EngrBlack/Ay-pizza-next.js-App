@@ -36,6 +36,7 @@ function PaymentMethod() {
       <div className="flex flex-col gap-3">
         <InputRadio
           label="Credit / Debit Card"
+          className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
           id="stripe"
           name="payment"
           onChange={handleChange}
@@ -45,6 +46,7 @@ function PaymentMethod() {
         />
         <InputRadio
           label="Cash on Delivery"
+          className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
           id="cod"
           name="payment"
           onChange={handleChange}
@@ -54,6 +56,7 @@ function PaymentMethod() {
         />
         <InputRadio
           label="PayPal"
+          className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
           id="paypal"
           name="payment"
           onChange={handleChange}
