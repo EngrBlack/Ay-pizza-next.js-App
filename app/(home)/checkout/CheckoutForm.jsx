@@ -10,9 +10,8 @@ import PaymentMethod from "./PaymentMethod";
 import DeliveryMethod from "./DeliveryMethod";
 import { useState } from "react";
 
-function CheckoutForm({ user, userProfile }) {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] =
-    useState("delivery");
+function CheckoutForm({ user }) {
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState("");
 
   return (
     <div className="grow-1">
@@ -23,7 +22,7 @@ function CheckoutForm({ user, userProfile }) {
           setSelectedDeliveryMethod={setSelectedDeliveryMethod}
         />
         {selectedDeliveryMethod === "delivery" && (
-          <DeliveryAddress userProfile={userProfile} />
+          <DeliveryAddress user={user} />
         )}
         <PaymentMethod />
         <AdditionalNote />

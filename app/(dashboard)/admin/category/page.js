@@ -1,8 +1,14 @@
 import { getCategories } from "@/app/_libs/categoryActions";
 import CategoryList from "./CategoryList";
 import CreateCategory from "./CreateCategory";
+import { requireAdmin } from "@/app/_libs/authActions";
+
+export const metadata = {
+  title: "Category",
+};
 
 async function page() {
+  await requireAdmin();
   const categories = (await getCategories()) || [];
 
   return (

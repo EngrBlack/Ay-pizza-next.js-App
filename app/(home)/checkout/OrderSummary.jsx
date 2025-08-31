@@ -1,36 +1,41 @@
 "use client";
 
-import { formatCurrency, tax } from "@/app/_helper/helper";
-import { nanoid } from "nanoid";
-import { useRouter } from "next/navigation";
 import OrderSummaryItem from "./OrderSummaryItem";
-import { useClosestLocation } from "@/app/_context/LocationProvider";
+import { calcItemTotal, formatCurrency, tax } from "@/app/_helper/helper";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { HiMiniArrowPath } from "react-icons/hi2";
+import toast from "react-hot-toast";
+import { placeOrder } from "@/app/_libs/orderActions";
 
-function OrderSummary({ cartItems }) {
+function OrderSummary({ cartItems, user }) {
   const router = useRouter();
-  const orderId = nanoid(12);
-  const { deliveryPrice } = useClosestLocation();
+  const [isPending, startTransition] = useTransition();
 
-  const totalCartPrice = cartItems.reduce((accu, cur) => {
-    const rawBasePrice =
-      cur?.selected_size?.price ?? cur?.menu_id?.base_price ?? 0;
-
-    const basePrice = cur?.menu_id?.discount
-      ? Number(rawBasePrice) - Number(cur.menu_id.discount)
-      : Number(rawBasePrice);
-
-    const toppingsPrice =
-      cur?.selected_toppings?.reduce(
-        (sum, t) => sum + Number(t?.price || 0),
-        0
-      ) || 0;
-
-    const itemTotal = (basePrice + toppingsPrice) * (cur?.quantity || 1);
-
-    return accu + itemTotal;
+  const itemsPrice = cartItems.reduce((accu, cur) => {
+    return accu + calcItemTotal(cur);
   }, 0);
 
-  const taxPrice = tax;
+  const deliveryPrice = user?.delivery_price ?? 0;
+  const taxPrice = user?.tax_price ?? 0;
+  const totalPrice = itemsPrice + deliveryPrice + taxPrice;
+
+  async function handlePlaceOrder() {
+    try {
+      const order = await placeOrder();
+      if (order?.success === false) {
+        toast.error(order.message);
+        if (order.redirectTo) router.push(order.redirectTo);
+        return;
+      }
+      toast.success("Order placed successfully! 🎉");
+      startTransition(() => {
+        router.push(`/order/${order.id}`);
+      });
+    } catch (err) {
+      toast.error(err.message || "Something went wrong.");
+    }
+  }
 
   return (
     <div className="md:basis-[45%] lg:basis-[35%] border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
@@ -47,11 +52,11 @@ function OrderSummary({ cartItems }) {
       <div className="flex flex-col gap-2 font-bold text-sm py-4">
         <p className="flex items-center justify-between">
           <span>Subtotal :</span>
-          <span>{formatCurrency(totalCartPrice)}</span>
+          <span>{formatCurrency(itemsPrice)}</span>
         </p>
         <p className="flex items-center justify-between">
           <span>Tax :</span>
-          <span>{formatCurrency(tax)}</span>
+          <span>{formatCurrency(taxPrice)}</span>
         </p>
         <p className="flex items-center justify-between">
           <span> Delivery Fee :</span>
@@ -60,15 +65,22 @@ function OrderSummary({ cartItems }) {
       </div>
       <div className="border-t-1 border-brown-100  pt-3 flex items-center justify-between font-bold">
         <p>Total :</p>
-        <p>{formatCurrency(totalCartPrice + tax + deliveryPrice)}</p>
+        <p>{formatCurrency(totalPrice)}</p>
       </div>
       <button
-        onClick={() => router.push(`/order/${orderId}`)}
+        onClick={handlePlaceOrder}
         type="submit"
         className="button w-full my-4"
+        disabled={isPending}
       >
-        Place Order &mdash;{" "}
-        {formatCurrency(totalCartPrice + tax + deliveryPrice)}
+        {isPending ? (
+          <span className="flex items-center gap-2">
+            <HiMiniArrowPath className="animate-spin text-lg" />
+            <span>Placing Order...</span>
+          </span>
+        ) : (
+          `Place Order - ${formatCurrency(totalPrice)}`
+        )}
       </button>
     </div>
   );

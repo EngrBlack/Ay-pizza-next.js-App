@@ -5,18 +5,18 @@ import { formatCurrency, locations } from "@/app/_helper/helper";
 import { HiPencilSquare } from "react-icons/hi2";
 import EmptyAddress from "./EmptyAddress";
 import UpdateAddressForm from "./UpdateAddressForm";
-import { updateDeliveryPrice } from "@/app/_libs/cartActions";
-import toast from "react-hot-toast";
 
-function DeliveryAddress({ userProfile }) {
-  const { address } = userProfile;
+import toast from "react-hot-toast";
+import { updateDeliveryPrice } from "@/app/_libs/checkoutActions";
+
+function DeliveryAddress({ user }) {
+  const { address } = user;
 
   const { selectedLocation, setSelectedLocation } = useClosestLocation();
 
   async function handleDeliveryPrice(e) {
     const { value } = e.target;
     setSelectedLocation(value);
-
     const deliveryPrice =
       locations.find((location) => location.name === value)?.price || 0;
 
@@ -52,7 +52,7 @@ function DeliveryAddress({ userProfile }) {
               </button>
             </Modal.Open>
             <Modal.Window openWindowName="address">
-              <UpdateAddressForm userProfile={userProfile} />
+              <UpdateAddressForm user={user} />
             </Modal.Window>
           </Modal>
         )}

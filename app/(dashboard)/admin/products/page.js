@@ -1,8 +1,15 @@
 import { getMenus } from "@/app/_libs/menuActions";
 import CreateProductButtton from "./create/CreateProductButtton";
 import ProductList from "./ProductList";
+import { requireAdmin } from "@/app/_libs/authActions";
+
+export const metadata = {
+  title: "Availble Product",
+};
 
 export default async function Page({ searchParams }) {
+  await requireAdmin();
+
   // FILTER
   const filterValue = searchParams?.category || "all";
 

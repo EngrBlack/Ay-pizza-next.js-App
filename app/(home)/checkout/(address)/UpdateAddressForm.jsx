@@ -17,8 +17,8 @@ import {
   HiUser,
 } from "react-icons/hi2";
 
-function UpdateAddressForm({ onCloseModal, userProfile }) {
-  const { address } = userProfile;
+function UpdateAddressForm({ onCloseModal, user }) {
+  const { address } = user;
 
   const firstName = address?.fullName.split(" ").at(0);
   const lastName = address?.fullName.split(" ").at(1);

@@ -13,7 +13,9 @@ const headers = [
   "Actions",
 ];
 
-function OrderList() {
+function OrderList({ orders }) {
+  console.log(orders);
+
   return (
     <Table size="grid-cols-7" className="p-6">
       <Table.Header>
@@ -21,9 +23,15 @@ function OrderList() {
           <div key={el}>{el}</div>
         ))}
       </Table.Header>
-      {Array.from({ length: 10 }, (_, i) => (
+      {/* {Array.from({ length: 10 }, (_, i) => (
         <Table.Body key={i} className="p-2.5 ">
           <OrderItem />
+        </Table.Body>
+      ))} */}
+
+      {orders.map((order) => (
+        <Table.Body key={order.id} className="p-2.5 ">
+          <OrderItem order={order} />
         </Table.Body>
       ))}
     </Table>

@@ -1,11 +1,13 @@
-"use client";
-
-import Modal from "@/app/_components/Modal";
 import UserList from "./UserList";
-import AdminButton from "@/app/_components/AdminButton";
-import UpdateUserForm from "./UpdateUserForm";
+import { requireAdmin } from "@/app/_libs/authActions";
+import UpdateUser from "./UpdateUser";
 
-function page() {
+export const metadata = {
+  title: "Admin User",
+};
+
+async function page() {
+  await requireAdmin();
   return (
     <section className="bg-cream-200 ">
       <div className="px-4 sm:px-6 py-4 sm:py-10 xl:px-10 lg:py-10 w-full tracking-wide bg-cream-200">
@@ -13,15 +15,7 @@ function page() {
           <h1 className="font-rowdies text-brown-300 text-2xl sm:text-3xl  ">
             Admins and Users
           </h1>
-
-          <Modal>
-            <Modal.Open openWindowName="user">
-              <AdminButton icon="empty">Update User</AdminButton>
-            </Modal.Open>
-            <Modal.Window openWindowName="user">
-              <UpdateUserForm />
-            </Modal.Window>
-          </Modal>
+          <UpdateUser />
         </div>
         <div>
           <UserList />

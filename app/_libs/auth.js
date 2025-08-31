@@ -1,13 +1,9 @@
 import { SupabaseAdapter } from "@auth/supabase-adapter";
-import { createClient } from "@supabase/supabase-js";
+
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+import { supabase } from "./supabase";
 
 export const authConfig = {
   pages: { signIn: "/login" },
@@ -52,28 +48,51 @@ export const authConfig = {
       return !!auth?.user;
     },
 
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
+      // First-time login
       if (user && account) {
         token.id = user.id;
-        token.role = user.role ?? "customer";
         token.name = user.name;
         token.provider = account.provider;
 
-        // Ensure user_profile exists
-        const { error } = await supabase.from("users_profile").upsert({
-          id: user.id,
-          fullName: user.name,
-          email: user.email,
-          role: user.role ?? "customer",
-        });
+        // ✅ Fetch role from Supabase instead of forcing "customer"
+        const { data, error } = await supabase
+          .from("users_profile")
+          .select("role")
+          .eq("id", user.id)
+          .single();
 
-        if (error) console.error("Error inserting user_profile:", error);
+        if (!error && data) {
+          token.role = data.role;
+        } else {
+          // fallback if no profile found
+          token.role = user.role ?? "customer";
+
+          // also ensure row exists
+          await supabase.from("users_profile").upsert({
+            id: user.id,
+            fullName: user.name,
+            email: user.email,
+            role: token.role,
+          });
+        }
+      }
+
+      if (trigger === "update" && session?.user) {
+        token.role = session.user.role;
+
+        const { error } = await supabase
+          .from("users_profile")
+          .update({ role: session.user.role })
+          .eq("id", token.id);
+
+        if (error) console.error("Error updating user_profile:", error);
       }
 
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.name = token.name;

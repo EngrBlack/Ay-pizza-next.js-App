@@ -1,9 +1,10 @@
 "use server";
 
-import { signIn, signOut } from "@/app/_libs/auth";
+import { auth, signIn, signOut } from "@/app/_libs/auth";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function signInWithCredentials(formData) {
   const data = {
@@ -106,4 +107,14 @@ export async function forgotPassword(formData) {
   }
 
   return { status: "success" };
+}
+
+export async function requireAdmin() {
+  const session = await auth();
+
+  if (session?.user?.role !== "admin") {
+    redirect("/unauthorized");
+  }
+
+  return session;
 }

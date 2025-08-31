@@ -21,7 +21,6 @@ const linkData = [
     icon: <HiOutlineInformationCircle />,
     label: "Order History",
   },
-  { href: "/admin", icon: <HiMiniUserGroup />, label: "Admin" },
 ];
 
 function ProfileNavigation({ onCloseNav, user }) {
@@ -56,6 +55,16 @@ function ProfileNavigation({ onCloseNav, user }) {
           </Link>
         </li>
       ))}
+      {user?.role === "admin" && (
+        <li onClick={onCloseNav}>
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 hover:bg-brown hover:text-cream-200 rounded-xs py-1.5 px-2 pr-5 md:pr-12  whitespace-nowrap"
+          >
+            <HiMiniUserGroup /> <span>Admin</span>
+          </Link>
+        </li>
+      )}
 
       {user?.email || user?.name ? (
         <button

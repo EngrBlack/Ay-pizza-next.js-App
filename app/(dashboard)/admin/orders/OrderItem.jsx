@@ -1,13 +1,22 @@
-import { formatCurrency } from "@/app/_helper/helper";
+import { formatCurrency, formatDateTime } from "@/app/_helper/helper";
 import { HiEllipsisVertical } from "react-icons/hi2";
 
-function OrderItem() {
+function OrderItem({ order }) {
+  const {
+    id: orderId,
+    created_at: createdAt,
+    total_price: totalPrice,
+    delivery_address: { fullName },
+  } = order;
+
   return (
     <>
-      <div>...34jhs</div>
-      <div>Dec 17, 2025, 8:12 PM</div>
-      <div>Gabriel Uchenna</div>
-      <div>{formatCurrency(230000)}</div>
+      <div>
+        {orderId.slice(-6).padStart(orderId.length, "*")}
+      </div>
+      <div>{formatDateTime(createdAt)}</div>
+      <div>{fullName}</div>
+      <div>{formatCurrency(totalPrice)}</div>
       <div>Dec 28, 2025, 8:12 PM</div>
       <div>Dec 15, 2025, 8:12 PM</div>
       <div>

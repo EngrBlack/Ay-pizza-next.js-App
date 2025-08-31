@@ -20,6 +20,25 @@ export async function getUserProfile() {
   return data;
 }
 
+export async function updateDeliveryPrice(formData) {
+  const { user } = await auth();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in.");
+  const deliveryPrice = formData.get("delivery-price");
+
+  const { data, error } = await supabase
+    .from("users_profile")
+    .update({ delivery_price: deliveryPrice })
+    .eq("id", userId)
+    .select();
+
+  if (error) throw new Error(error.message || "Could not set delivery price.");
+
+  revalidatePath("/checkout");
+
+  return data;
+}
+
 export async function updateAddress(formData) {
   const { user } = await auth();
   const userId = user?.id;

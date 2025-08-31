@@ -17,10 +17,11 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await auth();
+
   const cartItems = (await getCartItems()) || [];
 
   return (
-    <div className="min-h-screen flex flex-col  bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto">
+    <div className="min-h-screen flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto">
       <Navigation session={session} cartItems={cartItems} />
       <main className="grow bg-cream-200 font">{children}</main>
       <Footer />

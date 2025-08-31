@@ -1,8 +1,13 @@
+import { requireAdmin } from "@/app/_libs/authActions";
 import OrderDetails from "./OrderDetails";
 
+export const metadata = {
+  title: "Order Details",
+};
+
 export default async function page({ params }) {
+  await requireAdmin();
   const { orderId } = await params;
-  console.log(orderId);
 
   return (
     <section className="bg-cream-200 ">

@@ -1,6 +1,13 @@
+import { requireAdmin } from "@/app/_libs/authActions";
 import Dashboard from "../Dashboard";
 
-function page() {
+export const metadata = {
+  title: "Admin Dashboard",
+};
+
+async function page() {
+  await requireAdmin();
+
   return (
     <section className="bg-cream-200 h-screen text-brown">
       <div className="px-4 sm:px-6 py-4 sm:py-4 xl:px-10 lg:py-6 w-full tracking-wide flex flex-col gap-2">

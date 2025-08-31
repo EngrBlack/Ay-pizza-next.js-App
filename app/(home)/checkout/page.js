@@ -1,15 +1,18 @@
-import { auth } from "@/app/_libs/auth";
 import CheckoutForm from "./CheckoutForm";
+import { getCartItems } from "@/app/_libs/cartActions";
 import OrderSummary from "./OrderSummary";
 import { getUserProfile } from "@/app/_libs/checkoutActions";
-import { getCartItems } from "@/app/_libs/cartActions";
 import { LocationProvider } from "@/app/_context/LocationProvider";
+import { redirect } from "next/navigation";
 
 async function page() {
-  const session = await auth();
-  const user = session?.user;
   const userProfile = await getUserProfile();
+  const userId = userProfile.id;
   const cartItems = await getCartItems();
+
+  if (!userId) throw new Error("User not found");
+
+  if (!cartItems || cartItems.length === 0) redirect("/cart");
 
   return (
     <LocationProvider>
@@ -22,8 +25,8 @@ async function page() {
             Complete your order in just a few moment
           </p>
           <div className="mt-6 flex flex-col gap-6 md:flex-row md:gap-3 lg:gap-5 md:items-start">
-            <CheckoutForm user={user} userProfile={userProfile} />
-            <OrderSummary cartItems={cartItems} />
+            <CheckoutForm user={userProfile} />
+            <OrderSummary cartItems={cartItems} user={userProfile} />
           </div>
         </div>
       </section>

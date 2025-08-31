@@ -16,6 +16,9 @@ const SelectInput = forwardRef(
     },
     ref
   ) => {
+    // Ensure we never pass `value` down accidentally
+    const { value, ...otherProps } = rest;
+
     return (
       <div className="relative w-full">
         <div
@@ -37,7 +40,7 @@ const SelectInput = forwardRef(
             className={`appearance-none bg-cream-100 w-full pr-10 pl-3 py-2 h-10 text-brown-300 text-sm 
               focus:outline-none cursor-pointer capitalize ${className}`}
             aria-label="Select option"
-            {...rest}
+            {...otherProps} // no `value` passed here
           >
             {children}
           </select>

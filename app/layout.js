@@ -26,7 +26,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full ">
       <body
         className={`${rowdies.variable} ${pacifico.variable}  antialiased h-full`}
       >

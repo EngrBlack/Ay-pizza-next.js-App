@@ -6,7 +6,7 @@ import { BiLogoPaypal } from "react-icons/bi";
 import { HiCreditCard, HiMiniBanknotes } from "react-icons/hi2";
 
 function PaymentMethod() {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("paypal");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
 
   async function handleChange(e) {
     const value = e.target.value;

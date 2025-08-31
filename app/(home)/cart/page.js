@@ -9,7 +9,6 @@ export const metadata = {
 
 async function page() {
   const cartItems = (await getCartItems()) || [];
-  console.log(cartItems);
 
   const totalCartQuantity = cartItems.reduce(
     (accu, curItem) => accu + Number(curItem?.quantity),

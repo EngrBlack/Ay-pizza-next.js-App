@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 
 export const PAGE_SIZE = 10;
-export const tax = 0;
 export const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
@@ -51,3 +50,20 @@ export const locations = [
   { name: "Onipanu", price: 2500 },
   { name: "Gbagada", price: 3000 },
 ];
+
+export const calcItemTotal = (item) => {
+  const rawBasePrice =
+    item?.selected_size?.price ?? item?.menu_id?.base_price ?? 0;
+
+  const basePrice = item?.menu_id?.discount
+    ? Number(rawBasePrice) - Number(item.menu_id.discount)
+    : Number(rawBasePrice);
+
+  const toppingsPrice =
+    item?.selected_toppings?.reduce(
+      (sum, t) => sum + Number(t?.price || 0),
+      0
+    ) || 0;
+
+  return (basePrice + toppingsPrice) * (item?.quantity || 1);
+};
