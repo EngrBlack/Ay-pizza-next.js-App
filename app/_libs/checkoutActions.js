@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "./auth";
 import { supabase } from "./supabase";
+import { nanoid } from "nanoid";
 
 export async function getUserProfile() {
   const session = await auth();

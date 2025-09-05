@@ -1,4 +1,5 @@
 import { formatDate } from "@/app/_helper/helper";
+import { updateUserImage } from "@/app/_libs/checkoutActions";
 import Image from "next/image";
 import {
   HiCalendar,
@@ -7,24 +8,26 @@ import {
   HiPhone,
 } from "react-icons/hi2";
 import ContactCard from "./ContactCard";
-import { useState } from "react";
-import { updateUserImage } from "@/app/_libs/checkoutActions";
+import toast from "react-hot-toast";
 
 function ProfileCard({ user }) {
   const { fullName, image } = user;
-  const [profileImage, setProfileImage] = useState("");
 
   async function handleUpdateProfileImage(e) {
     const file = e.target.files[0];
     if (!file) return;
 
     try {
+      // Show loading toast
+      const toastId = toast.loading("Updating profile image...");
       await updateUserImage({ image: file });
-      setProfileImage(URL.createObjectURL(file)); // save preview
+      // Success
+      toast.success("Profile image updated successfully!", { id: toastId });
     } catch (error) {
-      console.error("Image update failed:", error.message);
+      toast.error(`Failed to update image: ${error.message}`);
     }
   }
+  git;
 
   return (
     <div className=" rounded border-2 border-cream-100 px-2 md:px-6 py-8 shadow-lg hover:shadow-2xl trans flex flex-col gap-6 md:gap-8">
@@ -34,11 +37,7 @@ function ProfileCard({ user }) {
             <Image
               fill
               quality={20}
-              src={
-                profileImage
-                  ? URL.createObjectURL(profileImage)
-                  : image || "/user.jpg"
-              }
+              src={image || "/user.jpg"}
               alt={fullName}
               className="object-cover w-full h-full "
             />
