@@ -1,52 +1,70 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/app/_libs/supabase"; // adjust path to your client
+import { supabase } from "@/app/_libs/supabase";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req) {
   try {
-    const { reference, orderId } = await req.json();
+    const body = await req.json();
+    console.log("Incoming payload:", body);
 
-    if (!reference || !orderId) {
+    const { reference, orderId } = body;
+    const ref =
+      typeof reference === "string" ? reference : reference?.reference;
+
+    if (!ref || !orderId) {
       return NextResponse.json(
         { error: "Missing reference or orderId" },
         { status: 400 }
       );
     }
 
+    console.log("Verifying ref:", ref);
+
     // Verify with Paystack
     const verifyRes = await fetch(
-      `https://api.paystack.co/transaction/verify/${reference.reference}`,
+      `https://api.paystack.co/transaction/verify/${ref}`,
       {
         headers: {
-          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`, // secret key, not public key
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
         },
       }
     );
 
     const verifyData = await verifyRes.json();
+    console.log("Verify response:", verifyData);
 
-    if (!verifyRes.ok || verifyData.data.status !== "success") {
+    if (!verifyRes.ok || verifyData.data?.status !== "success") {
       return NextResponse.json(
         { error: "Payment not verified" },
         { status: 400 }
       );
     }
 
-    // Update order in Supabase
-    const { error } = await supabase
+    // Update Supabase
+    const { data, error } = await supabase
       .from("orders")
-      .update({ is_paid: true, paid_at: new Date().toISOString() })
-      .eq("id", orderId);
+      .update({
+        is_paid: true,
+        paid_at: new Date().toISOString(),
+        transaction_ref: ref,
+      })
+      .eq("id", orderId)
+      .select();
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+
+    console.log("Updated order:", data);
 
     revalidatePath(`/order/${orderId}`);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, order: data });
   } catch (err) {
-    console.error("Payment verification failed:", err.message);
+    console.error("Payment verification failed:", err);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: err.message },
       { status: 500 }
     );
   }

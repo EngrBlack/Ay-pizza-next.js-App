@@ -2,8 +2,7 @@
 
 import { formatCurrency } from "@/app/_helper/helper";
 import toast from "react-hot-toast";
-import { PaystackButton } from "react-paystack";
-
+import PaystackPop from "@paystack/inline-js";
 import { useRouter } from "next/navigation";
 
 function OrderedItemsSummary({ orders, user }) {
@@ -22,44 +21,46 @@ function OrderedItemsSummary({ orders, user }) {
     return null;
   }
 
-  const componentProps = {
-    email: user?.email,
-    amount: totalPrice * 100,
-    publicKey,
-    text: "Pay with PayStack",
-    currency: "NGN",
-    metadata: {
-      name: user?.fullName,
-      phone: user?.address?.contact,
-      orderId: orders?.id,
-    },
+  const pay = () => {
+    const paystack = new PaystackPop();
+    paystack.newTransaction({
+      key: publicKey,
+      email: user?.email,
+      amount: totalPrice * 100,
+      currency: "NGN",
+      metadata: {
+        name: user?.fullName,
+        phone: user?.address?.contact,
+        orderId: orders?.id,
+      },
 
-    onSuccess: async (reference) => {
-      toast.success("Payment successful, verifying...");
-      router.push("/thank-you");
+      onSuccess: async (reference) => {
+        toast.success("Payment successful, verifying...");
+        router.push("/thank-you");
 
-      try {
-        const res = await fetch("/api/verify-payment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reference, orderId: orders.id }),
-        });
+        try {
+          const res = await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reference, orderId: orders.id }),
+          });
 
-        const data = await res.json();
+          const data = await res.json();
 
-        if (res.ok) {
-          toast.success("Order Paid ✅");
-        } else {
-          toast.error(data.error || "Could not update order");
+          if (res.ok) {
+            toast.success("Order Paid ✅");
+          } else {
+            toast.error(data.error || "Could not update order");
+          }
+        } catch (err) {
+          toast.error("Verification failed");
         }
-      } catch (err) {
-        toast.error("Verification failed");
-      }
-    },
+      },
 
-    onClose: () => toast.error("Payment cancelled"),
+      onClose: () => toast.error("Payment cancelled"),
 
-    onError: () => toast.error("Payment failed"),
+      onError: () => toast.error("Payment failed"),
+    });
   };
 
   return (
@@ -82,10 +83,12 @@ function OrderedItemsSummary({ orders, user }) {
       </div>
 
       <div>
-        <PaystackButton
+        <button
+          onClick={pay}
           className="text-cream-200 bg-orangered-100 w-full font-bold p-2.5 rounded-sm shadow-lg hover:-translate-y-0.5 focus:-translate-y-0.5 active:translate-y-0 active:shadow-sm trans ease-in-out mt-2"
-          {...componentProps}
-        />
+        >
+          Pay with Paystack
+        </button>
       </div>
     </div>
   );
