@@ -27,7 +27,6 @@ function ProfileCard({ user }) {
       toast.error(`Failed to update image: ${error.message}`);
     }
   }
-  git;
 
   return (
     <div className=" rounded border-2 border-cream-100 px-2 md:px-6 py-8 shadow-lg hover:shadow-2xl trans flex flex-col gap-6 md:gap-8">
