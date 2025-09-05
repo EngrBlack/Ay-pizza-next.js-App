@@ -29,7 +29,6 @@ function ResetPasswordForm() {
 
     try {
       const res = await resetPassword(formData);
-      await revalidateRoot();
 
       if (res?.status === "success") {
         toast.success(
