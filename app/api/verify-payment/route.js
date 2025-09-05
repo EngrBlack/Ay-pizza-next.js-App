@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 export async function POST(req) {
   try {
     const body = await req.json();
-    console.log("Incoming payload:", body);
+    // console.log("Incoming payload:", body);
 
     const { reference, orderId } = body;
     const ref =
@@ -18,7 +18,7 @@ export async function POST(req) {
       );
     }
 
-    console.log("Verifying ref:", ref);
+    // console.log("Verifying ref:", ref);
 
     // Verify with Paystack
     const verifyRes = await fetch(
@@ -31,7 +31,7 @@ export async function POST(req) {
     );
 
     const verifyData = await verifyRes.json();
-    console.log("Verify response:", verifyData);
+    // console.log("Verify response:", verifyData);
 
     if (!verifyRes.ok || verifyData.data?.status !== "success") {
       return NextResponse.json(
@@ -56,7 +56,7 @@ export async function POST(req) {
       throw error;
     }
 
-    console.log("Updated order:", data);
+    // console.log("Updated order:", data);
 
     revalidatePath(`/order/${orderId}`);
 

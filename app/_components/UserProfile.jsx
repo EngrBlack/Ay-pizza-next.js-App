@@ -28,14 +28,17 @@ function UserProfile({ user }) {
       ) : (
         <div
           onClick={onCloseNav}
-          className="overflow-hidden relative border-2 border-orangered-200 rounded-full w-12 md:w-14 aspect-square "
+          className="flex flex-col items-center  font-rowdies cursor-pointer"
         >
-          <Image
-            src={user?.image || "/user.jpg"}
-            fill
-            alt="user"
-            className="object-fill w-full h-full"
-          />
+          <div className="overflow-hidden relative border-2 border-brown-300 rounded-full w-6 sm:w-8 aspect-square ">
+            <Image
+              src={user?.image || "/user.jpg"}
+              fill
+              alt="user"
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <p className="text-[10px] md:text-xs">Login</p>
         </div>
       )}
 

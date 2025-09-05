@@ -43,8 +43,8 @@ function MenuItem({ menu, carts }) {
   }
 
   return (
-    <li className=" flex gap-2 sm:gap-4 border-2 border-cream-100 rounded-md p-2 pr-4 shadow-lg hover:shadow-2xl hover:border-orangered-100 trans group">
-      <div className="w-28 min-w-26 aspect-square overflow-hidden sm:w-28 sm:min-w-24  rounded-md lg:w-34 xl:w-38">
+    <li className=" flex gap-2 sm:gap-4 border-2 border-cream-100 rounded-md p-2  shadow-lg hover:shadow-2xl hover:border-orangered-100 trans group">
+      <div className="w-26 min-w-26 aspect-square overflow-hidden sm:w-28 sm:min-w-24  rounded-md lg:w-34 xl:w-38">
         <Image
           src={image}
           alt=""
@@ -90,7 +90,18 @@ function MenuItem({ menu, carts }) {
           </MenuModal>
 
           {size ? (
-            <Button type="danger">Select Option</Button>
+            <MenuModal>
+              <MenuModal.Open openWindowName="menuDetails">
+                <Button type="danger">Select Option</Button>
+              </MenuModal.Open>
+              <MenuModal.Window openWindowName="menuDetails">
+                <MenuDetails
+                  menuId={menuId}
+                  quantity={quantity}
+                  cartId={cartItem?.id}
+                />
+              </MenuModal.Window>
+            </MenuModal>
           ) : !isInCart ? (
             <Button
               type="danger"
