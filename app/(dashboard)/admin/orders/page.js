@@ -10,9 +10,6 @@ async function page() {
   await requireAdmin();
   const orders = await getAllOrders();
 
-  const id = "wduyryr134dvdvkj31dw";
-  console.log(id.slice(-10, id.length + 1).padStart(-6, "*"));
-
   return (
     <section className="bg-cream-200 ">
       <div className="px-4 sm:px-6 py-4 sm:py-10 xl:px-10 lg:py-10 w-full tracking-wide bg-cream-200">

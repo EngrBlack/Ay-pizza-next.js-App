@@ -1,4 +1,4 @@
-import { formatCurrency, formatDateTime } from "@/app/_helper/helper";
+import { formatCurrency, formatDateTime, maskId } from "@/app/_helper/helper";
 import { HiEllipsisVertical } from "react-icons/hi2";
 
 function OrderItem({ order }) {
@@ -7,18 +7,18 @@ function OrderItem({ order }) {
     created_at: createdAt,
     total_price: totalPrice,
     delivery_address: { fullName },
+    paid_at: paidAt,
+    is_delivered: isDelivered,
   } = order;
 
   return (
     <>
-      <div>
-        {orderId.slice(-6).padStart(orderId.length, "*")}
-      </div>
+      <div>{maskId(orderId, 6)}</div>
       <div>{formatDateTime(createdAt)}</div>
       <div>{fullName}</div>
       <div>{formatCurrency(totalPrice)}</div>
-      <div>Dec 28, 2025, 8:12 PM</div>
-      <div>Dec 15, 2025, 8:12 PM</div>
+      <div>{formatDateTime(paidAt) || "Not Paid"}</div>
+      <div>{isDelivered ? "Delivered" : "Not Delivered"}</div>
       <div>
         <HiEllipsisVertical />
       </div>

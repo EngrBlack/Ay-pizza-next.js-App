@@ -1,18 +1,23 @@
+import { maskId } from "@/app/_helper/helper";
 import { HiEllipsisVertical } from "react-icons/hi2";
 
-function User() {
+function User({ user }) {
   return (
     <>
-      <div>...tu674</div>
+      <div>{maskId(user?.id, 8)}</div>
       <div className=" flex items-center gap-4">
         <figure className="w-10 aspect-auto rounded-full overflow-hidden">
           <img src="/user.jpg" alt=" " className="w-full h-full object-cover" />
         </figure>
-        <span>Gabriel Uchenna</span>
+        <span>{user?.fullName || "No Name"}</span>
       </div>
-      <div>gabrieluchenna@mail.com</div>
-      <div className="bg-brown-300 text-cream-200 rounded-full py-0.5 px-3">
-        Admin
+      <div>{user?.email}</div>
+      <div
+        className={` text-cream-200 rounded-full py-0.5 px-3 capitalize ${
+          user?.role === "admin" ? "bg-brown " : "bg-brown-300"
+        }`}
+      >
+        {user?.role}
       </div>
       <div>
         <HiEllipsisVertical />

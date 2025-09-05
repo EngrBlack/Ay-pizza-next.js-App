@@ -12,6 +12,8 @@ import {
   HiQueueList,
 } from "react-icons/hi2";
 import Logo from "../_components/Logo";
+import { logOut } from "../_libs/authActions";
+import toast from "react-hot-toast";
 
 const linkData = [
   { name: "Dashboard", icon: <HiOutlineHome />, href: "/admin" },
@@ -32,6 +34,16 @@ const linkData = [
 function DashboardSibebarNavigation({ isOpen, onOpen }) {
   const router = useRouter();
   const pathName = usePathname();
+
+  async function handleLogout() {
+    const res = await logOut();
+    if (res.status === "success") {
+      toast.success("Logout successfully");
+      router.push("/");
+    } else {
+      toast.error("Cound not Logout user" || res.message);
+    }
+  }
 
   return (
     <>
@@ -87,7 +99,7 @@ function DashboardSibebarNavigation({ isOpen, onOpen }) {
               </li>
               <li>
                 <button
-                  onClick={() => router.push("/login")}
+                  onClick={handleLogout}
                   className={`flex items-center gap-2 cursor-pointer hover:bg-cream-200 hover:text-brown rounded-xs py-1.5 pl-2 pr-12 trans w-full`}
                 >
                   <span className="*:text-xl ">

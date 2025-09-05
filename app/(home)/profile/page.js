@@ -1,18 +1,16 @@
-import { getCurrentUser } from "@/app/_libs/authActions";
+import { getUserProfile } from "@/app/_libs/checkoutActions";
 import UserProfileDetails from "./UserProfileDetails";
-import { auth } from "@/app/_libs/auth";
 
-export const metadata = { title: "Profile" };
+export const metadata = { title: "My Profile" };
 
 async function page() {
-  const session = await auth();
-  const user = session?.user;
-  console.log(user);
+  const useProfile = await getUserProfile();
+  console.log(useProfile);
 
   return (
     <section className="bg-cream-200">
       <div className="px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
-        <UserProfileDetails user={user} />
+        <UserProfileDetails user={useProfile} />
       </div>
     </section>
   );

@@ -7,7 +7,7 @@ import {
   HiArrowLeftEndOnRectangle,
   HiArrowRightEndOnRectangle,
   HiMiniMoon,
-  HiMiniUserGroup,
+  HiMiniSquares2X2,
   HiOutlineInformationCircle,
   HiUser,
 } from "react-icons/hi2";
@@ -61,7 +61,7 @@ function ProfileNavigation({ onCloseNav, user }) {
             href="/admin"
             className="flex items-center gap-2 hover:bg-brown hover:text-cream-200 rounded-xs py-1.5 px-2 pr-5 md:pr-12  whitespace-nowrap"
           >
-            <HiMiniUserGroup /> <span>Admin</span>
+            <HiMiniSquares2X2 /> <span>Dashboard</span>
           </Link>
         </li>
       )}

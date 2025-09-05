@@ -27,7 +27,7 @@ function UpdateUserForm({ onCloseModal }) {
       </h1>
 
       <div className="mt-0 flex flex-col gap-2 md:gap-4">
-        {/* <InputGroup label="Name:">
+        <InputGroup label="Name:">
           <input
             className="input "
             type="text"
@@ -41,7 +41,7 @@ function UpdateUserForm({ onCloseModal }) {
         </InputGroup>
         <InputGroup label="Image">
           <input className="input " type="file" name="image" id="image" />
-        </InputGroup> */}
+        </InputGroup>
         <div>
           <label className="font-bold text-brown-300  tracking-wide">
             Role

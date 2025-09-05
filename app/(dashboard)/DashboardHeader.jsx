@@ -16,7 +16,6 @@ function Navigation({ onOpen }) {
         <HiBars3BottomLeft />
       </div>
       <SearchBar />
-
       <User />
     </header>
   );

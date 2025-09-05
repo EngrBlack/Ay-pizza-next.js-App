@@ -1,3 +1,5 @@
+"use client";
+
 import { formatCurrency } from "@/app/_helper/helper";
 import Image from "next/image";
 
@@ -12,7 +14,6 @@ function OrderedItem({ orderItem }) {
   const price = Number(orderItem?.selected_size?.price) || Number(basePrice);
   const toppingsPrice =
     toppings?.reduce((accu, cur) => accu + cur?.price, 0) || 0;
-  console.log(toppingsPrice);
 
   return (
     <div className="grid grid-cols-[auto_1fr_auto]  gap-2 border-b-1 border-brown-100 py-2.5">

@@ -5,6 +5,10 @@ import { getUserProfile } from "@/app/_libs/checkoutActions";
 import { LocationProvider } from "@/app/_context/LocationProvider";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "Checkout",
+};
+
 async function page() {
   const userProfile = await getUserProfile();
   const userId = userProfile.id;

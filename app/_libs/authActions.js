@@ -38,6 +38,7 @@ export async function logInWithGoogle() {
 export async function logOut() {
   try {
     await signOut({ redirect: false });
+    revalidatePath("/"); // clears any cached data for home
     return { status: "success" };
   } catch (err) {
     return { status: "error", message: "Logout failed" };

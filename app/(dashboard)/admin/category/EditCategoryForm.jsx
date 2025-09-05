@@ -6,7 +6,7 @@ import { createEditCategory } from "@/app/_libs/categoryActions";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-function AddCategoryForm({ onCloseModal }) {
+function EditCategoryForm() {
   const {
     register,
     handleSubmit,
@@ -14,7 +14,7 @@ function AddCategoryForm({ onCloseModal }) {
     reset,
   } = useForm();
 
-  async function onAddCategory(data) {
+  async function onEditCategory(data) {
     try {
       await createEditCategory({ name: data?.name, image: data?.image[0] });
       onCloseModal?.();
@@ -22,14 +22,13 @@ function AddCategoryForm({ onCloseModal }) {
       reset();
     } catch (err) {
       toast.error(`Failed to create category: ${err.message}`);
-      reset();
     }
   }
 
   return (
-    <form action="" onSubmit={handleSubmit(onAddCategory)}>
+    <form action="" onSubmit={handleSubmit(onEditCategory)}>
       <h1 className="font-rowdies capitalize text-2xl bg-transparent bg-linear-to-r from-gradient-1 to-gradient-2 bg-clip-text text-transparent  mb-2.5">
-        Add Category
+        Edit Category
       </h1>
 
       <div className="mt-0 flex flex-col gap-2 md:gap-4">
@@ -65,4 +64,4 @@ function AddCategoryForm({ onCloseModal }) {
   );
 }
 
-export default AddCategoryForm;
+export default EditCategoryForm;

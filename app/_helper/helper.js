@@ -29,6 +29,14 @@ export function formatDateTime(dateString) {
   return isNaN(date) ? "" : format(date, "do MMMM, yyyy - h:mm a");
 }
 
+export function maskId(value, distance = 4) {
+  if (!value) return "";
+  if (distance <= 0) return value;
+
+  const visible = value.slice(-distance);
+  return `....${visible}`;
+}
+
 export const locations = [
   { name: "Others", price: 3500 },
   { name: "Inside UniLag ", price: 500 },

@@ -23,11 +23,6 @@ function OrderList({ orders }) {
           <div key={el}>{el}</div>
         ))}
       </Table.Header>
-      {/* {Array.from({ length: 10 }, (_, i) => (
-        <Table.Body key={i} className="p-2.5 ">
-          <OrderItem />
-        </Table.Body>
-      ))} */}
 
       {orders.map((order) => (
         <Table.Body key={order.id} className="p-2.5 ">

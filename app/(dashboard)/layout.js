@@ -30,7 +30,7 @@ export const metadata = {
 
 export default function Layout({ children }) {
   return (
-    <div className="flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto">
+    <div className="flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto min-h-screen">
       <AdminHeader />
       <main className="grow bg-cream-200">{children}</main>
       <ScrollToTopOnRoute />

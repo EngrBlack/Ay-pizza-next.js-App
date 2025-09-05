@@ -23,7 +23,7 @@ const navItems = [
   { href: "/contact", icon: <HiPhone />, label: "Contact" },
 ];
 
-function Navigation({ session, cartItems }) {
+function Navigation({ user, cartItems }) {
   const [openNav, setOpenNav] = useState(false);
   const router = useRouter();
   const pathName = usePathname();
@@ -101,7 +101,7 @@ function Navigation({ session, cartItems }) {
         </ul>
         <div className="flex  items-center gap-3 sm:gap-4 ml-2 relative ">
           <CartButton cartItems={cartItems} />
-          <UserProfile session={session} />
+          <UserProfile user={user} />
         </div>
       </nav>
     </header>

@@ -37,12 +37,12 @@ function PaymentMethod() {
         <InputRadio
           label="Credit / Debit Card"
           className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
-          id="stripe"
+          id="paystack"
           name="payment"
           onChange={handleChange}
           icon={<HiCreditCard />}
-          value="stripe"
-          checked={selectedPaymentMethod === "stripe"}
+          value="paystack"
+          checked={selectedPaymentMethod === "paystack"}
         />
         <InputRadio
           label="Cash on Delivery"
@@ -53,16 +53,6 @@ function PaymentMethod() {
           icon={<HiMiniBanknotes />}
           value="cod"
           checked={selectedPaymentMethod === "cod"}
-        />
-        <InputRadio
-          label="PayPal"
-          className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
-          id="paypal"
-          name="payment"
-          onChange={handleChange}
-          icon={<BiLogoPaypal />}
-          value="paypal"
-          checked={selectedPaymentMethod === "paypal"}
         />
       </div>
     </div>

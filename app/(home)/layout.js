@@ -6,6 +6,7 @@ import { getCartItems } from "@/app/_libs/cartActions";
 
 import { Toaster } from "react-hot-toast";
 import { auth } from "../_libs/auth";
+import { getUserProfile } from "../_libs/checkoutActions";
 
 export const metadata = {
   title: {
@@ -16,13 +17,13 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await auth();
+  const user = await getUserProfile();
 
   const cartItems = (await getCartItems()) || [];
 
   return (
     <div className="min-h-screen flex flex-col bg-cream-200 text-brown 2xl:max-w-screen-2xl 2xl:mx-auto">
-      <Navigation session={session} cartItems={cartItems} />
+      <Navigation user={user} cartItems={cartItems} />
       <main className="grow bg-cream-200 font">{children}</main>
       <Footer />
       <ScrollToTopOnRoute />
