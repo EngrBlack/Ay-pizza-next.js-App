@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import {
+  HiArrowPath,
   HiInformationCircle,
   HiMapPin,
   HiPaperAirplane,
@@ -18,10 +19,10 @@ import {
 } from "react-icons/hi2";
 
 function UpdateAddressForm({ onCloseModal, user }) {
-  const { address } = user;
+  const { address, fullName } = user;
 
-  const firstName = address?.fullName.split(" ").at(0);
-  const lastName = address?.fullName.split(" ").at(1);
+  const firstName = fullName.split(" ").at(0) || "";
+  const lastName = fullName.split(" ").at(1) || "";
 
   console.log(firstName);
 
@@ -197,8 +198,18 @@ function UpdateAddressForm({ onCloseModal, user }) {
 
         <div className="flex items-center justify-end gap-4 mt-2">
           <Button onClick={onCloseModal}>Cancel</Button>
-          <Button type="danger" position="right" icon={<HiPaperAirplane />}>
-            Save
+          <Button
+            type="danger"
+            position={isSubmitting ? "left" : "right"}
+            icon={
+              isSubmitting ? (
+                <HiArrowPath className="animate-spin" />
+              ) : (
+                <HiPaperAirplane />
+              )
+            }
+          >
+            {isSubmitting ? "Editing..." : "Save"}
           </Button>
         </div>
       </div>
