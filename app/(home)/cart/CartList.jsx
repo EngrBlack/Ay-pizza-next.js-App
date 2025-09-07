@@ -48,7 +48,11 @@ function CartList({ cartItems, totalCartQuantity }) {
         </button>
 
         {isOpen && cartItems.length > 0 && (
-          <ConfirmDelete onClose={close} onDelete={handleClearCart} />
+          <ConfirmDelete
+            onClose={close}
+            onDelete={handleClearCart}
+            resource="Cart"
+          />
         )}
       </div>
       {cartItems.length ? (

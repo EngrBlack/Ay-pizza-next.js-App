@@ -3,17 +3,15 @@
 import Button from "@/app/_components/Button";
 import InputGroup from "@/app/_components/InputGroup";
 import SelectInput from "@/app/_components/SelectInput";
-import UpdateItemQuantity from "@/app/_components/UpdateItemQuantity";
+import Spinner from "@/app/_components/Spinner";
 import { formatCurrency } from "@/app/_helper/helper";
+import { addToCart } from "@/app/_libs/cartActions";
+import { getMenuById } from "@/app/_libs/menuActions";
+import Image from "next/image";
 import { useEffect, useState, useTransition } from "react";
+import toast from "react-hot-toast";
 import { HiChevronUp, HiShoppingCart } from "react-icons/hi2";
 import MenuToppings from "./MenuToppings";
-import { getMenuById } from "@/app/_libs/menuActions";
-import Spinner from "@/app/_components/Spinner";
-import Image from "next/image";
-import toast from "react-hot-toast";
-import { addToCart } from "@/app/_libs/cartActions";
-import SpinnerMini from "@/app/_components/SpinnerMini";
 
 function MenuDetails({ menuId, quantity, cartId }) {
   const [openToppings, setOpenToppings] = useState(false);
@@ -79,96 +77,98 @@ function MenuDetails({ menuId, quantity, cartId }) {
   }, [menuId]);
 
   return (
-    <div className=" grid gap-2 md:grid-cols-2 md:gap-3 xl:gap-4 relative w-full">
+    <div className=" flex flex-col gap-2  md:gap-3 xl:gap-4 ">
       {isLoading ? (
         <Spinner />
       ) : (
         <>
-          <figure className="col-span-2 md:col-span-1 rounded-md overflow-hidden aspect-3/2 md:aspect-square md:h-full relative">
-            <Image
-              fill
-              src={menuItem?.image || "/pizza-1jpg"}
-              alt={menuItem?.name || "Menu item"}
-              className="w-full h-full object-cover"
-            />
-          </figure>
+          <div className="mt-2 grid gap-2 sm:gap-4 sm:grid-cols-2  w-full">
+            <figure className="w-full col-span-2 md:col-span-1 rounded-md overflow-hidden aspect-3/2 md:aspect-square md:h-full relative">
+              <Image
+                fill
+                src={menuItem?.image || "/pizza-1jpg"}
+                alt={menuItem?.name || "Menu item"}
+                className="w-full h-full object-cover sm:object-fill"
+              />
+            </figure>
 
-          <div className="col-span-2  md:col-span-1 flex flex-col gap-3 overflow-hidden">
-            <h1 className="font-rowdies text-lg lg:text-xl xl:text-2xl mt-2 md:mt-3 lg:mt-0">
-              {menuItem?.name}
-            </h1>
+            <div className="col-span-2  md:col-span-1 flex flex-col gap-3 overflow-hidden">
+              <h1 className="font-rowdies text-lg lg:text-xl xl:text-2xl mt-2 md:mt-3 lg:mt-0">
+                {menuItem?.name}
+              </h1>
 
-            {sizes.length > 0 && (
-              <div>
-                <p className="font-bold text-sm lg:text-base mb-1">
-                  Choose Size and Price
-                </p>
-                <SelectInput
-                  className="font-bold"
-                  value={selectedSize || ""}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                >
-                  <option value="">-- Select a size --</option>
-                  {sizes.map((size) => (
-                    <option
-                      className="capitalize"
-                      value={size.name}
-                      key={size.name}
-                    >{`${size?.name.split("_").join(" ")} - (${formatCurrency(
-                      size?.price
-                    )})`}</option>
-                  ))}
-                </SelectInput>
-              </div>
-            )}
-            {selectedToppings.length > 0 && (
-              <p className="col-span-2 text-sm text-brown-300">
-                <span className="bg-brown-200 text-cream-100 py-0.5 px-1.5 mr-1">
-                  Added:
-                </span>
-                ({" "}
-                {selectedToppings?.map((top) => (
-                  <span
-                    key={top.name}
-                    className="mr-1.5 font-rowdies text-brown-300"
+              {sizes.length > 0 && (
+                <div>
+                  <p className="font-bold text-sm lg:text-base mb-1">
+                    Choose Size and Price
+                  </p>
+                  <SelectInput
+                    className="font-bold"
+                    value={selectedSize || ""}
+                    onChange={(e) => setSelectedSize(e.target.value)}
                   >
-                    {top.name},
+                    <option value="">-- Select a size --</option>
+                    {sizes.map((size) => (
+                      <option
+                        className="capitalize"
+                        value={size.name}
+                        key={size.name}
+                      >{`${size?.name.split("_").join(" ")} - (${formatCurrency(
+                        size?.price
+                      )})`}</option>
+                    ))}
+                  </SelectInput>
+                </div>
+              )}
+              {selectedToppings.length > 0 && (
+                <p className="col-span-2 text-sm text-brown-300">
+                  <span className="bg-brown-200 text-cream-100 py-0.5 px-1.5 mr-1">
+                    Added:
                   </span>
-                ))}
-                )
-              </p>
-            )}
-            <div>
-              <div
-                className="flex justify-between items-center cursor-pointer mb-1 mt-1 sm:mt-0"
-                onClick={() => setOpenToppings((open) => !open)}
-              >
-                <span className="font-bold text-sm lg:text-base ">
-                  Extra Toppings (Optional)
-                </span>
-                <HiChevronUp
-                  className={`trans ${
-                    openToppings ? "rotate-180" : "rotate-0"
-                  }`}
-                />
-              </div>
-              <div
-                className={`flex flex-col gap-3  trans transform ${
-                  openToppings
-                    ? "translate-y-0 opacity-100 sm:overflow-y-scroll max-fit sm:max-h-44 lg:max-h-50"
-                    : "-translate-y-full opacity-0 max-h-0 overflow-hidden"
-                }`}
-              >
-                {toppings?.map((topping) => (
-                  <MenuToppings
-                    key={topping.name}
-                    topping={topping}
-                    checked={selectedToppings.some(
-                      (t) => t.name === topping.name
-                    )}
-                    onToggle={() => handleToggleTopping(topping)}
+                  ({" "}
+                  {selectedToppings?.map((top) => (
+                    <span
+                      key={top.name}
+                      className="mr-1.5 font-rowdies text-brown-300"
+                    >
+                      {top.name},
+                    </span>
+                  ))}
+                  )
+                </p>
+              )}
+              <div>
+                <div
+                  className="flex justify-between items-center cursor-pointer mb-1 mt-1 sm:mt-0"
+                  onClick={() => setOpenToppings((open) => !open)}
+                >
+                  <span className="font-bold text-sm lg:text-base ">
+                    Extra Toppings (Optional)
+                  </span>
+                  <HiChevronUp
+                    className={`trans ${
+                      openToppings ? "rotate-180" : "rotate-0"
+                    }`}
                   />
-                ))}
+                </div>
+                <div
+                  className={`flex flex-col gap-3  trans transform ${
+                    openToppings
+                      ? "translate-y-0 opacity-100 sm:overflow-y-scroll max-fit sm:max-h-44 lg:max-h-50"
+                      : "-translate-y-full opacity-0 max-h-0 overflow-hidden"
+                  }`}
+                >
+                  {toppings?.map((topping) => (
+                    <MenuToppings
+                      key={topping.name}
+                      topping={topping}
+                      checked={selectedToppings.some(
+                        (t) => t.name === topping.name
+                      )}
+                      onToggle={() => handleToggleTopping(topping)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>

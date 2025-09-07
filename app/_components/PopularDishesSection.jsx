@@ -2,12 +2,12 @@ import DishesCard from "./DishesCard";
 import Heading from "./Heading";
 
 const dataList = [
-  { name: "Pizzas", image: "/pizza-1.jpg" },
-  { name: "Side Dishes", image: "/chicken-chips.jpg" },
-  { name: "Burger", image: "/burger.jpg" },
-  { name: "Ice Cream ", image: "/icecream-2.jpg" },
-  { name: "MilkShakes", image: "/milkshake-1.jpg" },
-  { name: "Drinks", image: "/drinks.jpg" },
+  { name: "Pizzas", image: "/pizza-1.jpg", category: "pizza" },
+  { name: "Side Dishes", image: "/chicken-chips.jpg", category: "side" },
+  { name: "Burger", image: "/burger.jpg", category: "burger" },
+  { name: "Ice Cream ", image: "/icecream-2.jpg", category: "ice_cream" },
+  { name: "MilkShakes", image: "/milkshake-1.jpg", category: "milkshake" },
+  { name: "Drinks", image: "/drinks.jpg", category: "drinks" },
 ];
 
 function PopularDishesSection() {
@@ -22,7 +22,7 @@ function PopularDishesSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-2 md:gap-4 pt-12  px-4 place-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-12 pt-12  px-4 place-items-center">
           {dataList.map((data) => (
             <DishesCard data={data} key={data.name} />
           ))}

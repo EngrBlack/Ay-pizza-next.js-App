@@ -29,7 +29,7 @@ function Navigation({ user, cartItems }) {
   const pathName = usePathname();
 
   return (
-    <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 xl:px-32 lg:px-12 bg-cream-200 lg:py-6  shadow-md z-10">
+    <header className="fixed top-0 w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 xl:px-32 lg:px-12 bg-cream-200 lg:py-6  shadow-md z-10">
       <Logo size="large" />
       <div
         className={`overlay ${openNav ? "" : "hidden"}`}
@@ -46,7 +46,7 @@ function Navigation({ user, cartItems }) {
         <ul
           className={`
     list-none fixed top-0 left-0 z-50
-    w-3/5 max-w-[50vw] h-screen px-4 pt-16
+    w-3/5 max-w-[70vw] sm:max-w-[50vw] sm:w-2/5  h-screen px-4 pt-16
     bg-nav border-r-8 border-brown
     flex flex-col space-y-4
     transition-transform duration-300 origin-left

@@ -8,8 +8,8 @@ function HeroSection() {
   const router = useRouter();
 
   return (
-    <section className="relative z-0">
-      <figure className="w-screen h-[calc(100vh-70px)] lg:h-[calc(100vh-100px)] brightness-50">
+    <section className="relative z-0 mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">
+      <figure className="w-screen h-[calc(100vh-4.5rem)] sm:h-[calc(100vh-5.5rem)] lg:h-[calc(100vh-6.5rem)]  brightness-50">
         <Image
           width={2000}
           height={2000}

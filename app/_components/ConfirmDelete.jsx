@@ -5,7 +5,7 @@ import Button from "./Button";
 import { createPortal } from "react-dom";
 import { useOutsideClick } from "../_hooks/useOutsideClick";
 
-function ConfirmDelete({ onClose, onDelete }) {
+function ConfirmDelete({ onClose, onDelete, resource }) {
   const ref = useOutsideClick(onClose, true);
 
   return createPortal(
@@ -23,7 +23,7 @@ function ConfirmDelete({ onClose, onDelete }) {
         </h3>
         <p className="text-[0.8rem] sm:text-base">
           This action cannot be undone. This will permanently delete the items
-          currently in your cart.
+          currently in your {resource}.
         </p>
 
         <div className="flex items-center justify-end gap-2 mt-2 sm:gap-4 sm:mt-4">

@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --font-display: "Pacifico", cursive;
-}
-
 /* Custom Theme */
 @theme inline {
   --color-white: #fff;
@@ -46,75 +42,6 @@
   --backgroundImage-gradient: linear-gradient(45deg, #998300, #3f0800);
   --backgroundImage-gradient-reverse: linear-gradient(-45deg, #998300, #3f0800);
 
-  --font-display: "Pacifico", cursive;
-}
-
-body {
-  font-family: var(--font-display), sans-serif;
-  background-color: var(--color-cream-100);
-}
-
-@layer components {
-  .nav-list {
-    @apply relative py-2 px-3 rounded-sm text-cream-200 hover:bg-brown 
-      transition-all duration-300 ease-in-out 
-      lg:p-0 lg:text-brown lg:font-bold lg:hover:bg-transparent 
-      lg:before:content-[''] lg:before:absolute lg:before:-bottom-1
-      lg:before:h-1 lg:before:w-0 lg:before:bg-brown lg:before:rounded-sm
-      lg:before:transition-all lg:before:duration-300 lg:before:ease-in-out
-      lg:hover:before:w-full lg:before:origin-left 
-      lg:before:left-1/2 lg:before:transform lg:before:-translate-x-1/2 
-      lg:text-lg;
-  }
-
-  .gradient {
-    @apply text-cream-200;
-    background-image: var(--backgroundImage-gradient);
-  }
-
-  .gradient:hover {
-    background-image: var(--backgroundImage-gradient-reverse);
-  }
-
-  .trans {
-    @apply transition-all duration-300;
-  }
-}
-
-@import "tailwindcss";
-
-/* Custom Theme */
-@theme inline {
-  --color-white: #fff;
-  --color-dark: rgb(42, 40, 40);
-
-  --color-grey: rgb(100, 97, 97);
-  --color-grey-50: #9e9e9e;
-
-  --color-brown: hsl(14, 65%, 9%);
-  --color-brown-50: hsla(0, 11.1%, 37.1%, 0.1);
-  --color-brown-100: hsla(6, 19.6%, 60%, 0.27);
-  --color-brown-200: hsl(7, 20%, 60%);
-  --color-brown-300: hsl(12, 20%, 44%);
-
-  --color-cream-100: hsl(20, 50%, 98%);
-  --color-cream-200: hsl(13, 31%, 94%);
-
-  --color-orangered-50: hsl(16, 87.7%, 71.4%);
-  --color-orangered-100: hsl(16, 77%, 50%);
-  --color-orangered-200: hsl(14, 86%, 42%);
-
-  --color-blue: rgba(69, 63, 240, 0.8);
-  --color-blue-100: rgba(153, 150, 247, 0.8);
-
-  --color-yellow: rgba(158, 163, 5, 0.8);
-  --color-yellow-100: rgba(231, 237, 112, 0.8);
-
-  --color-cyan: rgba(36, 213, 232, 0.8);
-  --color-cyan-100: rgba(143, 204, 245, 0.4);
-
-  --color-green: #008000;
-  /* --color-green-100: rgba(21, 153, 69, 0.8); */
   --color-green-100: rgba(60, 252, 130, 0.3);
 
   --backgroundImage-gradient: linear-gradient(45deg, #998300, #3f0800);
@@ -155,6 +82,11 @@ body {
 
   .input {
     @apply w-full border border-brown-100 text-brown-300 placeholder:text-brown-100 sm:text-base text-sm py-[8px] sm:py-2.5 px-4 rounded bg-cream-100 focus:outline-none focus:border-brown-300 transition-all duration-300 disabled:cursor-not-allowed disabled:bg-brown-100;
+  }
+
+  .gradient {
+    @apply text-cream-200;
+    background-image: var(--backgroundImage-gradient);
   }
 
   .gradient:hover {

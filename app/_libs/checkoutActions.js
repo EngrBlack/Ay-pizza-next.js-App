@@ -102,11 +102,13 @@ export async function updateDeliveryPrice(formData) {
   const { user } = await auth();
   const userId = user?.id;
   if (!userId) throw new Error("User must be logged in.");
-  const deliveryPrice = formData.get("delivery-price");
+
+  const locationData = formData.get("close_location"); // string
+  const location = JSON.parse(locationData); // { name, price }
 
   const { data, error } = await supabase
     .from("users_profile")
-    .update({ delivery_price: deliveryPrice })
+    .update({ delivery_price: location.price, closest_location: location.name })
     .eq("id", userId)
     .select();
 

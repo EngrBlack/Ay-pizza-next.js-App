@@ -31,7 +31,7 @@ function PaymentMethod({ user, orders }) {
       </p>
       <div
         className={` w-fit rounded-full py-1 px-4 font-bold text-cream-200 text-sm ${
-          isPaid ? "bg-green-500" : "bg-red-600"
+          isPaid ? "bg-green-500" : "bg-red-500"
         } `}
       >
         {isPaid ? "Paid" : "Not Paid"}
@@ -42,23 +42,26 @@ function PaymentMethod({ user, orders }) {
 
 function DeliveryAddress({ user }) {
   const address = user?.address;
+  const closestLocation = user?.closest_location;
 
   return (
     <div className="  border-2 border-cream-100 shadow-md rounded-md p-4 sm:p-6 flex flex-col gap-2">
       <h1 className="text-lg font-bold">Delivery Address: </h1>
-      <div className="text-brown-300">
+      <div className="text-brown-300 flex flex-col gap-1">
         <p className="">{address?.fullName}</p>
         <p>
           {address?.address} | {`${address?.city} | ${address?.state} State.`}
         </p>
         <p>
-          <span className="bg-brown-300 text-cream-200 py-0.5 px-2 font-bold mr-1">
-            Contact:
-          </span>
+          <span className=" font-bold mr-2">Contact:</span>
           {address.contact}
         </p>
+        <p>
+          <span className="font-bold mr-2">Closest Delivery Location:</span>
+          {closestLocation}
+        </p>
       </div>
-      <div className="bg-red w-fit rounded-full py-1 px-4 font-bold text-cream-200 text-sm ">
+      <div className="bg-red-500 w-fit rounded-full py-1 px-4 font-bold text-cream-200 text-sm ">
         Not Delivered
       </div>
     </div>

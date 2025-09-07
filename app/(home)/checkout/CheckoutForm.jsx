@@ -11,7 +11,9 @@ import DeliveryMethod from "./DeliveryMethod";
 import { useState } from "react";
 
 function CheckoutForm({ user }) {
-  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState("");
+  const deliveryMethod = user?.delivery_method;
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] =
+    useState(deliveryMethod);
 
   return (
     <div className="grow-1">
@@ -24,7 +26,7 @@ function CheckoutForm({ user }) {
         {selectedDeliveryMethod === "delivery" && (
           <DeliveryAddress user={user} />
         )}
-        <PaymentMethod />
+        <PaymentMethod user={user} />
         <AdditionalNote />
         <div className="space-y-4">
           <p className="text-sm md:text-base">

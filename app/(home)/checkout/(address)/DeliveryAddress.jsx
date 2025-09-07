@@ -1,31 +1,29 @@
 import Modal from "@/app/_components/Modal";
 import SelectInput from "@/app/_components/SelectInput";
-import { useClosestLocation } from "@/app/_context/LocationProvider";
 import { formatCurrency, locations } from "@/app/_helper/helper";
 import { HiPencilSquare } from "react-icons/hi2";
 import EmptyAddress from "./EmptyAddress";
 import UpdateAddressForm from "./UpdateAddressForm";
 
-import toast from "react-hot-toast";
 import { updateDeliveryPrice } from "@/app/_libs/checkoutActions";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 function DeliveryAddress({ user }) {
   const { address } = user;
 
-  const { selectedLocation, setSelectedLocation } = useClosestLocation();
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   async function handleDeliveryPrice(e) {
-    const { value } = e.target;
-    setSelectedLocation(value);
-    const deliveryPrice =
-      locations.find((location) => location.name === value)?.price || 0;
+    const location = JSON.parse(e.target.value); // { name, price }
+    setSelectedLocation(location);
 
     const formData = new FormData();
-    formData.append("delivery-price", deliveryPrice);
+    formData.append("close_location", JSON.stringify(location));
 
     try {
       await updateDeliveryPrice(formData);
-      toast.success(`Delivery fee added: ${formatCurrency(deliveryPrice)}`);
+      toast.success(`Delivery fee added: ${formatCurrency(location.price)}`);
     } catch (error) {
       toast.error(error.message);
     }
@@ -72,14 +70,18 @@ function DeliveryAddress({ user }) {
 
       <div>
         <p className="font-rowdies text-brown-300 mt-2 ">
-          Please select location/Delivery Fee :
+          Please select closest delivery location :
         </p>
-        <SelectInput value={selectedLocation} onChange={handleDeliveryPrice}>
-          <option>----- Select Location ------</option>
+        <SelectInput
+          value={selectedLocation ? JSON.stringify(selectedLocation) : ""}
+          name="close_location"
+          onChange={handleDeliveryPrice}
+        >
+          <option value="">----- Select Location ------</option>
           {locations.map((location) => (
-            <option key={location.name} value={location.name}>{`${
-              location.name
-            } - ${formatCurrency(location.price)}`}</option>
+            <option key={location.name} value={JSON.stringify(location)}>
+              {`${location.name} - ${formatCurrency(location.price)}`}
+            </option>
           ))}
         </SelectInput>
       </div>

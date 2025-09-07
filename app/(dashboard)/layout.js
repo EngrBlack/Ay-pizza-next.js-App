@@ -5,6 +5,7 @@ import { Pacifico, Rowdies } from "next/font/google";
 import "../globals.css";
 
 import AdminHeader from "./AdminHeader";
+import { Toaster } from "react-hot-toast";
 
 export const pacifico = Pacifico({
   weight: "400",
@@ -35,6 +36,35 @@ export default function Layout({ children }) {
       <main className="grow bg-cream-200">{children}</main>
       <ScrollToTopOnRoute />
       <BtnScrollToTop />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        gutter={8}
+        containerStyle={{ margin: "20px" }}
+        toastOptions={{
+          style: {
+            background: "#fff3e0",
+            color: "#5c3d2e",
+            fontSize: "16px",
+            maxWidth: "500px",
+            padding: "10px 20px",
+          },
+          success: {
+            duration: 3000,
+            iconTheme: {
+              primary: "#4caf50",
+              secondary: "#ffffff",
+            },
+          },
+          error: {
+            duration: 5000,
+            iconTheme: {
+              primary: "#f44336",
+              secondary: "#ffffff",
+            },
+          },
+        }}
+      />
     </div>
   );
 }

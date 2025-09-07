@@ -16,7 +16,7 @@ function EditProfileForm({ user, onEdit }) {
   const firstName = fullName.split(" ")?.at(0);
   const lastName = fullName.split(" ")?.at(1);
 
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState(address?.state);
   const [selectedCity, setSelectedCity] = useState("");
   const lgas =
     stateData.find((state) => state.state === selectedState)?.lgas || [];
@@ -151,8 +151,8 @@ function EditProfileForm({ user, onEdit }) {
 
             <SelectInput
               id="city"
-              defaultValue={address?.city}
               error={errors?.city?.message}
+              defaultValue={address?.city}
               {...register("city", { required: "City is required" })}
               value={selectedCity}
               onChange={(e) => {

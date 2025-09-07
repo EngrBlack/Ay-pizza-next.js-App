@@ -1,9 +1,9 @@
 import { formatDate } from "@/app/_helper/helper";
 import Image from "next/image";
-import { HiEllipsisVertical } from "react-icons/hi2";
+import CategoryGroupedButton from "./CategoryGroupedButton";
 
-function CategoryItem({ category }) {
-  const { name, created_at: createdAt, image, id } = category;
+function CategoryItem({ category, onDeleteCategory }) {
+  const { name, created_at: createdAt, image, id: categoryId } = category;
 
   return (
     <>
@@ -22,7 +22,10 @@ function CategoryItem({ category }) {
 
       <div>{formatDate(createdAt)}</div>
       <div>
-        <HiEllipsisVertical />
+        <CategoryGroupedButton
+          category={category}
+          onDeleteCategory={onDeleteCategory}
+        />
       </div>
     </>
   );

@@ -2,11 +2,12 @@ import InputRadio from "@/app/_components/InputRadio";
 import { paymentMethod } from "@/app/_libs/checkoutActions";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { BiLogoPaypal } from "react-icons/bi";
 import { HiCreditCard, HiMiniBanknotes } from "react-icons/hi2";
 
-function PaymentMethod() {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+function PaymentMethod({ user }) {
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
+    user?.payment_method
+  );
 
   async function handleChange(e) {
     const value = e.target.value;
@@ -35,7 +36,7 @@ function PaymentMethod() {
       </div>
       <div className="flex flex-col gap-3">
         <InputRadio
-          label="Credit / Debit Card"
+          label="Credit / Debit Card (PayStack)"
           className="gap-2 px-4 py-2  border trans border-brown-100 rounded  hover:border-brown-300 "
           id="paystack"
           name="payment"

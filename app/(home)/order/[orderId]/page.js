@@ -16,7 +16,7 @@ async function page({ params }) {
   console.log(orders);
 
   return (
-    <section className=" px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
+    <section className=" px-4 mt-[4rem] sm:mt-[5rem] lg:mt-[6rem] lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
       <h1 className="font-rowdies text-lg sm:text-xl md:text-2xl mb-4">
         Order: ({maskId(orderId, 10)})
       </h1>
