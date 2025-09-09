@@ -17,7 +17,7 @@ function MenuList({ menus, count, carts }) {
         variants={framerContainer}
         initial="hidden"
         animate="show"
-        className="grid gap-4 md:grid-cols-2 lg:gap-6 "
+        className="grid  gap-4 md:grid-cols-2 lg:gap-6 "
       >
         {menus.map((menu) => (
           <MenuItem menu={menu} key={menu.id} carts={carts} />
