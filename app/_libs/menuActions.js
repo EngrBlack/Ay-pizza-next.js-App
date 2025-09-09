@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 
 export async function getMenus(filter, sortBy, page) {
@@ -61,4 +62,17 @@ export async function getMenuById(id) {
 
   if (error) throw new Error(`Menu could not be loaded: ${error.message}`);
   return data;
+}
+
+export async function deleteMenuById(menuId) {
+  const { error } = await supabase
+    .from("menus")
+    .delete()
+    .eq("id", menuId)
+    .single();
+
+  if (error) throw new Error(`Menu could not be delete: ${error.message}`);
+
+  revalidatePath("/cart");
+  return true;
 }

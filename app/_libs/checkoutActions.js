@@ -9,15 +9,12 @@ export async function getUserProfile() {
   const session = await auth();
   const userId = session?.user?.id;
   if (!userId) return null;
-
   const { data, error } = await supabase
     .from("users_profile")
     .select("*")
     .eq("id", userId)
     .single();
-
-  if (error) throw new Error(error.message || "Could not user profile.");
-
+  if (error) throw new Error(error.message || "Could not get user profile.");
   return data;
 }
 
@@ -39,6 +36,7 @@ export async function updateUserProfile(formData) {
     .update({
       fullName: updateData.fullName,
       address: {
+        fullName: updateData.fullName,
         address: updateData.address,
         contact: updateData.contact,
         state: updateData.state,

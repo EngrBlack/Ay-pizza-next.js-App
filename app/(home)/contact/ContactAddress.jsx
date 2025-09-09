@@ -2,9 +2,10 @@ import {
   HiOutlineClock,
   HiOutlineMapPin,
   HiOutlinePhone,
-  HiPhone,
 } from "react-icons/hi2";
 import ContactCard from "./ContactCard";
+import { motion } from "framer-motion";
+import { container } from "@/app/_helper/framerMotion";
 
 const dataList = [
   {
@@ -29,11 +30,17 @@ const dataList = [
 
 function ContactAddress() {
   return (
-    <div className="flex flex-col gap-5 basis-1/2">
+    <motion.ul
+      variants={container}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ amount: 0.2 }}
+      className="flex flex-col gap-5 basis-1/2"
+    >
       {dataList.map((data) => (
         <ContactCard data={data} key={data.title} />
       ))}
-    </div>
+    </motion.ul>
   );
 }
 

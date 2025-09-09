@@ -20,16 +20,23 @@ function OrderSummary({ cartItems, user }) {
   const taxPrice = user?.tax_price ?? 0;
   const totalPrice = itemsPrice + deliveryPrice + taxPrice;
 
-  async function handlePlaceOrder() {
+  function handlePlaceOrder() {
     try {
-      const order = await placeOrder();
-      if (order?.success === false) {
-        toast.error(order.message);
-        if (order.redirectTo) router.push(order.redirectTo);
-        return;
-      }
-      toast.success("Order placed successfully! 🎉");
-      startTransition(() => {
+      startTransition(async () => {
+        const order = await placeOrder();
+
+        if (!order) {
+          toast.error("No response from server.");
+          return;
+        }
+
+        if (order.success === false) {
+          toast.error(order.message || "Order failed");
+          if (order.redirectTo) router.push(order.redirectTo);
+          return;
+        }
+
+        toast.success("Order placed successfully! 🎉");
         router.push(`/order/${order.id}`);
       });
     } catch (err) {

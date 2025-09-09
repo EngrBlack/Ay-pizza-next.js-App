@@ -2,6 +2,8 @@
 
 import Table from "@/app/_components/Table";
 import OrderItem from "./OrderItem";
+import { useOptimistic } from "react";
+import { deleteOrderById } from "@/app/_libs/orderActions";
 
 const headers = [
   "ID",
@@ -14,7 +16,17 @@ const headers = [
 ];
 
 function OrderList({ orders }) {
-  console.log(orders);
+  const [optimisticOrders, optimisticDelete] = useOptimistic(
+    orders,
+    function (curOrders, orderId) {
+      return curOrders.filter((item) => item.id !== orderId);
+    }
+  );
+
+  async function handleDeleteOrder(orderId) {
+    optimisticDelete(orderId);
+    await deleteOrderById(orderId);
+  }
 
   return (
     <Table size="grid-cols-7" className="p-6">
@@ -24,9 +36,9 @@ function OrderList({ orders }) {
         ))}
       </Table.Header>
 
-      {orders.map((order) => (
+      {optimisticOrders.map((order) => (
         <Table.Body key={order.id} className="p-2.5 ">
-          <OrderItem order={order} />
+          <OrderItem order={order} onDeleteOrder={handleDeleteOrder} />
         </Table.Body>
       ))}
     </Table>

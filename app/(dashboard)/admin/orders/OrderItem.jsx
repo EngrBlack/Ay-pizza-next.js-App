@@ -1,7 +1,7 @@
 import { formatCurrency, formatDateTime, maskId } from "@/app/_helper/helper";
-import { HiEllipsisVertical } from "react-icons/hi2";
+import OrderGroupedButton from "./OrderGroupedButton";
 
-function OrderItem({ order }) {
+function OrderItem({ order, onDeleteOrder }) {
   const {
     id: orderId,
     created_at: createdAt,
@@ -20,7 +20,7 @@ function OrderItem({ order }) {
       <div>{formatDateTime(paidAt) || "Not Paid"}</div>
       <div>{isDelivered ? "Delivered" : "Not Delivered"}</div>
       <div>
-        <HiEllipsisVertical />
+        <OrderGroupedButton orderId={orderId} onDeleteOrder={onDeleteOrder} />
       </div>
     </>
   );

@@ -102,7 +102,18 @@ export async function clearCartItems() {
 }
 
 export async function removeCartItem(id) {
-  const { error } = await supabase.from("carts").delete().eq("id", id);
+  const { user } = await auth();
+  const userId = user?.id;
+  if (!userId) throw new Error("User must be logged in to add to cart");
+
+  const { error } = await supabase
+    .from("carts")
+    .delete()
+    .eq("user_id", userId)
+    .eq("id", id)
+    .select()
+    .single();
+
   if (error) throw new Error("Could not remove cart item");
   revalidatePath("/cart");
   return true;

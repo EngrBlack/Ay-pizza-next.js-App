@@ -1,5 +1,6 @@
 import Button from "@/app/_components/Button";
 import InputGroup from "@/app/_components/InputGroup";
+import { motion } from "framer-motion";
 import {
   HiEnvelope,
   HiMiniChatBubbleOvalLeft,
@@ -9,7 +10,13 @@ import {
 
 function HelpContactForm() {
   return (
-    <div className=" rounded border-2 border-cream-100 p-3 sm:p-6 shadow-lg hover:shadow-2xl trans">
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      className=" rounded border-2 border-cream-100 p-3 sm:p-6 shadow-lg hover:shadow-2xl trans"
+    >
       <form action="">
         <h1 className="font-rowdies capitalize text-2xl bg-transparent sm:text-3xl xl:text-4xl relative w-fit  mb-4 md:mb-8 pb-4.5 sm:pb-4 bg-linear-to-r from-gradient-1 to-gradient-2 bg-clip-text text-transparent after:content-[''] after:absolute after:bottom-1.5 md:after:-bottom-1 after:left-0  after:w-2/6 after:h-1 sm:after:h-1.5 after:bg-orangered-100 after:rounded ">
           How can we help you?
@@ -71,7 +78,7 @@ function HelpContactForm() {
           </div>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 }
 

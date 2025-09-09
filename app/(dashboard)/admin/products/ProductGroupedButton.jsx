@@ -6,21 +6,17 @@ import {
   HiOutlineTrash,
 } from "react-icons/hi2";
 import ConfirmDelete from "../../../_components/ConfirmDelete";
-import Modal from "@/app/_components/Modal";
-import EditCategoryForm from "./EditCategoryForm";
 
-function CategoryGroupedButton({ onClick, category, onDeleteCategory }) {
-  const { id: categoryId, name } = category;
-
+function ProductGroupedButton({ menu, onDeleteMenu }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
     startTransition(async () => {
       try {
-        await onDeleteCategory(categoryId);
+        await onDeleteMenu(menu?.id);
 
-        toast.success(`Category ${name} was deleted successfully.`);
+        toast.success(`Menu ${menu?.id} was deleted successfully.`);
       } catch (error) {
         toast.error("Could not delete Category.");
       }
@@ -35,19 +31,9 @@ function CategoryGroupedButton({ onClick, category, onDeleteCategory }) {
       >
         <HiOutlineEye />
       </button> */}
-      <Modal>
-        <Modal.Open openWindowName={categoryId}>
-          <button
-            onClick={onClick}
-            className="bg-brown-300 text-cream-200 p-1 text-xl rounded shadow hover:-translate-y-0.5 active:translate-y-0 trans ease-in-out"
-          >
-            <HiOutlinePencilSquare />
-          </button>
-        </Modal.Open>
-        <Modal.Window openWindowName={categoryId}>
-          <EditCategoryForm onCloseModal category={category} />
-        </Modal.Window>
-      </Modal>
+      <button className="bg-brown-300 text-cream-200 p-1 text-xl rounded shadow hover:-translate-y-0.5 active:translate-y-0 trans ease-in-out">
+        <HiOutlinePencilSquare />
+      </button>
       <button
         onClick={() => setIsOpen(true)}
         className=" bg-orangered-100 text-cream-200 p-1 text-xl rounded shadow hover:-translate-y-0.5 active:translate-y-0 trans ease-in-out flex items-center justify-center"
@@ -62,7 +48,7 @@ function CategoryGroupedButton({ onClick, category, onDeleteCategory }) {
       {isOpen && (
         <ConfirmDelete
           onClose={() => setIsOpen(false)}
-          resource="Category"
+          resource={`Menu ${menu?.id}`}
           onDelete={handleDelete}
         />
       )}
@@ -70,4 +56,4 @@ function CategoryGroupedButton({ onClick, category, onDeleteCategory }) {
   );
 }
 
-export default CategoryGroupedButton;
+export default ProductGroupedButton;

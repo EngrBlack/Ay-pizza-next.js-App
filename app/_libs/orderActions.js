@@ -1,3 +1,6 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
 import { calcItemTotal } from "../_helper/helper";
 import { clearCartItems, getCartItems } from "./cartActions";
 import { getUserProfile } from "./checkoutActions";
@@ -131,31 +134,32 @@ export async function getOrderById(orderId) {
   return data;
 }
 
-// export async function deleteOrderById(orderId) {
-//   const userProfile = await getUserProfile();
-//   const user = userProfile;
-//   if (user?.role !== "admin") throw new Error("User is not authorized");
+export async function deleteOrderById(orderId) {
+  const userProfile = await getUserProfile();
+  const user = userProfile;
+  if (user?.role !== "admin") throw new Error("User is not authorized");
 
-//   const { error: itemsError } = await supabase
-//     .from("order_items")
-//     .delete()
-//     .eq("order_id", orderId);
+  const { error: itemsError } = await supabase
+    .from("order_items")
+    .delete()
+    .eq("order_id", orderId);
 
-//   if (itemsError) {
-//     throw new Error(`Failed to delete order items: ${itemsError.message}`);
-//   }
+  if (itemsError) {
+    throw new Error(`Failed to delete order items: ${itemsError.message}`);
+  }
 
-//   const { error: orderError } = await supabase
-//     .from("orders")
-//     .delete()
-//     .eq("id", orderId);
+  const { error: orderError } = await supabase
+    .from("orders")
+    .delete()
+    .eq("id", orderId);
 
-//   if (orderError) {
-//     throw new Error(`Failed to delete order: ${orderError.message}`);
-//   }
+  if (orderError) {
+    throw new Error(`Failed to delete order: ${orderError.message}`);
+  }
 
-//   return { success: true, message: `Order ${orderId} deleted successfully.` };
-// }
+  revalidatePath("/admin/orders");
+  return { success: true };
+}
 
 // export async function getOrderById(orderId) {
 //   const userProfile = await getUserProfile();

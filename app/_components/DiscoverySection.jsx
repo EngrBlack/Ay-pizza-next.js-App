@@ -1,3 +1,5 @@
+"use client";
+
 import DiscoveryCard from "./DiscoveryCard";
 
 const datalist = [

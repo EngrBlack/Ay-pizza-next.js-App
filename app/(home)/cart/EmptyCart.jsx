@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { HiArrowLeft } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 function EmptyCart() {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       <Link
         href="/menu"
         className="flex items-center gap-2 text-orangered-100 hover:text-brown-300 hover:underline trans mb-2 sm:mb-4"
@@ -18,7 +23,7 @@ function EmptyCart() {
           Your cart is still empty. Start adding some pizzas
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,5 +1,9 @@
+"use client";
+
+import { container } from "../_helper/framerMotion";
 import DishesCard from "./DishesCard";
 import Heading from "./Heading";
+import { motion } from "framer-motion";
 
 const dataList = [
   { name: "Pizzas", image: "/pizza-1.jpg", category: "pizza" },
@@ -14,19 +18,31 @@ function PopularDishesSection() {
   return (
     <section className="bg-cream-200">
       <div className="px-4 lg:px-12 lg:py-20 sm:px-6 xl:px-32 py-16 mx-auto w-full">
-        <div className="text-center">
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ amount: 1 }}
+          transition={{ duration: 0.6 }}
+          className="text-center"
+        >
           <Heading>Our Popular Dishes</Heading>
           <p className="font-rowdies w-[98%] mx-auto leading-[1.2] -mt-5 md:-mt-6 md:text-lg">
             Explore our most loved, metriculous dishes with authentic flavour
             and fresh ingredients
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-12 pt-12  px-4 place-items-center">
+        <motion.ul
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ amount: 0.2 }}
+          className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-12 pt-12  px-4 place-items-center"
+        >
           {dataList.map((data) => (
             <DishesCard data={data} key={data.name} />
           ))}
-        </div>
+        </motion.ul>
       </div>
     </section>
   );

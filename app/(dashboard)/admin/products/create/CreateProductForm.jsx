@@ -1,9 +1,14 @@
+"use client";
+
 import Button from "@/app/_components/Button";
 import InputCheck from "@/app/_components/InputCheck";
 import InputGroup from "@/app/_components/InputGroup";
-import { HiPaperAirplane } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
+import { HiArrowLeft, HiPaperAirplane } from "react-icons/hi2";
 
 function CreateProductForm() {
+  const router = useRouter();
+
   return (
     <div className="border-2 border-cream-100 p-6 rounded shadow-md">
       <form action=" " className="flex flex-col gap-4">
@@ -59,10 +64,18 @@ function CreateProductForm() {
             placeholder="Enter Product Description"
           ></textarea>
         </InputGroup>
-
-        <Button type="danger" className="self-end mt-2">
-          Create Product
-        </Button>
+        <div className="self-end mt-2 flex items-center gap-2 sm:gap-4">
+          <Button
+            type="primary"
+            icon={<HiArrowLeft />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
+          <Button type="danger" icon={<HiPaperAirplane />} position="rigth">
+            Create Product
+          </Button>
+        </div>
       </form>
     </div>
   );

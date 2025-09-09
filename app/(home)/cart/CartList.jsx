@@ -6,6 +6,7 @@ import ConfirmDelete from "../../_components/ConfirmDelete";
 import EmptyCart from "./EmptyCart";
 import { clearCartItems, removeCartItem } from "@/app/_libs/cartActions";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function CartList({ cartItems, totalCartQuantity }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,7 +36,12 @@ function CartList({ cartItems, totalCartQuantity }) {
   }
 
   return (
-    <div className="grow-1 border-2 border-cream-100 shadow-lg p-4 py-4 sm:p-6 lg:p-8 rounded-sm">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+      className="grow-1 border-2 border-cream-100 shadow-lg p-4 py-4 sm:p-6 lg:p-8 rounded-sm"
+    >
       <div className="flex  items-center justify-between border-b-1 border-brown-50 pb-2 sm:pb-3 mb-2 lg:mb-4">
         <h1 className=" sm:text-2xl md:text-xl lg:text-2xl  font-extrabold text-orangered-200">
           Your Shopping Cart {cartItems?.length > 0 && `(${totalCartQuantity})`}
@@ -68,7 +74,7 @@ function CartList({ cartItems, totalCartQuantity }) {
       ) : (
         <EmptyCart />
       )}
-    </div>
+    </motion.div>
   );
 }
 

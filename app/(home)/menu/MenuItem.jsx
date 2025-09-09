@@ -1,5 +1,3 @@
-"use client";
-
 import UpdateItemQuantity from "@/app/_components/UpdateItemQuantity";
 import { addToCart } from "@/app/_libs/cartActions";
 import Image from "next/image";
@@ -15,6 +13,8 @@ import Button from "../../_components/Button";
 import { formatCurrency } from "../../_helper/helper";
 import MenuDetails from "./MenuDetails";
 import MenuModal from "./MenuModal";
+import { motion } from "framer-motion";
+import { framerItem } from "@/app/_helper/framerMotion";
 
 function MenuItem({ menu, carts }) {
   const router = useRouter();
@@ -43,7 +43,10 @@ function MenuItem({ menu, carts }) {
   }
 
   return (
-    <li className=" flex gap-2 sm:gap-4 border-2 border-cream-100 rounded-md p-2  shadow-lg hover:shadow-2xl hover:border-orangered-100 trans group">
+    <motion.li
+      variants={framerItem}
+      className=" flex gap-2 sm:gap-4 border-2 border-cream-100 rounded-md p-2  shadow-lg hover:shadow-2xl hover:border-orangered-100 trans group"
+    >
       <div className="w-26 min-w-26 aspect-square overflow-hidden sm:w-28 sm:min-w-24  rounded-md lg:w-34 xl:w-38">
         <Image
           src={image}
@@ -121,7 +124,7 @@ function MenuItem({ menu, carts }) {
           )}
         </div>
       </div>
-    </li>
+    </motion.li>
   );
 }
 

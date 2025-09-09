@@ -27,7 +27,7 @@ function ConfirmDelete({ onClose, onDelete, resource }) {
         </p>
 
         <div className="flex items-center justify-end gap-2 mt-2 sm:gap-4 sm:mt-4">
-          <Button type="reset" onClick={onClose}>
+          <Button type="primary" onClick={onClose}>
             Cancel
           </Button>
           <Button

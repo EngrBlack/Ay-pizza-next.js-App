@@ -24,11 +24,8 @@ async function page({ searchParams }) {
   //PAGINATION
   const currentPage = Number(searchParams?.page) || 1;
 
-  const { data: menus, count } = await getMenus(
-    filterValue,
-    sortBy,
-    currentPage
-  );
+  const { data: menus, count } =
+    (await getMenus(filterValue, sortBy, currentPage)) || [];
 
   return (
     <section className="bg-cream-200 mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">
@@ -36,11 +33,7 @@ async function page({ searchParams }) {
         <Heading>our menu</Heading>
         <div className="relative">
           {menus.length > 0 ? (
-            <MenuList
-              menus={menus || []}
-              count={count || 0}
-              carts={cartItems}
-            />
+            <MenuList menus={menus} count={count || 0} carts={cartItems} />
           ) : (
             <EmptyMenu />
           )}

@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaPaperPlane } from "react-icons/fa6";
 import { HiEnvelope, HiLockClosed, HiUser } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 function SignupForm() {
   const router = useRouter();
@@ -54,7 +55,12 @@ function SignupForm() {
     <div className="mb-8">
       <Heading>Create Account</Heading>
       <div className="flex flex-col gap-y-8 w-[95%] mx-auto md:flex-row md:gap-8 lg:w-[80%]">
-        <div className="grow-1 border rounded-sm border-brown-100 px-5 md:px-6 lg:px-8 py-8 sm:py-10 focus-within:border-brown-200 focus-within:shadow-xl trans">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grow-1 border rounded-sm border-brown-100 px-5 md:px-6 lg:px-8 py-8 sm:py-10 focus-within:border-brown-200 focus-within:shadow-xl trans"
+        >
           <div className="w-fit mx-auto mb-4">
             <Logo />
           </div>
@@ -176,9 +182,14 @@ function SignupForm() {
               )}
             </button>
           </form>
-        </div>
+        </motion.div>
 
-        <div className="basis-[48%] md:basis-[45%] md:pt-[15%] flex flex-col gap-2 w-5/6 md:w-full mx-auto">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="basis-[48%] md:basis-[45%] md:pt-[15%] flex flex-col gap-2 w-5/6 md:w-full mx-auto"
+        >
           <h2 className="font-rowdies text-xl self-center mb-4">
             Already have an account?
           </h2>
@@ -199,7 +210,7 @@ function SignupForm() {
               privacy policy.
             </span>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

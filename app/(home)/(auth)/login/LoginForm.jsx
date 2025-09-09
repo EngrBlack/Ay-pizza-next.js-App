@@ -1,21 +1,21 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Heading from "@/app/_components/Heading";
 import InputGroup from "@/app/_components/InputGroup";
 import Logo from "@/app/_components/Logo";
 import { emailValid, passwordValid } from "@/app/_helper/helper";
 
+import InputCheck from "@/app/_components/InputCheck";
 import SpinnerMini from "@/app/_components/SpinnerMini";
-import { login, signInWithCredentials } from "@/app/_libs/authActions";
+import { signInWithCredentials } from "@/app/_libs/authActions";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaPaperPlane } from "react-icons/fa6";
 import { HiEnvelope, HiLockClosed } from "react-icons/hi2";
 import LoginWithGoogle from "./LoginWithGoogle";
-import Link from "next/link";
-import InputCheck from "@/app/_components/InputCheck";
-import { useActionState } from "react";
 
 function LoginForm() {
   const router = useRouter();
@@ -53,7 +53,12 @@ function LoginForm() {
     <div className="mb-8">
       <Heading>Log In</Heading>
       <div className="flex flex-col gap-y-8  w-[95%] mx-auto md:flex-row md:gap-8 md:items-center lg:w-[80%]">
-        <div className="grow-1 border rounded-sm border-brown-100 px-5 md:px-6 lg:px-8 py-8 sm:py-10 focus-within:border-brown-200 focus-within:shadow-xl trans">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grow-1 border rounded-sm border-brown-100 px-5 md:px-6 lg:px-8 py-8 sm:py-10 focus-within:border-brown-200 focus-within:shadow-xl trans"
+        >
           <div className="w-fit mx-auto mb-4">
             <Logo />
           </div>
@@ -140,8 +145,13 @@ function LoginForm() {
 
           <p className="text-center font-bold mt-4"> OR</p>
           <LoginWithGoogle />
-        </div>
-        <div className="basis-[48%] md:basis-[45%] flex flex-col gap-2 w-5/6 md:w-full  mx-auto ">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="basis-[48%] md:basis-[45%] flex flex-col gap-2 w-5/6 md:w-full  mx-auto "
+        >
           <h2 className="font-rowdies text-xl self-center mb-4">
             Don&apos;t have an account?
           </h2>
@@ -163,7 +173,7 @@ function LoginForm() {
               privacy policy.
             </span>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

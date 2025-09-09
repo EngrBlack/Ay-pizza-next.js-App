@@ -1,5 +1,6 @@
+"use client";
+
 import ContactAddress from "./ContactAddress";
-import ContactCard from "./ContactCard";
 import HelpContactForm from "./HelpContactForm";
 import Map from "./Map";
 

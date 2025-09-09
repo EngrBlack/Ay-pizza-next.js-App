@@ -16,10 +16,7 @@ function page() {
             restuarant in a warm inviting atmosphere.
           </p>
         </div>
-
-        <div>
-          <ContactSection />
-        </div>
+        <ContactSection />
       </div>
     </section>
   );

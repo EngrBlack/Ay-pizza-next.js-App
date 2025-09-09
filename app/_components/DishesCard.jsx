@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { item } from "../_helper/framerMotion";
 
 function DishesCard({ data }) {
   const { name, image, category } = data;
@@ -8,7 +10,8 @@ function DishesCard({ data }) {
   const router = useRouter();
 
   return (
-    <div
+    <motion.li
+      variants={item}
       onClick={() => router.push(`/menu?category=${category}`)}
       className=" group hover:shadow-xl shadow-md  w-68 aspect-square rounded-full relative trans"
     >
@@ -25,7 +28,7 @@ function DishesCard({ data }) {
           Order Now
         </button>
       </div>
-    </div>
+    </motion.li>
   );
 }
 

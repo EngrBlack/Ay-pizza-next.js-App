@@ -1,8 +1,9 @@
 import { formatCurrency, formatDate } from "@/app/_helper/helper";
 import Image from "next/image";
 import { HiEllipsisVertical } from "react-icons/hi2";
+import ProductGroupedButton from "./ProductGroupedButton";
 
-function ProductItem({ menu }) {
+function ProductItem({ menu, onDeleteMenu }) {
   const {
     name,
     id: menuId,
@@ -31,7 +32,7 @@ function ProductItem({ menu }) {
       <div>{isAvailable ? "True" : "False"}</div>
       <div>{formatDate(createdAt)}</div>
       <div>
-        <HiEllipsisVertical />
+        <ProductGroupedButton onDeleteMenu={onDeleteMenu} menu={menu} />
       </div>
     </>
   );
