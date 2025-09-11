@@ -20,7 +20,6 @@ function MenuDetails({ menuId, quantity, cartId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedToppings, setSelectedToppings] = useState([]);
-  console.log(selectedToppings);
 
   const sizes = menuItem?.size || [];
 

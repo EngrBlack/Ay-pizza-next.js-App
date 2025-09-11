@@ -134,6 +134,21 @@ export async function getOrderById(orderId) {
   return data;
 }
 
+export async function getAllUserOrders() {
+  const userProfile = await getUserProfile();
+  const userId = userProfile?.id;
+  if (!userId) throw new Error("User must be logged in.");
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, user_id(*), order_items(*, menu_id(*)) ")
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
 export async function deleteOrderById(orderId) {
   const userProfile = await getUserProfile();
   const user = userProfile;

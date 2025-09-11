@@ -1,6 +1,5 @@
 import { formatCurrency, formatDate } from "@/app/_helper/helper";
 import Image from "next/image";
-import { HiEllipsisVertical } from "react-icons/hi2";
 import ProductGroupedButton from "./ProductGroupedButton";
 
 function ProductItem({ menu, onDeleteMenu }) {
@@ -11,8 +10,9 @@ function ProductItem({ menu, onDeleteMenu }) {
     created_at: createdAt,
     is_available: isAvailable,
     base_price: basePrice,
-    category: { name: categoryName },
+    // category: { name: categoryName },
   } = menu;
+  console.log(menu);
 
   return (
     <>
@@ -27,7 +27,8 @@ function ProductItem({ menu, onDeleteMenu }) {
       </figure>
       <div>{name}</div>
       <div>{formatCurrency(basePrice)}</div>
-      <div className="capitalize">{categoryName.split("_").join(" ")}</div>
+      <div className="capitalize"></div>
+      {/* <div className="capitalize">{categoryName.split("_").join(" ")}</div> */}
 
       <div>{isAvailable ? "True" : "False"}</div>
       <div>{formatDate(createdAt)}</div>

@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
+import { auth } from "./auth";
+import { nanoid } from "nanoid";
 
 export async function getMenus(filter, sortBy, page) {
   const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE) || 10;
@@ -75,4 +77,53 @@ export async function deleteMenuById(menuId) {
 
   revalidatePath("/cart");
   return true;
+}
+
+export async function createMenu(product) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    throw new Error("User is not authorized");
+  }
+
+  let imageUrl = null;
+
+  // 1. Upload image if provided
+  if (product.image && product.image[0]) {
+    const file = product.image[0];
+    const fileName = `${nanoid(10)}-${file.name}`;
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("menu-image") // 👈 bucket name
+      .upload(fileName, file);
+
+    if (uploadError) throw new Error(uploadError.message);
+
+    // 2. Get public URL
+    const { data: publicUrl } = supabase.storage
+      .from("menu-image")
+      .getPublicUrl(fileName);
+
+    imageUrl = publicUrl.publicUrl;
+  }
+
+  // 3. Insert product into DB
+  const { data, error } = await supabase
+    .from("menus")
+    .insert([
+      {
+        name: product.name,
+        category: product.category,
+        base_price: product.base_price,
+        size: product.sizes,
+        toppings: product.toppings,
+        ingredients: product.ingredients,
+        // image: imageUrl, // ✅ uploaded image URL
+        available: product.available ?? true, // optional
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) throw new Error(error.message);
+  return data;
 }

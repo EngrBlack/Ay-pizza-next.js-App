@@ -4,7 +4,9 @@ function Flexitem({ label, children, className }) {
       className={`flex justify-between items-start text-brown-300 ${className}`}
     >
       <p className="capitalize">{label}</p>
-      <div className="font-bold basis-[60%] text-right">{children}</div>
+      <div className="font-bold basis-[75%] md:[60%] text-right">
+        {children}
+      </div>
     </div>
   );
 }

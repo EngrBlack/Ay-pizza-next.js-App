@@ -5,7 +5,6 @@ export const metadata = { title: "My Profile" };
 
 async function page() {
   const useProfile = await getUserProfile();
-  console.log(useProfile);
 
   return (
     <section className="bg-cream-200 mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">

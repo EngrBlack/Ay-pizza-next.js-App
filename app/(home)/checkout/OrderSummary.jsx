@@ -77,7 +77,7 @@ function OrderSummary({ cartItems, user }) {
       <button
         onClick={handlePlaceOrder}
         type="submit"
-        className="button w-full my-4"
+        className="button w-full my-4 disabled:cursor-not-allowed"
         disabled={isPending}
       >
         {isPending ? (
