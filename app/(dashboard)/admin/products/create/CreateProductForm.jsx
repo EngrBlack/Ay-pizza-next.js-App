@@ -8,9 +8,9 @@ import { createMenu } from "@/app/_libs/menuActions";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { HiArrowLeft, HiPaperAirplane } from "react-icons/hi2";
+import { HiArrowLeft, HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
-function CreateProductForm() {
+function CreateProductForm({ categories }) {
   const router = useRouter();
 
   const {
@@ -18,6 +18,7 @@ function CreateProductForm() {
     handleSubmit,
     watch,
     control,
+    setValue,
     reset,
     formState: { isSubmitting, errors },
   } = useForm({
@@ -49,22 +50,26 @@ function CreateProductForm() {
       // Normalize for DB
       const payload = {
         ...data,
-        sizes: ["pizza", "milkshake", "icecream"].includes(data.category)
-          ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
-          : null,
-        toppings: ["pizza", "milkshake", "icecream"].includes(data.category)
-          ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
-          : null,
-        base_price: ["drink", "sidedish"].includes(data.category)
-          ? Number(data.base_price)
-          : null,
+        sizes:
+          data.sizes.length > 0
+            ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
+            : null,
+        toppings:
+          data.toppings.length > 0
+            ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
+            : null,
+        base_price: data.base_price,
+        image: data.image,
+        discount: data.discount ?? 0,
       };
 
       await createMenu(payload);
       toast.success("Product created successfully!");
+      router.push("/admin/products");
+
       reset();
     } catch (err) {
-      toast.error(err.message || "❌ Failed to create product");
+      toast.error(err.message || " Failed to create product");
     }
   }
 
@@ -82,15 +87,27 @@ function CreateProductForm() {
               {...register("name", { required: true })}
             />
           </InputGroup>
-          <div className="basis-1/2">
+          <InputGroup label="Discount">
+            <input
+              className="input"
+              type="text"
+              inputMode="number"
+              id="name"
+              placeholder="Discount"
+              {...register("discount")}
+            />
+          </InputGroup>
+          <div className="basis-2/3">
             <h3 className="font-semibold text-brown-300">Category:</h3>
             <SelectInput {...register("category")}>
-              <option value="pizza">Pizza</option>
-              <option value="milkshake">Milkshake</option>
-              <option value="ice_cream">Ice Cream</option>
-              <option value="drink">Drink</option>
-              <option value="burger">Burger</option>
-              <option value="side">Side Dish</option>
+              {categories.map((category) => (
+                <option
+                  key={category.id}
+                  value={category?.name.replace(" ", "_")}
+                >
+                  {category?.name.replace("_", " ")}
+                </option>
+              ))}
             </SelectInput>
           </div>
         </div>
@@ -111,7 +128,14 @@ function CreateProductForm() {
               className="input grow"
               type="file"
               accept="image/*"
-              {...register("image")}
+              onChange={(e) => {
+                // store File object instead of string
+                const file = e.target.files?.[0];
+                if (file) {
+                  // replace RHF value with File object
+                  setValue("image", file, { shouldValidate: true });
+                }
+              }}
             />
           </InputGroup>
 
@@ -142,14 +166,7 @@ function CreateProductForm() {
                     type="text"
                     inputMode="number"
                     placeholder="Price"
-                    {...register(`sizes.${i}.price`, {
-                      required: true,
-                      min: {
-                        value: 0,
-                        message: "Price cannot be negative",
-                      },
-                      valueAsNumber: true,
-                    })}
+                    {...register(`sizes.${i}.price`)}
                   />
                 </InputGroup>
                 <Button type="danger" onClick={() => removeSize(i)}>
@@ -180,14 +197,7 @@ function CreateProductForm() {
                     type="text"
                     inputMode="number"
                     placeholder="Price"
-                    {...register(`toppings.${i}.price`, {
-                      required: true,
-                      min: {
-                        value: 0,
-                        message: "Price cannot be negative",
-                      },
-                      valueAsNumber: true,
-                    })}
+                    {...register(`toppings.${i}.price`)}
                   />
                 </InputGroup>
                 <Button type="danger" onClick={() => removeTopping(i)}>
@@ -217,8 +227,18 @@ function CreateProductForm() {
           >
             Back
           </Button>
-          <Button type="danger" icon={<HiPaperAirplane />} position="right">
-            {isSubmitting ? "Creating" : " Create Product"}
+          <Button
+            type="danger"
+            icon={
+              isSubmitting ? (
+                <HiArrowPath className="animate-spin" />
+              ) : (
+                <HiPaperAirplane />
+              )
+            }
+            position={isSubmitting ? "left" : "right"}
+          >
+            {isSubmitting ? "Creating..." : " Create Product"}
           </Button>
         </div>
       </form>

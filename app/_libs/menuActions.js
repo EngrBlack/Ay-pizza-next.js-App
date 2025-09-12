@@ -80,33 +80,21 @@ export async function deleteMenuById(menuId) {
 }
 
 export async function createMenu(product) {
+  //1) check if user is equal to Admin.
   const session = await auth();
   if (session?.user?.role !== "admin") {
     throw new Error("User is not authorized");
   }
 
-  let imageUrl = null;
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-  // 1. Upload image if provided
-  if (product.image && product.image[0]) {
-    const file = product.image[0];
-    const fileName = `${nanoid(10)}-${file.name}`;
+  //2) Generate a unique image name if it's a File
+  const imageName = `${nanoid(10)}-${product.image?.name}`.replaceAll("/", "");
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from("menu-image") // 👈 bucket name
-      .upload(fileName, file);
+  //3)   Build image path
+  const imagePath = `${supabaseUrl}/storage/v1/object/public/menu-image/${imageName}`;
 
-    if (uploadError) throw new Error(uploadError.message);
-
-    // 2. Get public URL
-    const { data: publicUrl } = supabase.storage
-      .from("menu-image")
-      .getPublicUrl(fileName);
-
-    imageUrl = publicUrl.publicUrl;
-  }
-
-  // 3. Insert product into DB
+  //4) Insert product into DB
   const { data, error } = await supabase
     .from("menus")
     .insert([
@@ -117,13 +105,95 @@ export async function createMenu(product) {
         size: product.sizes,
         toppings: product.toppings,
         ingredients: product.ingredients,
-        // image: imageUrl, // ✅ uploaded image URL
-        available: product.available ?? true, // optional
+        image: imagePath,
+        discount: product.discount,
+        is_available: product.available ?? true, // optional
       },
     ])
     .select()
     .single();
 
-  if (error) throw new Error(error.message);
+  if (error) throw new Error("Menu could not be created");
+
+  //5) Upload new image to Supabase storage
+  if (imageName) {
+    const { error: storageError } = await supabase.storage
+      .from("menu-image")
+      .upload(imageName, product.image, { upsert: false });
+
+    if (storageError) {
+      await supabase.from("menus").delete().eq("id", data.id);
+      throw new Error(
+        `Image upload failed: ${storageError.message}, Menu was deleted.`
+      );
+    }
+  }
+
+  //6) return and revalidate-path
+  revalidatePath("/admin/products");
   return data;
 }
+
+// export async function createEditCategory(newCategory, id) {
+//   const session = await auth();
+//   if (session?.user?.role !== "admin") {
+//     throw new Error("User is not authorized");
+//   }
+
+//   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+//   // If the image is already a URL
+//   const hasImagePath = newCategory.image?.startsWith?.("http");
+
+//   // Generate a unique image name if it's a File
+//   const imageName = hasImagePath
+//     ? null
+//     : `${nanoid(10)}-${newCategory.image?.name}`.replaceAll("/", "");
+
+//   // Build image path
+//   const imagePath = hasImagePath
+//     ? newCategory.image
+//     : `${supabaseUrl}/storage/v1/object/public/category-image/${imageName}`;
+
+//   let query = supabase.from("category");
+
+//   if (!id) {
+//     // CREATE
+//     query = query
+//       .insert([{ name: newCategory.name, image: imagePath }])
+//       .select()
+//       .single();
+//   } else {
+//     // EDIT
+//     query = query
+//       .update({ name: newCategory.name, image: imagePath })
+//       .eq("id", id)
+//       .select()
+//       .single();
+//   }
+
+//   const { data, error } = await query;
+//   if (error) throw new Error("Category could not be created/updated");
+
+//   // If image is already hosted, return
+//   if (hasImagePath) {
+//     revalidatePath("/admin/category");
+//     return data;
+//   }
+
+//   // Upload new image to Supabase storage
+//   const { error: storageError } = await supabase.storage
+//     .from("category-image")
+//     .upload(imageName, newCategory.image);
+
+//   if (storageError) {
+//     // Rollback the DB insert if image upload failed
+//     await supabase.from("category").delete().eq("id", data.id);
+//     throw new Error(
+//       `Image upload failed: ${storageError.message}, category was deleted.`
+//     );
+//   }
+
+//   revalidatePath("/admin/category");
+//   return data;
+// }

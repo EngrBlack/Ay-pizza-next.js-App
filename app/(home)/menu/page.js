@@ -3,6 +3,7 @@ import { getMenus } from "@/app/_libs/menuActions";
 import EmptyMenu from "./EmptyMenu";
 import MenuList from "./MenuList";
 import { getCartItems } from "@/app/_libs/cartActions";
+import { getCategories } from "@/app/_libs/categoryActions";
 
 export const metadata = {
   title: "Menu",
@@ -12,6 +13,7 @@ export const revalidate = 3600;
 
 async function page({ searchParams }) {
   const cartItems = await getCartItems();
+  const categories = await getCategories();
 
   // FILTER
   const filterValue = searchParams?.category || "all";
@@ -33,7 +35,12 @@ async function page({ searchParams }) {
         <Heading>our menu</Heading>
         <div className="relative">
           {menus.length > 0 ? (
-            <MenuList menus={menus} count={count || 0} carts={cartItems} />
+            <MenuList
+              menus={menus}
+              count={count || 0}
+              carts={cartItems}
+              categories={categories}
+            />
           ) : (
             <EmptyMenu />
           )}

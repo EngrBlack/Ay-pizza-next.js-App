@@ -71,7 +71,11 @@ export async function updateUserImage(newImage) {
   // Upload image first
   const { error: storageError } = await supabase.storage
     .from("profile-images")
-    .upload(imageName, newImage.image, { upsert: true });
+    .upload(imageName, newImage.image, {
+      cacheControl: "3600",
+      upsert: true,
+      contentType: newImage.image.type,
+    });
 
   if (storageError) {
     throw new Error(`Storage upload failed: ${storageError.message}`);

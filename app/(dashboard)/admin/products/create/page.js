@@ -1,5 +1,6 @@
 import { requireAdmin } from "@/app/_libs/authActions";
 import CreateProductForm from "./CreateProductForm";
+import { getCategories } from "@/app/_libs/categoryActions";
 
 export const metadata = {
   title: "Create Product",
@@ -7,6 +8,8 @@ export const metadata = {
 
 async function page() {
   await requireAdmin();
+  const categories = await getCategories();
+
   return (
     <section className="bg-cream-200 ">
       <div className="px-4 sm:px-6 py-4 sm:py-10 xl:px-10 lg:py-10 w-full tracking-wide bg-cream-200">
@@ -16,7 +19,7 @@ async function page() {
           </h1>
         </div>
         <div>
-          <CreateProductForm />
+          <CreateProductForm categories={categories} />
         </div>
       </div>
     </section>

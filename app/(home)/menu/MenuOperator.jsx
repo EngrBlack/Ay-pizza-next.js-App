@@ -2,8 +2,9 @@
 
 import Filter from "@/app/_components/Filter";
 import SortBy from "@/app/_components/SortBy";
+import { toCapitaliseWords } from "@/app/_helper/helper";
 
-function MenuOperator() {
+function MenuOperator({ categories }) {
   return (
     <div className="md:self-end flex items-center gap-2 mb-4 md:mb-6 md:justify-end md:w-[60%] lg:w-[49%]">
       <div className="basis-[50%] sm:basis-full md:basis-[50%] lg:basis-[60%] ">
@@ -11,12 +12,10 @@ function MenuOperator() {
           field="category"
           options={[
             { label: "All", value: "all" },
-            { label: "Pizza", value: "pizza" },
-            { label: "Ice Cream", value: "ice_cream" },
-            { label: "Burger", value: "burger" },
-            { label: "MilkShake", value: "milkshake" },
-            { label: "Drinks", value: "drinks" },
-            { label: "Sides Dishes", value: "side" },
+            ...categories.map((category) => ({
+              label: toCapitaliseWords(category.name),
+              value: category.name,
+            })),
           ]}
         />
       </div>

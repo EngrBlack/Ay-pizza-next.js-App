@@ -6,7 +6,7 @@ function SpecialOffer() {
   return (
     <div className="sm:w-[80%] md:w-full mx-auto ">
       <motion.h1
-        initial={{ opacity: 0, y: -40 }}
+        initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ amount: 1 }}
         transition={{ duration: 0.6 }}

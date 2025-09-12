@@ -26,7 +26,7 @@ export function formatDate(dateString) {
 export function formatDateTime(dateString) {
   if (!dateString) return "";
   const date = new Date(dateString);
-  return isNaN(date) ? "" : format(date, "do MMMM, yyyy - h:mm a");
+  return isNaN(date) ? "" : format(date, "do MMMM, yyyy  h:mm a");
 }
 
 export function maskId(value, distance = 4) {
@@ -75,3 +75,11 @@ export const calcItemTotal = (item) => {
 
   return (basePrice + toppingsPrice) * (item?.quantity || 1);
 };
+
+export function toCapitaliseWords(str) {
+  if (!str) return "";
+  return str
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}

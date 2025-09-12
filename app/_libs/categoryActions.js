@@ -84,9 +84,6 @@ export async function createEditCategory(newCategory, id) {
 
 export async function getCategories() {
   // await new Promise((resolve) => setTimeout(resolve, 40000));
-  const session = await auth();
-  if (session?.user?.role !== "admin")
-    throw new Error("User is not authorized");
 
   const { data, error } = await supabase.from("category").select("*");
   if (error) throw new Error(`Category could not be loaded: ${error.message}`);

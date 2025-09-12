@@ -21,7 +21,7 @@ function HeroSection() {
       </figure>
       <div className="absolute z-10 top-1/2 -translate-y-1/2 px-4 lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full text-cream-200 flex flex-col items-center gap-6 text-center ">
         <motion.h1
-          initial={{ opacity: 0, y: -40 }}
+          initial={{ opacity: 0, y: -20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ amount: 0.5 }}
           transition={{ duration: 0.6 }}
@@ -30,7 +30,7 @@ function HeroSection() {
           Welcome to <span className="font-pacifico">AY PIZZA</span>
         </motion.h1>
         <motion.p
-          initial={{ opacity: 0, x: -40 }}
+          initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ amount: 0.5 }}
           transition={{ duration: 0.6, delay: 0.8 }}
@@ -42,7 +42,7 @@ function HeroSection() {
           Milkshake to make your day Magical.
         </motion.p>
         <motion.p
-          initial={{ opacity: 0, x: 40 }}
+          initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ amount: 0.5 }}
           transition={{ duration: 0.6, delay: 1 }}
@@ -51,7 +51,7 @@ function HeroSection() {
           Please start placing your order right now...
         </motion.p>
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ amount: 0.5 }}
           transition={{ duration: 0.6, delay: 1.2 }}

@@ -95,7 +95,8 @@ export async function getUserOrders(orderId) {
     .select("*, user_id(*), order_items(*, menu_id(*)) ")
     .eq("user_id", userId)
     .eq("id", orderId)
-    .single();
+    .single()
+    .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
 
@@ -142,7 +143,8 @@ export async function getAllUserOrders() {
   const { data, error } = await supabase
     .from("orders")
     .select("*, user_id(*), order_items(*, menu_id(*)) ")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
 

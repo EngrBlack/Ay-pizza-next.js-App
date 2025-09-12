@@ -6,12 +6,12 @@ import MenuOperator from "./MenuOperator";
 import { motion } from "framer-motion";
 import { framerContainer } from "@/app/_helper/framerMotion";
 
-function MenuList({ menus, count, carts }) {
+function MenuList({ menus, count, carts, categories }) {
   const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
 
   return (
     <div className="sm:w-5/6 md:w-full xl:w-[95%] mx-auto flex flex-col">
-      <MenuOperator />
+      <MenuOperator categories={categories} />
 
       <motion.ul
         variants={framerContainer}

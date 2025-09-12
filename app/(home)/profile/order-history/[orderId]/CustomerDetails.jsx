@@ -30,7 +30,7 @@ function CustomerDetails({ order }) {
         {contact}
       </Flexitem>
       <Flexitem label=" Address:" className="text-sm lg:text-base">
-        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-sm ">
+        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-sm justify-self-end">
           {`${address} | ${city} | ${state}.`}
         </div>
       </Flexitem>

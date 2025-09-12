@@ -4,8 +4,8 @@ import SelectInput from "@/app/_components/SelectInput";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-function UpdateUserForm({ onCloseModal }) {
-  const { data: session, update } = useSession();
+function UpdateUserForm({ onCloseModal, user }) {
+  // const { data: session, update } = useSession();
 
   const [selected, setSelected] = useState("");
   // console.log(selected);
@@ -15,9 +15,9 @@ function UpdateUserForm({ onCloseModal }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    await update({
-      user: { role: selected }, // triggers jwt(trigger === "update")
-    });
+    // await update({
+    //   user: { role: selected }, // triggers jwt(trigger === "update")
+    // });
   }
 
   return (
@@ -37,10 +37,14 @@ function UpdateUserForm({ onCloseModal }) {
           />
         </InputGroup>
         <InputGroup label="Email">
-          <input className="input " type="email" name="email" id="email" />
-        </InputGroup>
-        <InputGroup label="Image">
-          <input className="input " type="file" name="image" id="image" />
+          <input
+            className="input "
+            type="email"
+            name="email"
+            id="email"
+            defaultValue={user?.email}
+            disabled={true}
+          />
         </InputGroup>
         <div>
           <label className="font-bold text-brown-300  tracking-wide">

@@ -18,11 +18,11 @@ export default ServiceList;
 function ServiceItemFirst() {
   return (
     <motion.div
-      initial={{ opacity: 0, x: -40 }}
+      initial={{ opacity: 0, x: -15 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ amount: 0.4 }}
       transition={{ duration: 0.6 }}
-      className="shadow-md border-2 border-cream-100 rounded-lg p-4 flex flex-col gap-3"
+      className="grow basis-1/2 shadow-md border-2 border-cream-100 rounded-lg p-4 flex flex-col gap-3"
     >
       <div className="flex items-center gap-2">
         <span className="text-xl bg-brown-200 text-cream-200 p-1.5 rounded-sm h-fit grid place-content-center">
@@ -63,11 +63,11 @@ function ServiceItemFirst() {
 function ServiceItemSecond() {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 40 }}
+      initial={{ opacity: 0, x: 15 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ amount: 0.4 }}
       transition={{ duration: 0.6 }}
-      className="shadow-md border-2 border-cream-100 rounded-lg p-4 flex flex-col gap-3"
+      className="grow basis-1/2 shadow-md border-2 border-cream-100 rounded-lg p-4 flex flex-col gap-3"
     >
       <div className="flex items-center gap-2">
         <span className="text-xl bg-brown-200 text-cream-200 p-1.5 rounded-sm h-fit grid place-content-center">

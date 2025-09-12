@@ -9,7 +9,7 @@ function DiscoveryCard({ data, onClick }) {
       className={`flex flex-col items-center gap-8 lg:gap-20 md:flex-row ${position}`}
     >
       <motion.figure
-        initial={{ opacity: 0, x: -40 }}
+        initial={{ opacity: 0, x: -20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ amount: 0.1 }}
         transition={{ duration: 0.6 }}
@@ -25,7 +25,7 @@ function DiscoveryCard({ data, onClick }) {
       </motion.figure>
 
       <motion.div
-        initial={{ opacity: 0, x: 40 }}
+        initial={{ opacity: 0, x: 20 }}
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ amount: 0.1 }}
         transition={{ duration: 0.6 }}

@@ -25,11 +25,19 @@ function MenuItem({ menu, carts }) {
   const isInCart = Boolean(cartItem);
   const quantity = cartItem?.quantity;
 
-  const maxPrice = Number(
-    size
+  // const maxPrice =
+  //   Number(
+  //     size
+  //       ?.map((el) => el.price)
+  //       ?.reduce((max, current) => (current > max ? current : max))
+  //   ) || null;
+
+  const sizes = typeof size === "string" ? JSON.parse(size) : size;
+
+  const maxPrice =
+    sizes
       ?.map((el) => el.price)
-      ?.reduce((max, current) => (current > max ? current : max))
-  );
+      ?.reduce((max, current) => (current > max ? current : max), 0) || null;
 
   function handleAddToCart() {
     startTransition(async () => {

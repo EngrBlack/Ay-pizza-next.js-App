@@ -16,7 +16,7 @@ function CustomerInfo({ order }) {
       <Flexitem label="Email:">{email}</Flexitem>
       <Flexitem label="contact:">{contact}</Flexitem>
       <Flexitem label=" Address:">
-        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-lg">
+        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-lg justify-self-end">
           {`${address} | ${city} | ${state}.`}
         </div>
       </Flexitem>
