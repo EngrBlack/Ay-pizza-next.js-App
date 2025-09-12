@@ -53,38 +53,11 @@ export async function updateUserProfile(formData) {
   return data;
 }
 
-export async function updateUserImage(newImage) {
+export async function updateUserImageInDb(imagePath) {
   const { user } = await auth();
   const userId = user?.id;
   if (!userId) throw new Error("User must be logged in.");
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-  // Ensure newImage is a File
-  if (!(newImage?.image instanceof File)) {
-    throw new Error("Invalid image file.");
-  }
-
-  // Generate unique image name
-  const imageName = `${nanoid(10)}-${newImage.image.name}`.replaceAll("/", "");
-
-  // Upload image first
-  const { error: storageError } = await supabase.storage
-    .from("profile-images")
-    .upload(imageName, newImage.image, {
-      cacheControl: "3600",
-      upsert: true,
-      contentType: newImage.image.type,
-    });
-
-  if (storageError) {
-    throw new Error(`Storage upload failed: ${storageError.message}`);
-  }
-
-  // Build public URL for the uploaded file
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/profile-images/${imageName}`;
-
-  // Update DB with image path
   const { data, error } = await supabase
     .from("users_profile")
     .update({ image: imagePath })
@@ -92,9 +65,7 @@ export async function updateUserImage(newImage) {
     .select()
     .single();
 
-  if (error) {
-    throw new Error(`Database update failed: ${error.message}`);
-  }
+  if (error) throw new Error(`Database update failed: ${error.message}`);
 
   revalidatePath("/profile");
   return data;

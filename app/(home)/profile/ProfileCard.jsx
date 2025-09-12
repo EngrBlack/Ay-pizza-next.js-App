@@ -1,5 +1,5 @@
-import { formatDate } from "@/app/_helper/helper";
-import { updateUserImage } from "@/app/_libs/checkoutActions";
+"use client";
+
 import Image from "next/image";
 import {
   HiCalendar,
@@ -7,21 +7,28 @@ import {
   HiMiniPencilSquare,
   HiPhone,
 } from "react-icons/hi2";
-import ContactCard from "./ContactCard";
 import toast from "react-hot-toast";
+import ContactCard from "./ContactCard";
+import { formatDate } from "@/app/_helper/helper";
+import { uploadUserImage } from "@/app/_libs/clientAuthAction";
+import { updateUserImageInDb } from "@/app/_libs/checkoutActions";
 
 function ProfileCard({ user }) {
   const { fullName, image } = user;
 
   async function handleUpdateProfileImage(e) {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
     if (!file) return;
 
     try {
-      // Show loading toast
-      const toastId = toast.loading("Updating profile image...");
-      await updateUserImage({ image: file });
-      // Success
+      const toastId = toast.loading("Uploading profile image...");
+
+      // 1. Upload file directly to Supabase Storage
+      const imagePath = await uploadUserImage(file);
+
+      // 2. Update DB with image path
+      await updateUserImageInDb(imagePath);
+
       toast.success("Profile image updated successfully!", { id: toastId });
     } catch (error) {
       toast.error(`Failed to update image: ${error.message}`);
@@ -29,28 +36,29 @@ function ProfileCard({ user }) {
   }
 
   return (
-    <div className=" rounded border-2 border-cream-100 px-2 md:px-6 py-8 shadow-lg hover:shadow-2xl trans flex flex-col gap-6 md:gap-8">
-      <div className="flex flex-col  items-center gap-2 ">
+    <div className="rounded border-2 border-cream-100 px-2 md:px-6 py-8 shadow-lg hover:shadow-2xl trans flex flex-col gap-6 md:gap-8">
+      <div className="flex flex-col items-center gap-2">
         <div className="relative">
           <figure className="w-25 aspect-square overflow-hidden relative max-w-30 border-3 border-brown-300 rounded-full">
             <Image
               fill
-              quality={20}
+              quality={40}
               src={image || "/user.jpg"}
               alt={fullName}
-              className="object-cover w-full h-full "
+              className="object-cover w-full h-full"
             />
           </figure>
           <label
             htmlFor="image"
             className="absolute bottom-[0.1rem] right-0 text-xl bg-gradient-to-r from-gradient-1 to-gradient-2 text-cream-200 rounded-full p-1.5 w-fit hover:bg-gradient-to-l cursor-pointer trans ease-in-out"
           >
-            <HiMiniPencilSquare className="" />
+            <HiMiniPencilSquare />
             <input
               type="file"
               id="image"
               name="image"
               className="hidden"
+              accept="image/*"
               onChange={handleUpdateProfileImage}
             />
           </label>
