@@ -26,7 +26,7 @@ function PaymentMethod({ user, orders }) {
       <h1 className="text-lg font-bold">Payment Method: </h1>
       <p className="">
         <span className="capitalize text-brown-300">
-          {user?.payment_method}
+          {user?.payment_method === "cod" ? "Cash On Delivery" : "PAYSTACK"}
         </span>
       </p>
       <div

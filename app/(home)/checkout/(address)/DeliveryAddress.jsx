@@ -8,6 +8,7 @@ import UpdateAddressForm from "./UpdateAddressForm";
 import { updateDeliveryPrice } from "@/app/_libs/checkoutActions";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function DeliveryAddress({ user }) {
   const { address } = user;
@@ -30,7 +31,13 @@ function DeliveryAddress({ user }) {
   }
 
   return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ amount: 0.15 }}
+      transition={{ duration: 0.6 }}
+      className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans "
+    >
       <div className="border-b-1 border-brown-100 pb-2 mb-4 flex justify-between items-start ">
         <div>
           <h2 className="text-orangered-200 font-rowdies lg:text-xl">
@@ -85,7 +92,7 @@ function DeliveryAddress({ user }) {
           ))}
         </SelectInput>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

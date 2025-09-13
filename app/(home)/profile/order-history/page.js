@@ -6,7 +6,7 @@ export const metadata = {
 };
 
 async function page() {
-  const userOrders = await getAllUserOrders();
+  const userOrders = (await getAllUserOrders()) || [];
 
   return (
     <section className="bg-cream-200 h-full  mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">

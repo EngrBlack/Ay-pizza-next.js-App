@@ -12,7 +12,7 @@ function MenuOperator({ categories }) {
           field="category"
           options={[
             { label: "All", value: "all" },
-            ...categories.map((category) => ({
+            ...(categories || []).map((category) => ({
               label: toCapitaliseWords(category.name),
               value: category.name,
             })),

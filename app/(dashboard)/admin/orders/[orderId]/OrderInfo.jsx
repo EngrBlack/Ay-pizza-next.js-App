@@ -1,16 +1,17 @@
+import Button from "@/app/_components/Button";
 import Flexitem from "@/app/_components/Flexitem";
 import { formatDate, formatDateTime, maskId } from "@/app/_helper/helper";
 
-const now = new Date();
-const date = now.toDateString();
-
-function OrderInfo({ order }) {
+function OrderInfo({ order, updatePaymentStatus }) {
   const {
     id: orderId,
     created_at: createdAt,
     is_paid: isPaid,
     is_delivered: isDelivered,
+    payment_method: paymentMethod,
   } = order;
+  console.log(order);
+
   return (
     <div className="basis-1/2 shadow-md border-2 border-cream-100 rounded-md p-4 flex flex-col gap-2">
       <h2 className="font-bold text-xl">Order Info:</h2>
@@ -39,6 +40,18 @@ function OrderInfo({ order }) {
           </span>
         )}
       </Flexitem>
+      {!isPaid && paymentMethod === "cod" && (
+        <Flexitem className="">
+          <form action={updatePaymentStatus}>
+            <Button
+              type="danger"
+              className=" font-rowdies mt-4 justify-self-end w-full "
+            >
+              Mark as Paid
+            </Button>
+          </form>
+        </Flexitem>
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { useTransition } from "react";
 import { HiMiniArrowPath } from "react-icons/hi2";
 import toast from "react-hot-toast";
 import { placeOrder } from "@/app/_libs/orderActions";
+import { motion } from "framer-motion";
 
 function OrderSummary({ cartItems, user }) {
   const router = useRouter();
@@ -45,7 +46,13 @@ function OrderSummary({ cartItems, user }) {
   }
 
   return (
-    <div className="md:basis-[45%] lg:basis-[35%] border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.15 }}
+      transition={{ duration: 0.6 }}
+      className="md:basis-[45%] lg:basis-[35%] border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans "
+    >
       <h2 className="text-orangered-200 font-rowdies border-b-1 border-brown-100  pb-2 mb-2 lg:text-xl">
         Order Summary
       </h2>
@@ -89,7 +96,7 @@ function OrderSummary({ cartItems, user }) {
           `Place Order - ${formatCurrency(totalPrice)}`
         )}
       </button>
-    </div>
+    </motion.div>
   );
 }
 

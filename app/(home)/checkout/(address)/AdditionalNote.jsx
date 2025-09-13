@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 function AdditionalNote() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,7 +9,13 @@ function AdditionalNote() {
   }
 
   return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.15 }}
+      transition={{ duration: 0.6 }}
+      className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans "
+    >
       <div
         className={`${
           isOpen ? "border-b-1 border-brown-100 mb-4 pb-2 " : ""
@@ -35,7 +42,7 @@ function AdditionalNote() {
           placeholder="Special instruction for your order..."
         ></textarea>
       )}
-    </div>
+    </motion.div>
   );
 }
 

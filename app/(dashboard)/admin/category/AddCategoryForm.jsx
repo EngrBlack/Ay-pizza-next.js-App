@@ -5,12 +5,13 @@ import InputGroup from "@/app/_components/InputGroup";
 import { createEditCategory } from "@/app/_libs/categoryActions";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
 function AddCategoryForm({ onCloseModal }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm();
 
@@ -56,8 +57,18 @@ function AddCategoryForm({ onCloseModal }) {
 
         <div className="flex items-center justify-end gap-4 mt-2">
           <Button onClick={onCloseModal}>Cancel</Button>
-          <Button type="danger" position="right">
-            Add
+          <Button
+            type="danger"
+            position={isSubmitting ? "left" : "right"}
+            icon={
+              isSubmitting ? (
+                <HiArrowPath className="animate-spin" />
+              ) : (
+                <HiPaperAirplane />
+              )
+            }
+          >
+            {isSubmitting ? "Creating..." : " Create"}
           </Button>
         </div>
       </div>

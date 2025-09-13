@@ -10,7 +10,7 @@ function ProductItem({ menu, onDeleteMenu }) {
     created_at: createdAt,
     is_available: isAvailable,
     base_price: basePrice,
-    // category: { name: categoryName },
+    category,
   } = menu;
   console.log(menu);
 
@@ -27,8 +27,7 @@ function ProductItem({ menu, onDeleteMenu }) {
       </figure>
       <div>{name}</div>
       <div>{formatCurrency(basePrice)}</div>
-      <div className="capitalize"></div>
-      {/* <div className="capitalize">{categoryName.split("_").join(" ")}</div> */}
+      <div className="capitalize">{category?.name?.split("_").join(" ")}</div>
 
       <div>{isAvailable ? "True" : "False"}</div>
       <div>{formatDate(createdAt)}</div>

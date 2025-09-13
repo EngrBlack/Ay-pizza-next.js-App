@@ -2,20 +2,17 @@
 
 import Button from "@/app/_components/Button";
 import InputGroup from "@/app/_components/InputGroup";
-import {
-  createEditCategory,
-  getCategoryById,
-} from "@/app/_libs/categoryActions";
-import { useEffect, useState } from "react";
+import { createEditCategory } from "@/app/_libs/categoryActions";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { HiArrowPath, HiOutlinePaperAirplane } from "react-icons/hi2";
 
 function EditCategoryForm({ onCloseModal, category }) {
   console.log(category);
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm();
 
@@ -71,8 +68,18 @@ function EditCategoryForm({ onCloseModal, category }) {
 
         <div className="flex items-center justify-end gap-4 mt-2">
           <Button onClick={onCloseModal}>Cancel</Button>
-          <Button type="danger" position="right">
-            Edit
+          <Button
+            type="danger"
+            position={isSubmitting ? "left" : "right"}
+            icon={
+              isSubmitting ? (
+                <HiArrowPath className="animate-spin" />
+              ) : (
+                <HiOutlinePaperAirplane />
+              )
+            }
+          >
+            {isSubmitting ? "Editing..." : "Edit"}
           </Button>
         </div>
       </div>

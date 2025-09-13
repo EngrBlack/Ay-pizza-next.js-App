@@ -5,16 +5,16 @@ import DishesCard from "./DishesCard";
 import Heading from "./Heading";
 import { motion } from "framer-motion";
 
-const dataList = [
-  { name: "Pizzas", image: "/pizza-1.jpg", category: "pizza" },
-  { name: "Side Dishes", image: "/chicken-chips.jpg", category: "side" },
-  { name: "Burger", image: "/burger.jpg", category: "burger" },
-  { name: "Ice Cream ", image: "/icecream-2.jpg", category: "ice_cream" },
-  { name: "MilkShakes", image: "/milkshake-1.jpg", category: "milkshake" },
-  { name: "Drinks", image: "/drinks.jpg", category: "drinks" },
-];
+function PopularDishesSection({ categories }) {
+  const dataList = [
+    { name: "Pizzas", image: "/pizza-1.jpg", category: "pizza" },
+    { name: "Side Dishes", image: "/chicken-chips.jpg", category: "side" },
+    { name: "Burger", image: "/burger.jpg", category: "burger" },
+    { name: "Ice Cream ", image: "/icecream-2.jpg", category: "ice_cream" },
+    { name: "MilkShakes", image: "/milkshake-1.jpg", category: "milkshake" },
+    { name: "Drinks", image: "/drinks.jpg", category: "drinks" },
+  ];
 
-function PopularDishesSection() {
   return (
     <section className="bg-cream-200">
       <div className="px-4 lg:px-12 lg:py-20 sm:px-6 xl:px-32 py-16 mx-auto w-full">
@@ -39,8 +39,8 @@ function PopularDishesSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-4 md:gap-12 pt-12  px-4 place-items-center"
         >
-          {dataList.map((data) => (
-            <DishesCard data={data} key={data.name} />
+          {categories.map((category) => (
+            <DishesCard category={category} key={category.name} />
           ))}
         </motion.ul>
       </div>

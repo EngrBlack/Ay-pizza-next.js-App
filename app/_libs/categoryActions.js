@@ -13,7 +13,7 @@ export async function createEditCategory(newCategory, id) {
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-  // Handle image: could be FileList, File, or existing string
+  // Normalize image input
   const file =
     newCategory.image instanceof File
       ? newCategory.image
@@ -21,24 +21,31 @@ export async function createEditCategory(newCategory, id) {
       ? newCategory.image[0]
       : null;
 
-  // If user didn't upload a file, keep the old path (string)
-  const hasImagePath =
-    !file &&
-    typeof newCategory.image === "string" &&
-    newCategory.image.startsWith("http");
-
-  let imagePath = newCategory.image; // preserve old path if no file
-  let imageName;
+  let imagePath = null;
+  let imageName = null;
 
   if (file) {
     imageName = `${nanoid(10)}-${file.name}`.replaceAll("/", "");
     imagePath = `${supabaseUrl}/storage/v1/object/public/category-image/${imageName}`;
+  } else if (typeof newCategory.image === "string") {
+    // preserve old path
+    imagePath = newCategory.image;
   }
 
   let query = supabase.from("category");
 
   if (!id) {
     // CREATE
+    const { data: existingCategory, error: existingError } = await query
+      .select("id")
+      .eq("name", newCategory.name)
+      .maybeSingle();
+
+    if (existingError) throw new Error(existingError.message);
+    if (existingCategory) {
+      throw new Error("Category already exists in your list.");
+    }
+
     query = query
       .insert([{ name: newCategory.name, image: imagePath }])
       .select()
@@ -53,7 +60,7 @@ export async function createEditCategory(newCategory, id) {
   }
 
   const { data, error } = await query;
-  if (error) throw new Error("Category could not be created/updated");
+  if (error) throw new Error(error.message || "Category create/update failed");
 
   // If no new file, we’re done
   if (!file) {

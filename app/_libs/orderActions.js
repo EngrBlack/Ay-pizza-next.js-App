@@ -5,6 +5,7 @@ import { calcItemTotal } from "../_helper/helper";
 import { clearCartItems, getCartItems } from "./cartActions";
 import { getUserProfile } from "./checkoutActions";
 import { supabase } from "./supabase";
+import { auth } from "./auth";
 
 export async function placeOrder() {
   try {
@@ -86,8 +87,9 @@ export async function placeOrder() {
 }
 
 export async function getUserOrders(orderId) {
-  const userProfile = await getUserProfile();
-  const userId = userProfile?.id;
+  const session = await auth();
+  const userId = session?.user?.id;
+
   if (!userId) throw new Error("User must be logged in.");
 
   const { data, error } = await supabase
@@ -101,6 +103,21 @@ export async function getUserOrders(orderId) {
   if (error) throw new Error(error.message);
 
   return data;
+}
+
+export async function updateOrderToPaid(orderId) {
+  // const userProfile = await getUserProfile();
+  // const user = userProfile;
+  // if (user?.role !== "admin") throw new Error("User is not authorized");
+  // const { data, error } = await supabase
+  //   .from("orders")
+  //   .update({ is_paid: true })
+  //   .eq("id", orderId)
+  //   .select()
+  //   .maybeSingle();
+  // if (error) throw new Error(error.message);
+  // revalidatePath(`/admin/orders/${orderId}`);
+  // return data;
 }
 
 export async function getAllOrders() {
@@ -147,6 +164,7 @@ export async function getAllUserOrders() {
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
+  c;
 
   return data;
 }

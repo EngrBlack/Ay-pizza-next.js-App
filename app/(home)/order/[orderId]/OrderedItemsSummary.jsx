@@ -89,15 +89,17 @@ function OrderedItemsSummary({ orders, user }) {
         <span>{formatCurrency(totalPrice)}</span>
       </div>
 
-      <div>
-        <button
-          onClick={pay}
-          className="text-cream-200 bg-orangered-100 w-full font-bold p-2.5 rounded-sm shadow-lg hover:-translate-y-0.5 focus:-translate-y-0.5 active:translate-y-0 active:shadow-sm trans ease-in-out mt-2 disabled:cursor-not-allowed"
-          disabled={isPending}
-        >
-          {isPending ? "Processing Payment..." : "Pay with Paystack"}
-        </button>
-      </div>
+      {orders?.payment_method === "paystack" && (
+        <div>
+          <button
+            onClick={pay}
+            className="text-cream-200 bg-orangered-100 w-full font-bold p-2.5 rounded-sm shadow-lg hover:-translate-y-0.5 focus:-translate-y-0.5 active:translate-y-0 active:shadow-sm trans ease-in-out mt-2 disabled:cursor-not-allowed"
+            disabled={isPending}
+          >
+            {isPending ? "Processing Payment..." : "Pay with Paystack"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

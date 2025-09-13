@@ -5,6 +5,7 @@ import { deliveryMethod } from "@/app/_libs/checkoutActions";
 import toast from "react-hot-toast";
 import { BiBowlHot } from "react-icons/bi";
 import { HiOutlineClock, HiOutlineTruck } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 function DeliveryMethod({ selectedDeliveryMethod, setSelectedDeliveryMethod }) {
   async function handleDeliveryMethod(e) {
@@ -23,7 +24,13 @@ function DeliveryMethod({ selectedDeliveryMethod, setSelectedDeliveryMethod }) {
   }
 
   return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.15 }}
+      transition={{ duration: 0.6 }}
+      className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans "
+    >
       <div className="border-b-1 border-brown-100 pb-2 mb-4">
         <h2 className="text-orangered-200 font-rowdies lg:text-xl">
           Order Options ( Delivery Method )
@@ -88,7 +95,7 @@ function DeliveryMethod({ selectedDeliveryMethod, setSelectedDeliveryMethod }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

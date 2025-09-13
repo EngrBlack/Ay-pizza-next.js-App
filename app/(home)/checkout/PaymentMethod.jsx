@@ -3,6 +3,7 @@ import { paymentMethod } from "@/app/_libs/checkoutActions";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { HiCreditCard, HiMiniBanknotes } from "react-icons/hi2";
+import { motion } from "framer-motion";
 
 function PaymentMethod({ user }) {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
@@ -25,7 +26,13 @@ function PaymentMethod({ user }) {
   }
 
   return (
-    <div className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans ">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ amount: 0.15 }}
+      transition={{ duration: 0.6 }}
+      className="border-2 border-cream-100 p-4 rounded-sm shadow-md focus-within:border-orangered-200 focus-within:shadow-xl trans "
+    >
       <div className="border-b-1 border-brown-100 pb-2 mb-4">
         <h2 className="text-orangered-200 font-rowdies lg:text-xl">
           Payment Method
@@ -56,7 +63,7 @@ function PaymentMethod({ user }) {
           checked={selectedPaymentMethod === "cod"}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
 

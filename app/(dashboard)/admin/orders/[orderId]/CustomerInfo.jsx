@@ -1,11 +1,14 @@
 import Flexitem from "@/app/_components/Flexitem";
+import { formatCurrency } from "@/app/_helper/helper";
 
 function CustomerInfo({ order }) {
   const {
+    delivery_price,
     user_id: {
       fullName,
       email,
       address: { contact, address, city, state },
+      closest_location,
     },
   } = order;
 
@@ -15,8 +18,13 @@ function CustomerInfo({ order }) {
       <Flexitem label="Name:">{fullName}</Flexitem>
       <Flexitem label="Email:">{email}</Flexitem>
       <Flexitem label="contact:">{contact}</Flexitem>
+      <Flexitem label="Fast Location for Riders:">
+        <div className=" bg-brown text-cream-100 w-fit rounded  py-1 px-4 text-lg justify-self-end animate-pulse">
+          {`${closest_location} - ${formatCurrency(delivery_price)}`}
+        </div>
+      </Flexitem>
       <Flexitem label=" Address:">
-        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-lg justify-self-end">
+        <div className=" bg-brown text-cream-100 w-fit rounded  py-1 px-4 text-lg justify-self-end">
           {`${address} | ${city} | ${state}.`}
         </div>
       </Flexitem>

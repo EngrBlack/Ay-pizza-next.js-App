@@ -58,7 +58,7 @@ export async function getMenus(filter, sortBy, page) {
 export async function getMenuById(id) {
   const { data, error } = await supabase
     .from("menus")
-    .select("*")
+    .select("*, category(*)")
     .eq("id", id)
     .single();
 

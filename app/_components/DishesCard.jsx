@@ -3,16 +3,17 @@
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { item } from "../_helper/framerMotion";
+import { toCapitaliseWords } from "../_helper/helper";
 
-function DishesCard({ data }) {
-  const { name, image, category } = data;
+function DishesCard({ category }) {
+  const { name, image } = category;
 
   const router = useRouter();
 
   return (
     <motion.li
       variants={item}
-      onClick={() => router.push(`/menu?category=${category}`)}
+      onClick={() => router.push(`/menu?category=${name}`)}
       className=" group hover:shadow-xl shadow-md  w-68 aspect-square rounded-full relative trans"
     >
       <div className="flex flex-col items-center gap-0.5 text-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
@@ -23,7 +24,9 @@ function DishesCard({ data }) {
             className="object-cover w-full h-full group-hover:scale-110 group-hover:brightness-75 trans"
           />
         </figure>
-        <p className="font-rowdies text-lg mt-2">{name}</p>
+        <p className="font-rowdies text-lg mt-2 capitalize">
+          {toCapitaliseWords(name)}
+        </p>
         <button className="text-sm  text-cream-200 bg-orangered-100 hover:bg-orangered-200 hover:-translate-y-0.5 active:translate-y-0 animate-pulse hover:animate-none py-1 px-2 rounded trans">
           Order Now
         </button>

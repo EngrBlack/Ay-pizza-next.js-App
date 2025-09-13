@@ -10,8 +10,10 @@ import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { HiArrowLeft, HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
-function CreateProductForm({ categories }) {
+function EditProductForm({ menu, categories }) {
   const router = useRouter();
+
+  console.log(menu);
 
   const {
     register,
@@ -23,13 +25,14 @@ function CreateProductForm({ categories }) {
     formState: { isSubmitting, errors },
   } = useForm({
     defaultValues: {
-      name: "",
-      category: "pizza",
-      sizes: [{ name: "", price: "" }],
-      toppings: [{ name: "", price: "" }],
-      base_price: "",
-      available: true,
-      ingredients: "",
+      name: menu?.name || "",
+      category: menu?.category?.name || "",
+      sizes: menu?.size || [{ name: "", price: "" }],
+      toppings: menu?.toppings || [{ name: "", price: "" }],
+      base_price: menu?.selected_Size?.at(0)?.price || menu?.base_price || "",
+      available: menu.is_available || true,
+      ingredients: menu?.ingredients || "",
+      discount: menu?.discount || "",
     },
   });
 
@@ -46,31 +49,29 @@ function CreateProductForm({ categories }) {
   } = useFieldArray({ control, name: "toppings" });
 
   async function onSubmit(data) {
-    try {
-      // Normalize for DB
-      const payload = {
-        ...data,
-        sizes:
-          data.sizes.length > 0
-            ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
-            : null,
-        toppings:
-          data.toppings.length > 0
-            ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
-            : null,
-        base_price: data.base_price,
-        image: data.image,
-        discount: data.discount ?? 0,
-      };
-
-      await createMenu(payload);
-      toast.success("Product created successfully!");
-      router.push("/admin/products");
-
-      reset();
-    } catch (err) {
-      toast.error(err.message || " Failed to create product");
-    }
+    // try {
+    //   // Normalize for DB
+    //   const payload = {
+    //     ...data,
+    //     sizes:
+    //       data.sizes.length > 0
+    //         ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
+    //         : null,
+    //     toppings:
+    //       data.toppings.length > 0
+    //         ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
+    //         : null,
+    //     base_price: data.base_price,
+    //     image: data.image,
+    //     discount: data.discount ?? 0,
+    //   };
+    //   await createMenu(payload);
+    //   toast.success("Product created successfully!");
+    //   router.push("/admin/products");
+    //   reset();
+    // } catch (err) {
+    //   toast.error(err.message || " Failed to create product");
+    // }
   }
 
   return (
@@ -82,6 +83,7 @@ function CreateProductForm({ categories }) {
               className="input"
               type="text"
               id="name"
+              // defaultValue={menu?.name}
               placeholder="Enter Product Name"
               {...register("name", { required: true })}
             />
@@ -213,6 +215,7 @@ function CreateProductForm({ categories }) {
           <textarea
             className="input h-40 "
             type="text"
+            name="ingredients"
             {...register("ingredients")}
             placeholder="Enter Product ingredients"
           ></textarea>
@@ -236,7 +239,7 @@ function CreateProductForm({ categories }) {
             }
             position={isSubmitting ? "left" : "right"}
           >
-            {isSubmitting ? "Creating..." : " Create Product"}
+            {isSubmitting ? "Editting..." : " Edit Product"}
           </Button>
         </div>
       </form>
@@ -244,4 +247,4 @@ function CreateProductForm({ categories }) {
   );
 }
 
-export default CreateProductForm;
+export default EditProductForm;

@@ -44,7 +44,7 @@ function ProfileCard({ user }) {
               fill
               quality={40}
               src={image || "/user.jpg"}
-              alt={fullName}
+              alt={fullName || "User"}
               className="object-cover w-full h-full"
             />
           </figure>
@@ -79,11 +79,9 @@ function ProfileCard({ user }) {
 export default ProfileCard;
 
 function ProfileTable({ user }) {
-  const {
-    email,
-    address: { contact },
-    created_at: createdAt,
-  } = user;
+  const email = user?.email || "No email provided";
+  const contact = user?.address?.contact || "No contact info";
+  const createdAt = user?.created_at || null;
 
   return (
     <div className=" border rounded border-brown-300 ">
@@ -91,9 +89,11 @@ function ProfileTable({ user }) {
         Profile Details
       </h2>
       <div className="flex flex-col gap-2 p-4 px-2 md:px-4">
-        <ContactCard icon={<HiEnvelope />}>{email || ""}</ContactCard>
-        <ContactCard icon={<HiPhone />}>{contact || ""}</ContactCard>
-        <ContactCard icon={<HiCalendar />}>{formatDate(createdAt)}</ContactCard>
+        <ContactCard icon={<HiEnvelope />}>{email}</ContactCard>
+        <ContactCard icon={<HiPhone />}>{contact}</ContactCard>
+        <ContactCard icon={<HiCalendar />}>
+          {createdAt ? formatDate(createdAt) : "N/A"}
+        </ContactCard>
       </div>
     </div>
   );
