@@ -164,7 +164,6 @@ export async function getAllUserOrders() {
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
-  c;
 
   return data;
 }
