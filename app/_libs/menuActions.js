@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { supabase } from "./supabase";
 import { auth } from "./auth";
 import { nanoid } from "nanoid";
+import { getCategoryIdByName } from "./categoryActions";
 
 export async function getMenus(filter, sortBy, page) {
   const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE) || 10;
@@ -94,16 +95,20 @@ export async function createMenu(product) {
   //3)   Build image path
   const imagePath = `${supabaseUrl}/storage/v1/object/public/menu-image/${imageName}`;
 
-  //4) Insert product into DB
+  // fetch categoryId by Name
+
+  const categoryId = await getCategoryIdByName(product.category);
+
+  //5) Insert product into DB
   const { data, error } = await supabase
     .from("menus")
     .insert([
       {
         name: product.name,
-        category: product.category,
+        categoryId,
         base_price: product.base_price,
-        size: product.sizes,
-        toppings: product.toppings,
+        size: JSON.parse(product.sizes),
+        toppings: JSON.parse(product.toppings),
         ingredients: product.ingredients,
         image: imagePath,
         discount: product.discount,
@@ -115,7 +120,7 @@ export async function createMenu(product) {
 
   if (error) throw new Error("Menu could not be created");
 
-  //5) Upload new image to Supabase storage
+  //6) Upload new image to Supabase storage
   if (imageName) {
     const { error: storageError } = await supabase.storage
       .from("menu-image")
@@ -129,7 +134,7 @@ export async function createMenu(product) {
     }
   }
 
-  //6) return and revalidate-path
+  //7) return and revalidate-path
   revalidatePath("/admin/products");
   return data;
 }

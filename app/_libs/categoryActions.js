@@ -130,6 +130,17 @@ export async function deleteCategoryById(categoryId) {
   return { success: true };
 }
 
+export async function getCategoryIdByName(name) {
+  const { data, error } = await supabase
+    .from("category")
+    .select("id")
+    .eq("name", name)
+    .single();
+
+  if (error) throw new Error("Category not found");
+  return data.id;
+}
+
 // export async function createEditCategory(newCategory, id) {
 //   const session = await auth();
 //   if (session?.user?.role !== "admin") {

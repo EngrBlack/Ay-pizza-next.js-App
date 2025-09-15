@@ -10,9 +10,7 @@ function Stat({ data }) {
       </span>
       <div className="flex flex-col gap-1">
         <p className="font-rowdies uppercase text-sm sm:text-base ">{name}</p>
-        <h2 className="font-semibold text-lg md:text-2xl ">
-          {formatCurrency(value)}
-        </h2>
+        <h2 className="font-semibold text-lg md:text-2xl ">{value}</h2>
       </div>
     </div>
   );

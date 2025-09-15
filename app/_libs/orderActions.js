@@ -128,7 +128,7 @@ export async function getAllOrders() {
   const { data, error } = await supabase
     .from("orders")
     .select("*, user_id(*), order_items(*, menu_id(*)) ")
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
 
   if (error) throw new Error(error.message);
 
@@ -146,6 +146,22 @@ export async function getOrderById(orderId) {
     .order("created_at", { ascending: true })
     .eq("id", orderId)
     .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+}
+
+export async function getRecentOrders() {
+  const userProfile = await getUserProfile();
+  const user = userProfile;
+  if (user?.role !== "admin") throw new Error("User is not authorized");
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, user_id(*), order_items(*, menu_id(*))")
+    .order("created_at", { ascending: false }) // newest first
+    .limit(8);
 
   if (error) throw new Error(error.message);
 

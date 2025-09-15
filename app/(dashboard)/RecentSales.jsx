@@ -1,11 +1,25 @@
 "use client";
 
+import { useOptimistic } from "react";
 import Table from "../_components/Table";
 import RecentSalesItem from "./RecentSalesItem";
+import { deleteOrderById } from "../_libs/orderActions";
 
 const headers = ["id", "buyer", "date", "total price", "actions"];
 
-function RecentSales() {
+function RecentSales({ recentOrders }) {
+  const [optimisticRecentOrders, optimisticDelete] = useOptimistic(
+    recentOrders ?? [], // safe default
+    function (curOrders, recentOrderId) {
+      return curOrders.filter((item) => item?.id !== recentOrderId);
+    }
+  );
+
+  async function handleDeleteRecentOrder(recentOrderId) {
+    optimisticDelete(recentOrderId);
+    await deleteOrderById(recentOrderId);
+  }
+
   return (
     <div className="basis-1/2">
       <Table size="grid-cols-[50px_repeat(3,1fr)_70px]" className="p-4">
@@ -16,9 +30,12 @@ function RecentSales() {
             <div key={el}>{el}</div>
           ))}
         </Table.Header>
-        {Array.from({ length: 8 }, (_, i) => (
-          <Table.Body key={i} className="py-1 px-4 text-sm">
-            <RecentSalesItem />
+        {optimisticRecentOrders.map((recentOrder) => (
+          <Table.Body key={recentOrder.id} className="py-1 px-4 text-sm">
+            <RecentSalesItem
+              recentOrder={recentOrder}
+              onDeleteRecentOrder={handleDeleteRecentOrder}
+            />
           </Table.Body>
         ))}
       </Table>

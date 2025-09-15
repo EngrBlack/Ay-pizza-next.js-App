@@ -1,15 +1,25 @@
 import { HiEllipsisVertical } from "react-icons/hi2";
-import { formatCurrency } from "../_helper/helper";
+import { formatCurrency, formatDateTime, maskId } from "../_helper/helper";
+import RecentOrderGroupedButton from "./RecentOrderGroupedButton";
 
-function RecentSalesItem() {
+function RecentSalesItem({ recentOrder, onDeleteRecentOrder }) {
+  const {
+    id: recentOrderId,
+    total_price: totalPrice,
+    user_id: { address },
+    created_at: createdAt,
+  } = recentOrder;
   return (
     <>
-      <div>..424hd</div>
-      <div>Fabioan Peace </div>
-      <div>Tue, Dec 17, 2014. 18:34 PM</div>
-      <div>{formatCurrency(204343)}</div>
+      <div>{maskId(recentOrderId, 5)}</div>
+      <div>{address?.fullName} </div>
+      <div>{formatDateTime(createdAt)}</div>
+      <div className="font-bold">{formatCurrency(totalPrice)}</div>
       <div>
-        <HiEllipsisVertical />
+        <RecentOrderGroupedButton
+          recentOrderId={recentOrderId}
+          onDeleteRecentOrder={onDeleteRecentOrder}
+        />
       </div>
     </>
   );

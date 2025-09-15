@@ -6,12 +6,15 @@ import InputGroup from "@/app/_components/InputGroup";
 import SelectInput from "@/app/_components/SelectInput";
 import { createMenu } from "@/app/_libs/menuActions";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { HiArrowLeft, HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
 function CreateProductForm({ categories }) {
   const router = useRouter();
+  const [showSizes, setShowSizes] = useState(false);
+  const [showToppings, setShowToppings] = useState(false);
 
   const {
     register,
@@ -25,8 +28,8 @@ function CreateProductForm({ categories }) {
     defaultValues: {
       name: "",
       category: "pizza",
-      sizes: [{ name: "", price: "" }],
-      toppings: [{ name: "", price: "" }],
+      sizes: null,
+      toppings: null,
       base_price: "",
       available: true,
       ingredients: "",
@@ -45,17 +48,33 @@ function CreateProductForm({ categories }) {
     remove: removeTopping,
   } = useFieldArray({ control, name: "toppings" });
 
+  useEffect(() => {
+    if (showSizes) {
+      setValue("sizes", [{ name: "", price: "" }]); // enable sizes with 1 row
+    } else {
+      setValue("sizes", null); // disable toppings → store null
+    }
+  }, [showSizes]);
+
+  useEffect(() => {
+    if (showToppings) {
+      setValue("toppings", [{ name: "", price: "" }]); // enable toppings with 1 row
+    } else {
+      setValue("toppings", null); // disable toppings → store null
+    }
+  }, [showToppings]);
+
   async function onSubmit(data) {
     try {
       // Normalize for DB
       const payload = {
         ...data,
         sizes:
-          data.sizes.length > 0
+          data.sizes && data.sizes.length > 0
             ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
             : null,
         toppings:
-          data.toppings.length > 0
+          data.toppings && data.toppings.length > 0
             ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
             : null,
         base_price: data.base_price,
@@ -147,66 +166,89 @@ function CreateProductForm({ categories }) {
           />
         </div>
         <div className="flex  items-start gap-4">
-          <div className="grow">
-            <h3 className="font-semibold text-brown-300">Sizes</h3>
-            {sizeFields.map((field, i) => (
-              <div key={field.id} className="flex gap-4 items-center mb-4">
-                <InputGroup>
-                  <input
-                    className="input "
-                    type="text"
-                    placeholder="Size "
-                    {...register(`sizes.${i}.name`)}
-                  />
-                </InputGroup>
-                <InputGroup error={errors?.sizes?.[i]?.price?.message}>
-                  <input
-                    className="input "
-                    type="text"
-                    inputMode="number"
-                    placeholder="Price"
-                    {...register(`sizes.${i}.price`)}
-                  />
-                </InputGroup>
-                <Button type="danger" onClick={() => removeSize(i)}>
-                  Remove
-                </Button>
-                <Button onClick={() => addSize({ name: "", size: "" })}>
-                  +Add
-                </Button>
-              </div>
-            ))}
+          <div className="basis-1/2">
+            <InputCheck
+              label="Sizes:"
+              type="checkbox"
+              checked={showSizes}
+              onChange={(e) => setShowSizes(e.target.checked)}
+            />
+
+            {showSizes &&
+              sizeFields.map((field, i) => (
+                <div key={field.id} className="flex gap-4 items-center mb-4">
+                  <InputGroup>
+                    <input
+                      className="input "
+                      type="text"
+                      placeholder="Size "
+                      {...register(`sizes.${i}.name`)}
+                    />
+                  </InputGroup>
+                  <InputGroup error={errors?.sizes?.[i]?.price?.message}>
+                    <input
+                      className="input "
+                      type="text"
+                      inputMode="number"
+                      placeholder="Price"
+                      {...register(`sizes.${i}.price`)}
+                    />
+                  </InputGroup>
+                  <Button type="danger" onClick={() => removeSize(i)}>
+                    Remove
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addSize({ name: "", size: "" });
+                    }}
+                  >
+                    +Add
+                  </Button>
+                </div>
+              ))}
           </div>
 
           <div className="grow">
-            <h3 className="font-semibold text-brown-300">Toppings</h3>
-            {toppingFields.map((field, i) => (
-              <div key={field.id} className="flex gap-4 items-center mb-4">
-                <InputGroup>
-                  <input
-                    className="input "
-                    type="text"
-                    placeholder="Topping Name"
-                    {...register(`toppings.${i}.name`)}
-                  />
-                </InputGroup>
-                <InputGroup error={errors?.toppings?.[i]?.price?.message}>
-                  <input
-                    className="input "
-                    type="text"
-                    inputMode="number"
-                    placeholder="Price"
-                    {...register(`toppings.${i}.price`)}
-                  />
-                </InputGroup>
-                <Button type="danger" onClick={() => removeTopping(i)}>
-                  Remove
-                </Button>
-                <Button onClick={() => addTopping({ name: "", size: "" })}>
-                  +Add
-                </Button>
-              </div>
-            ))}
+            <InputCheck
+              label="Toppings:"
+              type="checkbox"
+              checked={showToppings}
+              onChange={(e) => setShowToppings(e.target.checked)}
+            />
+            {showToppings &&
+              toppingFields.map((field, i) => (
+                <div key={field.id} className="flex gap-4 items-center mb-4">
+                  <InputGroup>
+                    <input
+                      className="input "
+                      type="text"
+                      placeholder="Topping Name"
+                      {...register(`toppings.${i}.name`)}
+                    />
+                  </InputGroup>
+                  <InputGroup error={errors?.toppings?.[i]?.price?.message}>
+                    <input
+                      className="input "
+                      type="text"
+                      inputMode="number"
+                      placeholder="Price"
+                      {...register(`toppings.${i}.price`)}
+                    />
+                  </InputGroup>
+                  <Button type="danger" onClick={() => removeTopping(i)}>
+                    Remove
+                  </Button>
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addTopping({ name: "", size: "" });
+                    }}
+                  >
+                    +Add
+                  </Button>
+                </div>
+              ))}
           </div>
         </div>
         <InputGroup label="Ingredients:">
@@ -227,6 +269,7 @@ function CreateProductForm({ categories }) {
           </Button>
           <Button
             type="danger"
+            disable={isSubmitting}
             icon={
               isSubmitting ? (
                 <HiArrowPath className="animate-spin" />
