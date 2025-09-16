@@ -6,6 +6,7 @@ import { clearCartItems, getCartItems } from "./cartActions";
 import { getUserProfile } from "./checkoutActions";
 import { supabase } from "./supabase";
 import { auth } from "./auth";
+import { endOfToday } from "date-fns";
 
 export async function placeOrder() {
   try {
@@ -165,7 +166,7 @@ export async function getRecentOrders() {
 
   if (error) throw new Error(error.message);
 
-  return data;
+  return data ?? [];
 }
 
 export async function getAllUserOrders() {
@@ -209,6 +210,24 @@ export async function deleteOrderById(orderId) {
 
   revalidatePath("/admin/orders");
   return { success: true };
+}
+
+export async function getOrdersAfterDate(date) {
+  const userProfile = await getUserProfile();
+  const user = userProfile;
+  if (user?.role !== "admin") throw new Error("User is not authorized");
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*, user_id(*), order_items(*, menu_id(*)) ")
+    .gte("created_at", date)
+    .lte("created_at", endOfToday().toISOString()); // use end of today
+
+  if (error) {
+    throw new Error("Orders could not get loaded");
+  }
+
+  return data ?? [];
 }
 
 // export async function getOrderById(orderId) {

@@ -24,7 +24,7 @@ async function page({ searchParams }) {
   const sortBy = { field, direction };
 
   //PAGINATION
-  const currentPage = Number(searchParams?.page) || 1;
+  const currentPage = Number(searchParams?.page || 1);
 
   const { data: menus, count } =
     (await getMenus(filterValue, sortBy, currentPage)) || [];

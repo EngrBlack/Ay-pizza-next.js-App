@@ -2,10 +2,14 @@ import AreaChart from "./AreaChart";
 import RecentSales from "./RecentSales";
 import Stats from "./Stats";
 
-function Dashboard({ menuCount, users, recentOrders }) {
+function Dashboard({ menuCount, users, recentOrders, totalSalesAndRevenue }) {
   return (
     <div className="flex flex-col gap-6">
-      <Stats menuCount={menuCount} users={users} />
+      <Stats
+        menuCount={menuCount}
+        users={users}
+        totalSalesAndRevenue={totalSalesAndRevenue}
+      />
       <div className="flex gap-6">
         <AreaChart />
         <RecentSales recentOrders={recentOrders} />

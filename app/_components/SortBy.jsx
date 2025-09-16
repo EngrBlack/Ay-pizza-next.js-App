@@ -9,7 +9,7 @@ function SortBy({ field, options }) {
   const pathName = usePathname();
   const router = useRouter();
 
-  const activeValue = searchParams?.get(field) || "created_at-asc";
+  const activeValue = searchParams?.get(field) ?? options?.at(0)?.value;
 
   function handleSortBy(value) {
     const params = new URLSearchParams(searchParams.toString());

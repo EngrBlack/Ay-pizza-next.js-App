@@ -5,20 +5,21 @@ import {
   HiUsers,
 } from "react-icons/hi2";
 import Stat from "./Stat";
+import { formatCurrency } from "../_helper/helper";
 
-function Stats({ menuCount, users }) {
+function Stats({ menuCount, users, totalSalesAndRevenue }) {
   const dataList = [
     {
       icon: <HiMiniCurrencyDollar />,
       name: "Total Revenue",
-      value: "22000",
+      value: formatCurrency(totalSalesAndRevenue?.revenue),
       textColor: "text-cyan",
       bgColor: "bg-cyan-100",
     },
     {
       icon: <HiMiniBanknotes />,
       name: "Sales",
-      value: "10",
+      value: totalSalesAndRevenue?.sales,
       textColor: "text-green",
       bgColor: "bg-green-100",
     },

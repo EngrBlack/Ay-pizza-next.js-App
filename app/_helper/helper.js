@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, subDays, isAfter, isToday } from "date-fns";
 
 export const PAGE_SIZE = 10;
 export const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -83,3 +83,94 @@ export function toCapitaliseWords(str) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
 }
+
+export function calculateSalesAndRevenue(orders, days) {
+  const now = new Date();
+
+  let sales = 0;
+  let revenue = 0;
+
+  // if days = 0 → only include orders created "today"
+  if (days === 0) {
+    for (const order of orders) {
+      const orderDate = new Date(order.created_at);
+      if (isToday(orderDate)) {
+        sales += 1;
+        revenue += order.order_items.reduce((sum, item) => sum + item.price, 0);
+      }
+    }
+    return { sales, revenue };
+  }
+
+  // otherwise → use cutoff date
+  const cutoff = subDays(now, days);
+
+  for (const order of orders) {
+    const orderDate = new Date(order.created_at);
+    if (isAfter(orderDate, cutoff)) {
+      sales += 1;
+      revenue += order.order_items.reduce((sum, item) => sum + item.price, 0);
+    }
+  }
+
+  return { sales, revenue };
+}
+
+// export function calculateRevenue(orders, days) {
+//   const now = new Date();
+
+//   // if days = 0, only include orders created "today"
+//   if (days === 0) {
+//     return orders.reduce((total, order) => {
+//       const orderDate = new Date(order.created_at);
+//       if (isToday(orderDate)) {
+//         const orderTotal = order.order_items.reduce(
+//           (sum, item) => sum + item.price,
+//           0
+//         );
+//         return total + orderTotal;
+//       }
+//       return total;
+//     }, 0);
+//   }
+
+//   // otherwise, use cutoff date
+//   const cutoff = subDays(now, days);
+
+//   return orders.reduce((total, order) => {
+//     const orderDate = new Date(order.created_at);
+//     if (isAfter(orderDate, cutoff)) {
+//       const orderTotal = order.order_items.reduce(
+//         (sum, item) => sum + item.price,
+//         0
+//       );
+//       return total + orderTotal;
+//     }
+//     return total;
+//   }, 0);
+// }
+
+// export function calculateRevenue(orders, days) {
+//   if (!Array.isArray(orders)) return 0;
+
+//   const cutoff = new Date();
+//   cutoff.setDate(cutoff.getDate() - days);
+//   cutoff.setHours(23, 59, 59, 999); //end of day
+
+//   return orders.reduce((total, order) => {
+//     if (!order?.created_at || !Array.isArray(order.order_items)) return total;
+
+//     const orderDate = new Date(order.created_at);
+//     if (orderDate >= cutoff) {
+//       const orderTotal = order.order_items.reduce(
+//         (sum, item) => sum + Number(item.price ?? 0),
+//         0
+//       );
+//       return total + orderTotal;
+//     }
+//     return total;
+//   }, 0);
+// }
+
+// Usage
+// const revenueToday = calculateRevenue(orders, 0);
