@@ -78,7 +78,7 @@ export const authConfig = {
         }
       }
 
-      if (trigger === "update" && session?.user) {
+      if (trigger === "update" && session?.user?.role) {
         token.role = session.user.role;
 
         const { error } = await supabase
@@ -86,7 +86,12 @@ export const authConfig = {
           .update({ role: session.user.role })
           .eq("id", token.id);
 
-        if (error) console.error("Error updating user_profile:", error);
+        if (error) {
+          console.error("Error updating user_profile:", error);
+          token.updateError = "Failed to update user role"; // 👈 pass error forward
+        } else {
+          token.updateError = null; // clear error if successful
+        }
       }
 
       return token;

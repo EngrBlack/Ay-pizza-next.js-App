@@ -1,5 +1,6 @@
 import Modal from "@/app/_components/Modal";
-import { use, useState, useTransition } from "react";
+import { deleteUser } from "@/app/_libs/userAction";
+import { useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import {
   HiArrowPath,
@@ -16,13 +17,15 @@ function UserGroupedButton({ onClick, user, onDeleteCategory }) {
   const userId = user?.id;
 
   function handleDelete() {
+    if (!confirm("Are you sure you want to delete this user?")) return;
+
     startTransition(async () => {
-      // try {
-      //   await onDeleteCategory(categoryId);
-      //   toast.success(`Category ${name} was deleted successfully.`);
-      // } catch (error) {
-      //   toast.error("Could not delete Category.");
-      // }
+      try {
+        await deleteUser(userId);
+        toast.success("User deleted successfully");
+      } catch (err) {
+        toast.error(err.message);
+      }
     });
   }
 

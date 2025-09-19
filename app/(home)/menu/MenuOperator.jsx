@@ -5,6 +5,7 @@ import SortBy from "@/app/_components/SortBy";
 import { toCapitaliseWords } from "@/app/_helper/helper";
 
 function MenuOperator({ categories }) {
+  console.log(categories);
   return (
     <div className="md:self-end flex items-center gap-2 mb-4 md:mb-6 md:justify-end md:w-[60%] lg:w-[49%]">
       <div className="basis-[50%] sm:basis-full md:basis-[50%] lg:basis-[60%] ">

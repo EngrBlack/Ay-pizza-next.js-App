@@ -1,5 +1,5 @@
 import { maskId } from "@/app/_helper/helper";
-import { HiEllipsisVertical } from "react-icons/hi2";
+import Image from "next/image";
 import UserGroupedButton from "./UserGroupedButton";
 
 function User({ user }) {
@@ -7,8 +7,9 @@ function User({ user }) {
     <>
       <div>{maskId(user?.id, 8)}</div>
       <div className=" flex items-center gap-4">
-        <figure className="w-10 aspect-square rounded-full overflow-hidden">
-          <img
+        <figure className="w-10 aspect-square rounded-full relative overflow-hidden">
+          <Image
+            quality={40}
             fill
             src={user?.image || "/user.jpg"}
             alt={user?.fullName || ""}

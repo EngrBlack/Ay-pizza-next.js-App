@@ -6,7 +6,7 @@ function Table({ children, size, className }) {
   return (
     <TableContext.Provider value={{ size }}>
       <div
-        className={`border-2 border-cream-100 text-center  rounded shadow-md ${className}`}
+        className={`border-2 border-cream-100 text-center  rounded shadow-md ${className} w-full`}
       >
         {children}
       </div>
@@ -26,7 +26,7 @@ function Header({ children }) {
   const { size } = useTable();
   return (
     <div
-      className={`font-bold text-sm md:text-md p-3 uppercase grid gap-2  place-items-center border border-brown-300 bg-brown-300 text-cream-200 rounded-t-sm ${size} `}
+      className={`font-bold text-sm md:text-md p-3 uppercase grid gap-2  place-items-center border border-brown-300 bg-brown-300 text-cream-200 rounded-t-sm  ${size} `}
     >
       {children}
     </div>

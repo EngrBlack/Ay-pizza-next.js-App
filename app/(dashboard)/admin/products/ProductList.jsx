@@ -18,7 +18,7 @@ const headers = [
   "Actions",
 ];
 
-function ProductList({ menus, count }) {
+function ProductList({ menus, count, categories }) {
   const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
 
   const [optimisticMenus, optimisticDelete] = useOptimistic(
@@ -35,7 +35,7 @@ function ProductList({ menus, count }) {
 
   return (
     <>
-      <MenuOperator />
+      <MenuOperator categories={categories} />
       <Table size="grid-cols-8 " className="p-6">
         <Table.Header>
           {headers.map((el) => (

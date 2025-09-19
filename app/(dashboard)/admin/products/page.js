@@ -2,6 +2,7 @@ import { requireAdmin } from "@/app/_libs/authActions";
 import { getMenus } from "@/app/_libs/menuActions";
 import CreateProductButtton from "./create/CreateProductButtton";
 import ProductList from "./ProductList";
+import { getCategories } from "@/app/_libs/categoryActions";
 
 export const metadata = {
   title: "Availble Product",
@@ -9,6 +10,8 @@ export const metadata = {
 
 export default async function Page({ searchParams }) {
   await requireAdmin();
+
+  const categories = await getCategories();
 
   // FILTER
   const filterValue = searchParams?.category || "all";
@@ -37,7 +40,11 @@ export default async function Page({ searchParams }) {
           <CreateProductButtton />
         </div>
 
-        <ProductList menus={menus || []} count={count || 0} />
+        <ProductList
+          menus={menus || []}
+          count={count || 0}
+          categories={categories}
+        />
       </div>
     </section>
   );

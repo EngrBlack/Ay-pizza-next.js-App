@@ -1,23 +1,32 @@
 import Button from "@/app/_components/Button";
 import InputGroup from "@/app/_components/InputGroup";
 import SelectInput from "@/app/_components/SelectInput";
-import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { updateUserRole } from "@/app/_libs/userAction";
+import { useState, useTransition } from "react";
+import toast from "react-hot-toast";
+import { HiArrowPath, HiOutlinePaperAirplane } from "react-icons/hi2";
 
 function UpdateUserForm({ onCloseModal, user }) {
-  // const { data: session, update } = useSession();
+  const [selected, setSelected] = useState("customer");
+  const [isPending, startTranstion] = useTransition();
 
-  const [selected, setSelected] = useState("");
-  // console.log(selected);
-
-  // console.log(session);
-
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-
-    // await update({
-    //   user: { role: selected }, // triggers jwt(trigger === "update")
-    // });
+    startTranstion(async () => {
+      try {
+        await updateUserRole(user.id, selected);
+        toast.success(
+          `${
+            selected === "admin"
+              ? "User updated to Admin successfully."
+              : "User updated to Customer successfully."
+          }`
+        );
+        onCloseModal();
+      } catch (error) {
+        toast.error("Something went wrong" || error?.message);
+      }
+    });
   }
 
   return (
@@ -33,6 +42,8 @@ function UpdateUserForm({ onCloseModal, user }) {
             type="text"
             name="name"
             id="name"
+            defaultValue={user?.fullName}
+            disabled={true}
             placeholder="Category Name"
           />
         </InputGroup>
@@ -55,15 +66,25 @@ function UpdateUserForm({ onCloseModal, user }) {
             value={selected}
             onChange={(e) => setSelected(e.target.value)}
           >
-            <option value="customer">User</option>
+            <option value="customer">Customer</option>
             <option value="admin">Admin</option>
           </SelectInput>
         </div>
 
         <div className="flex items-center justify-end gap-4 mt-2">
           <Button onClick={onCloseModal}>Cancel</Button>
-          <Button type="danger" position="right">
-            Update
+          <Button
+            type="danger"
+            position={isPending ? "left" : "right"}
+            icon={
+              isPending ? (
+                <HiArrowPath className="animate-spin" />
+              ) : (
+                <HiOutlinePaperAirplane />
+              )
+            }
+          >
+            {isPending ? "Updating..." : " Update"}
           </Button>
         </div>
       </div>

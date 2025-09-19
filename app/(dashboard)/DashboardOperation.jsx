@@ -1,12 +1,12 @@
 "use client";
 
-import SortBy from "../_components/SortBy";
+import Filter from "../_components/Filter";
 
 function DashboardOperation() {
   return (
     <div>
-      <SortBy
-        field="sortedBy"
+      <Filter
+        field="days"
         options={[
           { label: "Today", value: "1" },
           { label: "Last 3 days ago", value: "3" },

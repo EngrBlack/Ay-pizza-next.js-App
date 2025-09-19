@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 async function page({ searchParams }) {
-  const numDays = Number(searchParams?.sortedBy) || 1;
+  const numDays = Number(searchParams?.days) || 1;
 
   const queryDate = subDays(new Date(), numDays).toISOString();
 
@@ -28,7 +28,7 @@ async function page({ searchParams }) {
   );
 
   return (
-    <section className="bg-cream-200 h-screen text-brown">
+    <section className="bg-cream-200 min-h-screen text-brown">
       <div className="px-4 sm:px-6 py-4 sm:py-4 xl:px-10 lg:py-6 w-full tracking-wide flex flex-col gap-2">
         <DashboardHeading />
         <Dashboard
@@ -36,6 +36,8 @@ async function page({ searchParams }) {
           users={users}
           recentOrders={recentOrders}
           totalSalesAndRevenue={totalSalesAndRevenue}
+          numDays={numDays}
+          ordersAfterDate={ordersAfterDate}
         />
       </div>
     </section>

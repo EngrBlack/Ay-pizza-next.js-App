@@ -21,7 +21,7 @@ function RecentSales({ recentOrders }) {
   }
 
   return (
-    <div className="basis-1/2">
+    <div className="basis-1/2 ">
       <Table size="grid-cols-[50px_repeat(3,1fr)_70px]" className="p-4">
         <h2 className="font-rowdies text-xl mb-2">Recent Sales</h2>
 

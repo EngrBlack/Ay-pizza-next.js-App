@@ -162,7 +162,7 @@ export async function getRecentOrders() {
     .from("orders")
     .select("*, user_id(*), order_items(*, menu_id(*))")
     .order("created_at", { ascending: false }) // newest first
-    .limit(8);
+    .limit(10);
 
   if (error) throw new Error(error.message);
 
