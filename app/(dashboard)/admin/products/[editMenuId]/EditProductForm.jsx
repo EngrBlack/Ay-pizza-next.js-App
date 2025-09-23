@@ -4,35 +4,35 @@ import Button from "@/app/_components/Button";
 import InputCheck from "@/app/_components/InputCheck";
 import InputGroup from "@/app/_components/InputGroup";
 import SelectInput from "@/app/_components/SelectInput";
-import { createMenu } from "@/app/_libs/menuActions";
+import { editMenuById } from "@/app/_libs/menuActions";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { HiArrowLeft, HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
 function EditProductForm({ menu, categories }) {
   const router = useRouter();
-
-  console.log(menu);
-
+  const [showSizes, setShowSizes] = useState(false);
+  const [showToppings, setShowToppings] = useState(false);
   const {
     register,
     handleSubmit,
     watch,
     control,
     setValue,
-    reset,
     formState: { isSubmitting, errors },
   } = useForm({
     defaultValues: {
       name: menu?.name || "",
       category: menu?.category?.name || "",
-      sizes: menu?.size || [{ name: "", price: "" }],
-      toppings: menu?.toppings || [{ name: "", price: "" }],
-      base_price: menu?.selected_Size?.at(0)?.price || menu?.base_price || "",
-      available: menu.is_available || true,
+      sizes: Array.isArray(menu?.size) ? menu.size : [],
+      toppings: Array.isArray(menu?.toppings) ? menu.toppings : [],
+      base_price: menu?.base_price || "",
+      available: menu?.is_available ?? true,
       ingredients: menu?.ingredients || "",
-      discount: menu?.discount || "",
+      discount: menu?.discount || 0,
+      image: menu?.image || null,
     },
   });
 
@@ -49,41 +49,34 @@ function EditProductForm({ menu, categories }) {
   } = useFieldArray({ control, name: "toppings" });
 
   async function onSubmit(data) {
-    // try {
-    //   // Normalize for DB
-    //   const payload = {
-    //     ...data,
-    //     sizes:
-    //       data.sizes.length > 0
-    //         ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
-    //         : null,
-    //     toppings:
-    //       data.toppings.length > 0
-    //         ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
-    //         : null,
-    //     base_price: data.base_price,
-    //     image: data.image,
-    //     discount: data.discount ?? 0,
-    //   };
-    //   await createMenu(payload);
-    //   toast.success("Product created successfully!");
-    //   router.push("/admin/products");
-    //   reset();
-    // } catch (err) {
-    //   toast.error(err.message || " Failed to create product");
-    // }
+    try {
+      const payload = {
+        ...data,
+        sizes: data.sizes?.filter((s) => s.name && s.price) || [],
+        toppings: data.toppings?.filter((t) => t.name && t.price) || [],
+        base_price: Number(data.base_price),
+        discount: Number(data.discount) || 0,
+      };
+
+      await editMenuById(payload, menu?.id);
+      toast.success("Product updated successfully!");
+      router.push("/admin/products");
+    } catch (err) {
+      console.error("Form submit error:", err);
+      toast.error(err.message || "Failed to update product");
+    }
   }
 
   return (
     <div className="border-2 border-cream-100 p-6 rounded shadow-md">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {/* Top Row */}
         <div className="flex items-center flex-col gap-4 md:flex-row ">
           <InputGroup label="Product Name">
             <input
               className="input"
               type="text"
               id="name"
-              // defaultValue={menu?.name}
               placeholder="Enter Product Name"
               {...register("name", { required: true })}
             />
@@ -91,9 +84,7 @@ function EditProductForm({ menu, categories }) {
           <InputGroup label="Discount">
             <input
               className="input"
-              type="text"
-              inputMode="number"
-              id="name"
+              type="number"
               placeholder="Discount"
               {...register("discount")}
             />
@@ -112,12 +103,13 @@ function EditProductForm({ menu, categories }) {
             </SelectInput>
           </div>
         </div>
+
+        {/* Price + Image + Available */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <InputGroup label="Price">
             <input
               className="input"
-              type="text"
-              inputMode="number"
+              type="number"
               id="base_price"
               placeholder="Base Price"
               {...register("base_price")}
@@ -130,10 +122,8 @@ function EditProductForm({ menu, categories }) {
               type="file"
               accept="image/*"
               onChange={(e) => {
-                // store File object instead of string
                 const file = e.target.files?.[0];
                 if (file) {
-                  // replace RHF value with File object
                   setValue("image", file, { shouldValidate: true });
                 }
               }}
@@ -148,8 +138,11 @@ function EditProductForm({ menu, categories }) {
             {...register("available")}
           />
         </div>
-        <div className="flex  items-start gap-4">
-          <div className="grow">
+
+        {/* Sizes and Toppings */}
+        <div className="flex items-start gap-4">
+          {/* Sizes */}
+          <div className="basis-1/2">
             <h3 className="font-semibold text-brown-300">Sizes</h3>
             {sizeFields.map((field, i) => (
               <div key={field.id} className="flex gap-4 items-center mb-4">
@@ -157,15 +150,14 @@ function EditProductForm({ menu, categories }) {
                   <input
                     className="input "
                     type="text"
-                    placeholder="Size "
+                    placeholder="Size"
                     {...register(`sizes.${i}.name`)}
                   />
                 </InputGroup>
                 <InputGroup error={errors?.sizes?.[i]?.price?.message}>
                   <input
                     className="input "
-                    type="text"
-                    inputMode="number"
+                    type="number"
                     placeholder="Price"
                     {...register(`sizes.${i}.price`)}
                   />
@@ -173,13 +165,14 @@ function EditProductForm({ menu, categories }) {
                 <Button type="danger" onClick={() => removeSize(i)}>
                   Remove
                 </Button>
-                <Button onClick={() => addSize({ name: "", size: "" })}>
+                <Button onClick={() => addSize({ name: "", price: "" })}>
                   +Add
                 </Button>
               </div>
             ))}
           </div>
 
+          {/* Toppings */}
           <div className="grow">
             <h3 className="font-semibold text-brown-300">Toppings</h3>
             {toppingFields.map((field, i) => (
@@ -195,8 +188,7 @@ function EditProductForm({ menu, categories }) {
                 <InputGroup error={errors?.toppings?.[i]?.price?.message}>
                   <input
                     className="input "
-                    type="text"
-                    inputMode="number"
+                    type="number"
                     placeholder="Price"
                     {...register(`toppings.${i}.price`)}
                   />
@@ -204,22 +196,24 @@ function EditProductForm({ menu, categories }) {
                 <Button type="danger" onClick={() => removeTopping(i)}>
                   Remove
                 </Button>
-                <Button onClick={() => addTopping({ name: "", size: "" })}>
+                <Button onClick={() => addTopping({ name: "", price: "" })}>
                   +Add
                 </Button>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Ingredients */}
         <InputGroup label="Ingredients:">
           <textarea
             className="input h-40 "
-            type="text"
-            name="ingredients"
             {...register("ingredients")}
             placeholder="Enter Product ingredients"
           ></textarea>
         </InputGroup>
+
+        {/* Actions */}
         <div className="self-end mt-2 flex items-center gap-2 sm:gap-4">
           <Button
             type="primary"
@@ -239,7 +233,7 @@ function EditProductForm({ menu, categories }) {
             }
             position={isSubmitting ? "left" : "right"}
           >
-            {isSubmitting ? "Editting..." : " Edit Product"}
+            {isSubmitting ? "Editing..." : "Edit Product"}
           </Button>
         </div>
       </form>

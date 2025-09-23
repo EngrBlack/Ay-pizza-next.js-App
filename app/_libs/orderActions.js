@@ -87,7 +87,7 @@ export async function placeOrder() {
   }
 }
 
-export async function getUserOrders(orderId) {
+export async function getUserOrderByOrdeId(orderId) {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -121,19 +121,31 @@ export async function updateOrderToPaid(orderId) {
   // return data;
 }
 
-export async function getAllOrders() {
+export async function getAllOrders(sortBy, page) {
   const userProfile = await getUserProfile();
   const user = userProfile;
   if (user?.role !== "admin") throw new Error("User is not authorized");
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("orders")
-    .select("*, user_id(*), order_items(*, menu_id(*)) ")
-    .order("created_at", { ascending: false });
+    .select("*, user_id(*), order_items(*, menu_id(*)) ", { count: "exact" });
 
+  if (sortBy) {
+    const { field, direction } = sortBy;
+    query = query.order(field, { ascending: direction === "asc" });
+  }
+
+  if (page) {
+    const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE) || 10; // fallback pageSize
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, error, count } = await query;
   if (error) throw new Error(error.message);
 
-  return data;
+  return { data, count };
 }
 
 export async function getOrderById(orderId) {
@@ -168,21 +180,37 @@ export async function getRecentOrders() {
 
   return data ?? [];
 }
-
-export async function getAllUserOrders() {
+export async function getUserOrders(sortBy, page) {
   const userProfile = await getUserProfile();
   const userId = userProfile?.id;
   if (!userId) throw new Error("User must be logged in.");
 
-  const { data, error } = await supabase
+  let query = supabase
     .from("orders")
-    .select("*, user_id(*), order_items(*, menu_id(*)) ")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+    .select("*, user_id(*), order_items(*, menu_id(*))", { count: "exact" })
+    .eq("user_id", userId);
 
+  // ✅ Safe default sort (created_at DESC)
+  const { field, direction } = sortBy || {
+    field: "created_at",
+    direction: "desc",
+  };
+
+  if (field) {
+    query = query.order(field, { ascending: direction === "asc" });
+  }
+
+  if (page) {
+    const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE) || 10; // fallback pageSize
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, error, count } = await query;
   if (error) throw new Error(error.message);
 
-  return data;
+  return { data, count };
 }
 
 export async function deleteOrderById(orderId) {

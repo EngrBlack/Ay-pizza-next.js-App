@@ -23,8 +23,8 @@ function MenuOperator({ categories }) {
       <SortBy
         field="sortedBy"
         options={[
-          { label: "Latest Added (Recently)", value: "created_at-asc" },
-          { label: "Latest Added (Old)", value: "created_at-desc" },
+          { label: "Latest Added (Old)", value: "created_at-asc" },
+          { label: "Latest Added (Recently)", value: "created_at-desc" },
           { label: "Price (Low - High)", value: "base_price-asc" },
           { label: "Price (High - Low)", value: "base_price-desc" },
           { label: "Name (A-Z)", value: "name-asc" },

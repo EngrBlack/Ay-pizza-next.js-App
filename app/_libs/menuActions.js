@@ -138,6 +138,74 @@ export async function createMenu(product) {
   revalidatePath("/admin/products");
   return data;
 }
+export async function editMenuById(editedMenu, menuId) {
+  const session = await auth();
+  if (session?.user?.role !== "admin") {
+    throw new Error("User is not authorized");
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+  const file = editedMenu.image instanceof File ? editedMenu.image : null;
+
+  let imagePath = null;
+  let imageName = null;
+
+  if (file) {
+    imageName = `${nanoid(10)}-${file.name}`.replaceAll("/", "");
+    imagePath = `${supabaseUrl}/storage/v1/object/public/menu-image/${imageName}`;
+  } else if (typeof editedMenu.image === "string") {
+    imagePath = editedMenu.image;
+  }
+
+  const normalizedCategory = editedMenu.category?.replace("_", " ");
+  const categoryId = await getCategoryIdByName(normalizedCategory);
+
+  const updatePayload = {
+    name: editedMenu.name,
+    category_id: categoryId,
+    base_price: Number(editedMenu.base_price) || 0,
+    size: Array.isArray(editedMenu.sizes) ? editedMenu.sizes : null,
+    toppings: Array.isArray(editedMenu.toppings) ? editedMenu.toppings : null,
+    ingredients: editedMenu.ingredients || "",
+    image: imagePath,
+    discount: Number(editedMenu.discount) || 0,
+    is_available: Boolean(editedMenu.available),
+  };
+
+  console.log("🔍 Updating menu with ID:", menuId);
+  console.log("Update payload:", updatePayload);
+
+  const { data, error } = await supabase
+    .from("menu")
+    .update(updatePayload)
+    .eq("id", menuId)
+    .select();
+
+  if (error) {
+    console.error("❌ Supabase update error:", error);
+    throw new Error(
+      "Menu update failed: " + (error.message || JSON.stringify(error))
+    );
+  }
+
+  if (!file) {
+    revalidatePath("/admin/products");
+    return data?.[0] || null;
+  }
+
+  const { error: storageError } = await supabase.storage
+    .from("menu-image")
+    .upload(imageName, file, { upsert: true });
+
+  if (storageError) {
+    console.error("❌ Image upload failed:", storageError);
+    throw new Error("Image upload failed: " + storageError.message);
+  }
+
+  revalidatePath("/admin/products");
+  return data?.[0] || null;
+}
 
 // export async function createEditCategory(newCategory, id) {
 //   const session = await auth();
@@ -147,23 +215,39 @@ export async function createMenu(product) {
 
 //   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
-//   // If the image is already a URL
-//   const hasImagePath = newCategory.image?.startsWith?.("http");
+//   // Normalize image input
+//   const file =
+//     newCategory.image instanceof File
+//       ? newCategory.image
+//       : newCategory.image?.[0] instanceof File
+//         ? newCategory.image[0]
+//         : null;
 
-//   // Generate a unique image name if it's a File
-//   const imageName = hasImagePath
-//     ? null
-//     : `${nanoid(10)}-${newCategory.image?.name}`.replaceAll("/", "");
+//   let imagePath = null;
+//   let imageName = null;
 
-//   // Build image path
-//   const imagePath = hasImagePath
-//     ? newCategory.image
-//     : `${supabaseUrl}/storage/v1/object/public/category-image/${imageName}`;
+//   if (file) {
+//     imageName = `${nanoid(10)}-${file.name}`.replaceAll("/", "");
+//     imagePath = `${supabaseUrl}/storage/v1/object/public/category-image/${imageName}`;
+//   } else if (typeof newCategory.image === "string") {
+//     // preserve old path
+//     imagePath = newCategory.image;
+//   }
 
 //   let query = supabase.from("category");
 
 //   if (!id) {
 //     // CREATE
+//     const { data: existingCategory, error: existingError } = await query
+//       .select("id")
+//       .eq("name", newCategory.name)
+//       .maybeSingle();
+
+//     if (existingError) throw new Error(existingError.message);
+//     if (existingCategory) {
+//       throw new Error("Category already exists in your list.");
+//     }
+
 //     query = query
 //       .insert([{ name: newCategory.name, image: imagePath }])
 //       .select()
@@ -178,24 +262,28 @@ export async function createMenu(product) {
 //   }
 
 //   const { data, error } = await query;
-//   if (error) throw new Error("Category could not be created/updated");
+//   if (error) throw new Error(error.message || "Category create/update failed");
 
-//   // If image is already hosted, return
-//   if (hasImagePath) {
+//   // If no new file, we’re done
+//   if (!file) {
 //     revalidatePath("/admin/category");
 //     return data;
 //   }
 
-//   // Upload new image to Supabase storage
+//   // Upload the new file
 //   const { error: storageError } = await supabase.storage
 //     .from("category-image")
-//     .upload(imageName, newCategory.image);
+//     .upload(imageName, file, { upsert: true });
 
 //   if (storageError) {
-//     // Rollback the DB insert if image upload failed
-//     await supabase.from("category").delete().eq("id", data.id);
+//     if (!id) {
+//       // rollback on create only
+//       await supabase.from("category").delete().eq("id", data.id);
+//     }
 //     throw new Error(
-//       `Image upload failed: ${storageError.message}, category was deleted.`
+//       `Image upload failed: ${storageError.message}${
+//         !id ? ", category was deleted." : ""
+//       }`
 //     );
 //   }
 

@@ -13,7 +13,7 @@ function CustomerOrderList({ order }) {
       transition={{ duration: 0.6, delay: 0.2 }}
       className="mt-4 xl:mt-6 grid md:grid-cols-2 gap-0.5 gap-x-8 lg:gap-x-12 shadow-md border-2 border-cream-100 rounded-md p-4 "
     >
-      {orderItems.map((orderItem) => (
+      {orderItems?.map((orderItem) => (
         <CustomerOrderItem key={orderItem.id} orderItem={orderItem} />
       ))}
     </motion.div>

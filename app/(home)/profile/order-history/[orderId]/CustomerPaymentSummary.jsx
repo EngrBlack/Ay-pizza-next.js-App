@@ -10,8 +10,8 @@ function CustomerPaymentSummary({ order }) {
     tax_price: taxPrice,
     items_price: itemsPrice,
     total_price: totalPrice,
-    order_items: orderItems,
-  } = order;
+    order_items: orderItems = [], // 👈 fallback to empty array
+  } = order || {};
 
   const totalQuantity = orderItems.reduce(
     (accu, cur) => accu + cur?.quantity,

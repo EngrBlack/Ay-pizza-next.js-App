@@ -1,11 +1,12 @@
-import { getUserOrders } from "@/app/_libs/orderActions";
+import { getUserOrderByOrdeId } from "@/app/_libs/orderActions";
 import CustomerDetails from "./CustomerDetails";
 import CustomerOrderInfo from "./CustomerOrderInfo";
-import CustomerPaymentSummary from "./CustomerPaymentSummary";
 import CustomerOrderList from "./CustomerOrderList";
+import CustomerPaymentSummary from "./CustomerPaymentSummary";
 
 async function page({ params }) {
-  const order = await getUserOrders(params.orderId);
+  const order = await getUserOrderByOrdeId(params.orderId);
+  console.log(order);
 
   return (
     <section className="bg-cream-200 h-full  mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">

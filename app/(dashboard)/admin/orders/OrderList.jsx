@@ -4,6 +4,7 @@ import Table from "@/app/_components/Table";
 import OrderItem from "./OrderItem";
 import { useOptimistic } from "react";
 import { deleteOrderById } from "@/app/_libs/orderActions";
+import Pagination from "@/app/_components/Pagination";
 
 const headers = [
   "ID",
@@ -15,7 +16,9 @@ const headers = [
   "Actions",
 ];
 
-function OrderList({ orders }) {
+function OrderList({ orders, count }) {
+  const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
+
   const [optimisticOrders, optimisticDelete] = useOptimistic(
     orders,
     function (curOrders, orderId) {
@@ -29,19 +32,22 @@ function OrderList({ orders }) {
   }
 
   return (
-    <Table size="grid-cols-7" className="p-6">
-      <Table.Header>
-        {headers.map((el) => (
-          <div key={el}>{el}</div>
-        ))}
-      </Table.Header>
+    <div>
+      <Table size="grid-cols-7" className="p-6">
+        <Table.Header>
+          {headers.map((el) => (
+            <div key={el}>{el}</div>
+          ))}
+        </Table.Header>
 
-      {optimisticOrders.map((order) => (
-        <Table.Body key={order.id} className="p-2.5 ">
-          <OrderItem order={order} onDeleteOrder={handleDeleteOrder} />
-        </Table.Body>
-      ))}
-    </Table>
+        {optimisticOrders.map((order) => (
+          <Table.Body key={order.id} className="p-2.5 ">
+            <OrderItem order={order} onDeleteOrder={handleDeleteOrder} />
+          </Table.Body>
+        ))}
+      </Table>
+      {count > pageSize && <Pagination field="page" count={count} />}
+    </div>
   );
 }
 

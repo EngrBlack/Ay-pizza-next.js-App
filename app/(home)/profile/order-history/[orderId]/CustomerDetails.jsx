@@ -4,13 +4,7 @@ import Flexitem from "@/app/_components/Flexitem";
 import { motion } from "framer-motion";
 
 function CustomerDetails({ order }) {
-  const {
-    user_id: {
-      fullName,
-      email,
-      address: { contact, address, city, state },
-    },
-  } = order;
+  const { user_id } = order;
 
   return (
     <motion.div
@@ -21,17 +15,17 @@ function CustomerDetails({ order }) {
     >
       <h2 className="font-bold lg:text-xl">Contact Info:</h2>
       <Flexitem label="Name:" className="text-sm lg:text-base">
-        {fullName}
+        {user_id?.fullName}
       </Flexitem>
       <Flexitem label="Email:" className="text-sm lg:text-base">
-        {email}
+        {user_id?.email}
       </Flexitem>
       <Flexitem label="contact:" className="text-sm lg:text-base">
-        {contact}
+        {user_id?.address?.contact}
       </Flexitem>
       <Flexitem label=" Address:" className="text-sm lg:text-base">
         <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-sm justify-self-end">
-          {`${address} | ${city} | ${state}.`}
+          {`${user_id?.address?.address} | ${user_id?.address?.city} | ${user_id?.address?.state}.`}
         </div>
       </Flexitem>
     </motion.div>

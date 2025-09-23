@@ -4,21 +4,29 @@ import { framerContainer } from "@/app/_helper/framerMotion";
 import HistoryCard from "./HistoryCard";
 import { motion } from "framer-motion";
 import EmptyOrderHistory from "./EmptyOrderHistory";
+import Pagination from "@/app/_components/Pagination";
 
-function OrderHistory({ userOrders }) {
+function OrderHistory({ userOrders, count }) {
+  const pageSize = Number(process.env.NEXT_PUBLIC_PAGE_SIZE);
+
   return (
-    <motion.ul
-      variants={framerContainer}
-      initial="hidden"
-      animate="show"
-      className="grid md:grid-cols-2 gap-4"
-    >
-      {userOrders.length > 0 ? (
-        userOrders.map((order) => <HistoryCard key={order.id} order={order} />)
-      ) : (
-        <EmptyOrderHistory />
-      )}
-    </motion.ul>
+    <div>
+      <motion.ul
+        variants={framerContainer}
+        initial="hidden"
+        animate="show"
+        className="grid md:grid-cols-2 gap-4"
+      >
+        {userOrders.length > 0 ? (
+          userOrders.map((order) => (
+            <HistoryCard key={order.id} order={order} />
+          ))
+        ) : (
+          <EmptyOrderHistory />
+        )}
+      </motion.ul>
+      {count > pageSize && <Pagination field="page" count={count} />}
+    </div>
   );
 }
 
