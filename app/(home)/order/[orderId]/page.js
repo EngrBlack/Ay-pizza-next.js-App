@@ -1,6 +1,6 @@
 import { maskId } from "@/app/_helper/helper";
 import { getUserProfile } from "@/app/_libs/checkoutActions";
-import { getUserOrdersByOrdeId } from "@/app/_libs/orderActions";
+import { getUserOrderByOrdeId } from "@/app/_libs/orderActions";
 import OrderInProcess from "./OrderInProcess";
 
 export async function generateMetadata({ params }) {
@@ -10,7 +10,7 @@ export async function generateMetadata({ params }) {
 
 async function page({ params }) {
   const { orderId } = params;
-  const orders = await getUserOrdersByOrdeId(orderId);
+  const orders = await getUserOrderByOrdeId(orderId);
   const user = await getUserProfile();
 
   return (
