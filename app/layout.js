@@ -1,5 +1,6 @@
 import { Pacifico, Rowdies } from "next/font/google";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 
 export const pacifico = Pacifico({
   weight: "400",

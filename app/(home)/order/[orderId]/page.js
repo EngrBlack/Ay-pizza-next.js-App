@@ -4,7 +4,7 @@ import { getUserOrderByOrdeId } from "@/app/_libs/orderActions";
 import OrderInProcess from "./OrderInProcess";
 
 export async function generateMetadata({ params }) {
-  const { id: orderId } = await getUserOrders(params.orderId);
+  const { id: orderId } = await getUserOrderByOrdeId(params.orderId);
   return { title: `Order ${maskId(orderId)}` };
 }
 
@@ -12,6 +12,8 @@ async function page({ params }) {
   const { orderId } = params;
   const orders = await getUserOrderByOrdeId(orderId);
   const user = await getUserProfile();
+
+  console.log(orders);
 
   return (
     <section className=" px-4 mt-[4rem] sm:mt-[5rem] lg:mt-[6rem] lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">

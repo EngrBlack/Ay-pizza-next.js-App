@@ -98,8 +98,7 @@ export async function getUserOrderByOrdeId(orderId) {
     .select("*, user_id(*), order_items(*, menu_id(*)) ")
     .eq("user_id", userId)
     .eq("id", orderId)
-    .single()
-    .order("created_at", { ascending: false });
+    .single();
 
   if (error) throw new Error(error.message);
 

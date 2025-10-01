@@ -6,7 +6,6 @@ import { getAllUsers } from "@/app/_libs/userAction";
 import { subDays } from "date-fns";
 import Dashboard from "../Dashboard";
 import DashboardHeading from "./DashboardHeading";
-
 export const metadata = {
   title: "Admin Dashboard",
 };
@@ -31,6 +30,7 @@ async function page({ searchParams }) {
     <section className="bg-cream-200 min-h-screen text-brown">
       <div className="px-4 sm:px-6 py-4 sm:py-4 xl:px-10 lg:py-6 w-full tracking-wide flex flex-col gap-2">
         <DashboardHeading />
+
         <Dashboard
           menuCount={menuCount}
           users={users}
