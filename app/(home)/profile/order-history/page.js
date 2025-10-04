@@ -21,7 +21,7 @@ async function page({ searchParams }) {
   return (
     <section className="bg-cream-200 h-full  mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">
       <div className="px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full xl:w-[95%] ">
-        <OrderHistoryHeading />
+        <OrderHistoryHeading userOrders={userOrders} />
         <OrderHistory userOrders={userOrders} count={count} />
       </div>
     </section>

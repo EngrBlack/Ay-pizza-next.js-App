@@ -15,7 +15,7 @@ function UserProfileDetails({ user }) {
   return (
     <div className="flex flex-col gap-6">
       <ProfileHeader onEdit={onEdit} />
-      {isEdit ? (
+      {isEdit && (user !== null || {}) ? (
         <EditProfileForm user={user} onEdit={onEdit} />
       ) : (
         <ProfileCard user={user} />

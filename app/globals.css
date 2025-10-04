@@ -98,7 +98,7 @@ body {
   }
 
   .button {
-    @apply flex items-center justify-center gap-2 border py-2 sm:py-2.5 px-5 rounded text-cream-200 shadow-slate-400 shadow-sm  bg-orangered-100 border-none hover:bg-orangered-200 hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm self-center font-bold text-base  cursor-pointer  transition-all duration-300;
+    @apply flex items-center justify-center gap-2 border py-2 sm:py-2.5 px-5 rounded text-cream-200 shadow-slate-400 shadow-sm  bg-orangered-100 border-none hover:bg-orangered-200 hover:shadow-md focus:bg-orangered-200 focus:shadow-md transform hover:-translate-y-0.5 focus:-translate-y-0.5 active:translate-y-0 active:shadow-sm self-center font-bold text-base  cursor-pointer  transition-all duration-300;
   }
 
   .pagination-button {
@@ -115,7 +115,8 @@ body {
 
   @media only screen and (max-width: 1000px) {
     .bg-nav {
-      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
         url("/burger-1.jpg");
       background-size: cover;
       background-position: center;

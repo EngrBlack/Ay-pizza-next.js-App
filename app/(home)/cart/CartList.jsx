@@ -61,7 +61,7 @@ function CartList({ cartItems, totalCartQuantity }) {
           />
         )}
       </div>
-      {cartItems.length ? (
+      {cartItems?.length ? (
         <div>
           {optimisticCartItems?.map((cart) => (
             <CartItem

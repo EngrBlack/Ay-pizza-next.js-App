@@ -21,7 +21,7 @@ function UpdateItemQuantity({ quantity, cartId }) {
     <div className="place-self-end flex items-center w-fit gap-2 sm:gap-3  p-1  rounded-full bg-orangered-100 text-cream-200 font-bold text-lg">
       <button
         onClick={handleDecreaseItem}
-        className="border-1 w-6 h-6 p-1 sm:p-3 grid place-content-center rounded-full hover:bg-cream-200 hover:text-orangered-100 trans cursor-pointer"
+        className="border-1 w-6 h-6 p-1 sm:p-3 grid place-content-center rounded-full hover:bg-cream-200 hover:text-orangered-100 focus:bg-cream-200 focus:text-orangered-100 trans cursor-pointer"
       >
         -
       </button>
@@ -34,7 +34,7 @@ function UpdateItemQuantity({ quantity, cartId }) {
 
       <button
         onClick={handleIncreaseItem}
-        className="border-1 w-6 h-6 p-1 sm:p-3 grid place-content-center rounded-full hover:bg-cream-200 hover:text-orangered-100 trans cursor-pointer"
+        className="border-1 w-6 h-6 p-1 sm:p-3 grid place-content-center rounded-full hover:bg-cream-200 hover:text-orangered-100 focus:bg-cream-200 focus:text-orangered-100 trans cursor-pointer"
       >
         <span>+</span>
       </button>

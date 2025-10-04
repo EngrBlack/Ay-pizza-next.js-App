@@ -1,10 +1,11 @@
 "use client";
 
 import Flexitem from "@/app/_components/Flexitem";
+import { formatCurrency } from "@/app/_helper/helper";
 import { motion } from "framer-motion";
 
 function CustomerDetails({ order }) {
-  const { user_id } = order;
+  const { delivery_price, user_id } = order;
 
   return (
     <motion.div
@@ -23,8 +24,9 @@ function CustomerDetails({ order }) {
       <Flexitem label="contact:" className="text-sm lg:text-base">
         {user_id?.address?.contact}
       </Flexitem>
+      <Flexitem label="Closest Location:">{user_id?.closest_location}</Flexitem>
       <Flexitem label=" Address:" className="text-sm lg:text-base">
-        <div className=" bg-brown text-cream-100 w-fit rounded-lg  py-2 px-4 text-sm justify-self-end">
+        <div className=" bg-brown-300 text-cream-100 w-fit rounded-lg  py-2 px-4 text-sm justify-self-end">
           {`${user_id?.address?.address} | ${user_id?.address?.city} | ${user_id?.address?.state}.`}
         </div>
       </Flexitem>

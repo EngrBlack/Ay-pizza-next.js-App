@@ -20,7 +20,7 @@ function RemoveCartItem({ cartId, onRemoveCartItem }) {
   return (
     <button
       onClick={handleRemoveCartItem}
-      className="place-self-center  flex items-center justify-center gap-0.5 sm:gap-1 text-xs md:text-sm border border-brown text-brown rounded py-1 sm:py-1.5  px-2 sm:px-3 md:px-2 group hover:bg-brown hover:text-cream-200 trans ease-in-out w-full "
+      className="place-self-center  flex items-center justify-center gap-0.5 sm:gap-1 text-xs md:text-sm border border-brown text-brown rounded py-1 sm:py-1.5  px-2 sm:px-3 md:px-2 group hover:bg-brown hover:text-cream-200 focus:bg-brown focus:text-cream-200 trans ease-in-out w-full "
     >
       {isPending ? (
         <div className="px-6">

@@ -11,21 +11,23 @@ function OrderHistory({ userOrders, count }) {
 
   return (
     <div>
-      <motion.ul
-        variants={framerContainer}
-        initial="hidden"
-        animate="show"
-        className="grid md:grid-cols-2 gap-4"
-      >
-        {userOrders.length > 0 ? (
-          userOrders.map((order) => (
+      {userOrders?.length > 0 ? (
+        <motion.ul
+          variants={framerContainer}
+          initial="hidden"
+          animate="show"
+          className="grid md:grid-cols-2 gap-4"
+        >
+          {userOrders.map((order) => (
             <HistoryCard key={order.id} order={order} />
-          ))
-        ) : (
-          <EmptyOrderHistory />
-        )}
-      </motion.ul>
-      {count > pageSize && <Pagination field="page" count={count} />}
+          ))}
+        </motion.ul>
+      ) : (
+        <EmptyOrderHistory />
+      )}
+      {count > pageSize && userOrders?.length > 0 && (
+        <Pagination field="page" count={count} />
+      )}
     </div>
   );
 }

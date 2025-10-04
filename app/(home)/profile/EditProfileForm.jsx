@@ -13,8 +13,8 @@ import { HiArrowPath, HiEnvelope, HiMapPin, HiUser } from "react-icons/hi2";
 
 function EditProfileForm({ user, onEdit }) {
   const { fullName, address } = user;
-  const firstName = fullName.split(" ")?.at(0);
-  const lastName = fullName.split(" ")?.at(1);
+  const firstName = fullName?.split(" ")?.at(0);
+  const lastName = fullName?.split(" ")?.at(1);
 
   const [selectedState, setSelectedState] = useState(address?.state);
   const [selectedCity, setSelectedCity] = useState("");

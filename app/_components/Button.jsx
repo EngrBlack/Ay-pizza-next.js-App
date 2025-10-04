@@ -1,9 +1,10 @@
 const variant = {
   primary:
-    "border-brown bg-cream-200 text-brown hover:bg-brown hover:text-cream-200 ",
+    "border-brown bg-cream-200 text-brown hover:bg-brown hover:text-cream-200 focus:bg-brown focus:text-cream-200",
   danger:
-    "bg-orangered-100 border-none text-cream-200 hover:bg-orangered-200  py-2 ",
-  secondary: "border-cream-200 bg-brown hover:bg-cream-200 hover:text-brown ",
+    "bg-orangered-100 border-none text-cream-200 hover:bg-orangered-200 focus:bg-orangered-200  py-2 ",
+  secondary:
+    "border-cream-200 text-cream-200 bg-brown hover:bg-cream-200 hover:text-brown focus:bg-cream-200 focus:text-brown",
   gradient: "gradient border-none text-cream-200 ",
 };
 
@@ -21,9 +22,9 @@ function Button({
       onClick={onClick}
       className={`
     flex items-center justify-center  gap-2 w-fit  px-2.5 py-1.5 sm:py-2  lg:px-3.5  text-[0.8rem] font-medium outline-0 rounded-sm cursor-pointer border shadow-xl trans
-    hover:-translate-y-0.5 active:translate-y-0 active:shadow-lg md:text-[15px] disabled:cursor-not-allowed  ${className} ${
-        variant[type]
-      } ${width === "full" ? "w-full font-semibold " : ""}
+    hover:-translate-y-0.5 focus:-translate-y-0.5 active:translate-y-0 active:shadow-lg md:text-[15px] disabled:cursor-not-allowed  ${className} ${
+      variant[type]
+    } ${width === "full" ? "w-full font-semibold " : ""}
   `}
     >
       {position === "left" ? (

@@ -6,7 +6,6 @@ import CustomerPaymentSummary from "./CustomerPaymentSummary";
 
 async function page({ params }) {
   const order = await getUserOrderByOrdeId(params.orderId);
-  console.log(order);
 
   return (
     <section className="bg-cream-200 h-full  mt-[4rem] sm:mt-[5rem] lg:mt-[6rem]">

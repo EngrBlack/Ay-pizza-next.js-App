@@ -13,6 +13,7 @@ export async function getUserProfile() {
     .select("*")
     .eq("id", userId)
     .single();
+
   if (error) throw new Error(error.message || "Could not get user profile.");
   return data;
 }

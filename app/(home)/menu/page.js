@@ -34,7 +34,7 @@ async function page({ searchParams }) {
       <div className=" px-4  lg:px-12 lg:py-12 sm:px-6 xl:px-32 py-8 mx-auto w-full">
         <Heading>our menu</Heading>
         <div className="relative">
-          {menus.length > 0 ? (
+          {menus?.length > 0 ? (
             <MenuList
               menus={menus}
               count={count || 0}
