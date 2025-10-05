@@ -2,7 +2,7 @@ import { maskId } from "@/app/_helper/helper";
 import Image from "next/image";
 import UserGroupedButton from "./UserGroupedButton";
 
-function User({ user }) {
+function User({ user, onDeleteUser }) {
   return (
     <>
       <div>{maskId(user?.id, 8)}</div>
@@ -27,7 +27,7 @@ function User({ user }) {
         {user?.role}
       </div>
       <div>
-        <UserGroupedButton user={user} />
+        <UserGroupedButton user={user} onDeleteUser={onDeleteUser} />
       </div>
     </>
   );

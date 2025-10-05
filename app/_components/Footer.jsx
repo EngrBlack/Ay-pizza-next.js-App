@@ -20,10 +20,10 @@ function Footer() {
               <Link href="/">FAQs</Link>
             </li>
             <li>
-              <Link href="/">Contact Us</Link>
+              <Link href="/contact">Contact Us</Link>
             </li>
             <li>
-              <Link href="/">Store Location</Link>
+              <Link href="/contact">Store Location</Link>
             </li>
           </ul>
         </div>
@@ -32,19 +32,19 @@ function Footer() {
           <h2 className="text-lg font-bold">Account</h2>
           <ul className="space-y-1 *:text-[12px] *:md:text-[14px] *:text-grey *:hover:underline trans">
             <li>
-              <Link href="/">My Account</Link>
+              <Link href="/profile">My Account</Link>
             </li>
             <li>
-              <Link href="/">My Cart</Link>
+              <Link href="/cart">My Cart</Link>
             </li>
             <li>
-              <Link href="/">Order History</Link>
+              <Link href="/profile/order-history">Order History</Link>
             </li>
             <li>
-              <Link href="/">My Wishlist</Link>
+              <Link href="/wishlist">My Wishlist</Link>
             </li>
             <li>
-              <Link href="/">My Address</Link>
+              <Link href="/profile">My Address</Link>
             </li>
           </ul>
         </div>
@@ -53,16 +53,16 @@ function Footer() {
           <h2 className="text-lg font-bold">Privacy and Terms</h2>
           <ul className="space-y-1 *:text-[12px] *:md:text-[14px] *:text-grey *:hover:underline trans">
             <li>
-              <Link href="/">Payment Policy</Link>
+              <Link href="/not-found">Payment Policy</Link>
             </li>
             <li>
-              <Link href="/">Privacy Policy</Link>
+              <Link href="/not-found">Privacy Policy</Link>
             </li>
             <li>
-              <Link href="/">Shipping Policy</Link>
+              <Link href="/not-found">Shipping Policy</Link>
             </li>
             <li>
-              <Link href="/">Terms and Conditions</Link>
+              <Link href="/not-found">Terms and Conditions</Link>
             </li>
           </ul>
         </div>

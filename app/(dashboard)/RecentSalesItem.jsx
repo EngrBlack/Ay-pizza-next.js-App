@@ -6,13 +6,13 @@ function RecentSalesItem({ recentOrder, onDeleteRecentOrder }) {
   const {
     id: recentOrderId,
     total_price: totalPrice,
-    user_id: { address },
+    user_id,
     created_at: createdAt,
   } = recentOrder;
   return (
     <>
       <div>{maskId(recentOrderId, 5)}</div>
-      <div>{address?.fullName} </div>
+      <div>{user_id?.address?.fullName} </div>
       <div>{formatDateTime(createdAt)}</div>
       <div className="font-bold">{formatCurrency(totalPrice)}</div>
       <div>

@@ -10,7 +10,6 @@ function OrderInfo({ order, updatePaymentStatus }) {
     is_delivered: isDelivered,
     payment_method: paymentMethod,
   } = order;
-  console.log(order);
 
   return (
     <div className="basis-1/2 shadow-md border-2 border-cream-100 rounded-md p-4 flex flex-col gap-2">
@@ -25,7 +24,7 @@ function OrderInfo({ order, updatePaymentStatus }) {
           </span>
         ) : (
           <span className=" bg-orange-400 text-cream-100 rounded-full py-1.5 px-4">
-            In Progress
+            In Progress...
           </span>
         )}
       </Flexitem>

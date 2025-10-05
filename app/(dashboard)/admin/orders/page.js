@@ -19,8 +19,6 @@ async function page({ searchParams }) {
   const currentPage = Number(searchParams?.page) || 1;
   const { data: orders, count } = await getAllOrders(sortBy, currentPage);
 
-  console.log(orders);
-
   return (
     <section className="bg-cream-200 ">
       <div className="px-4 sm:px-6 py-4 sm:py-10 xl:px-10 lg:py-10 w-full tracking-wide bg-cream-200">

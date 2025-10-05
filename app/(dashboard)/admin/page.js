@@ -19,7 +19,8 @@ async function page({ searchParams }) {
   await requireAdmin();
   const menus = await getMenus();
   const menuCount = menus?.count;
-  const users = await getAllUsers();
+  const { data: users } = await getAllUsers();
+
   const recentOrders = await getRecentOrders();
   const ordersAfterDate = await getOrdersAfterDate(queryDate);
   const totalSalesAndRevenue = calculateSalesAndRevenue(

@@ -10,18 +10,18 @@ import {
 import ConfirmDelete from "../../../_components/ConfirmDelete";
 import UpdateUserForm from "./UpdateUserForm";
 
-function UserGroupedButton({ onClick, user, onDeleteCategory }) {
+function UserGroupedButton({ onClick, user, onDeleteUser }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const userId = user?.id;
 
   function handleDelete() {
-    if (!confirm("Are you sure you want to delete this user?")) return;
+    // if (!confirm("Are you sure you want to delete this user?")) return;
 
     startTransition(async () => {
       try {
-        await deleteUser(userId);
+        await onDeleteUser(userId);
         toast.success("User deleted successfully");
       } catch (err) {
         toast.error(err.message);

@@ -8,6 +8,7 @@ function PaymentSummary({ order }) {
     items_price: itemsPrice,
     total_price: totalPrice,
     order_items: orderItems,
+    is_paid: isPaid,
   } = order;
 
   const totalQuantity = orderItems.reduce(
@@ -29,7 +30,11 @@ function PaymentSummary({ order }) {
           {formatCurrency(taxPrice)}
         </Flexitem>
         <div className="flex items-center justify-between font-bold text-sm sm:text-base md:text-xl border-t-1 border-brown-300 pt-2">
-          <p>Total to be paid by Customer:</p>
+          <p>
+            {isPaid
+              ? "Total paid by Customer:"
+              : "Total to be paid by Customer:"}
+          </p>
           <p>{formatCurrency(totalPrice)}</p>
         </div>
       </div>

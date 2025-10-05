@@ -60,7 +60,6 @@ export async function signUp(formData) {
     options: {
       data: {
         fullName: credentials.fullName,
-        // avatar: "",
       },
     },
   });
@@ -68,15 +67,17 @@ export async function signUp(formData) {
   // Handle Supabase errors first
   if (error) {
     return {
-      status: error.message,
+      status: "error",
+      message: error.message,
       user: null,
     };
   }
 
-  // If `identities` is empty, the email is already registered
-  if (data?.user?.identities?.length === 0) {
+  // Check if user already exists
+  if (data?.user && data.user.identities?.length === 0) {
     return {
-      status: "User with this email already exists, please login",
+      status: "error",
+      message: "User with this email already exists, please login",
       user: null,
     };
   }
@@ -86,7 +87,9 @@ export async function signUp(formData) {
 
   return {
     status: "success",
-    user: data,
+    message:
+      "Account created successfully! Please check your Email-Box for  email verification.",
+    user: data.user,
   };
 }
 

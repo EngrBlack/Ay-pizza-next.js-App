@@ -12,9 +12,10 @@ export async function getUserProfile() {
     .from("users_profile")
     .select("*")
     .eq("id", userId)
-    .single();
+    .maybeSingle();
 
   if (error) throw new Error(error.message || "Could not get user profile.");
+  if (!data) throw new Error("User profile not found.");
   return data;
 }
 
