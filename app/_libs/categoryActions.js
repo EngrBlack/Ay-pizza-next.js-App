@@ -18,8 +18,8 @@ export async function createEditCategory(newCategory, id) {
     newCategory.image instanceof File
       ? newCategory.image
       : newCategory.image?.[0] instanceof File
-      ? newCategory.image[0]
-      : null;
+        ? newCategory.image[0]
+        : null;
 
   let imagePath = null;
   let imageName = null;
@@ -65,7 +65,7 @@ export async function createEditCategory(newCategory, id) {
   // If no new file, we’re done
   if (!file) {
     revalidatePath("/admin/category");
-    return data;
+    return { success: true, data };
   }
 
   // Upload the new file
@@ -86,7 +86,7 @@ export async function createEditCategory(newCategory, id) {
   }
 
   revalidatePath("/admin/category");
-  return data;
+  return { success: true, data };
 }
 
 export async function getCategories() {

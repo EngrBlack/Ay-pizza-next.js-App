@@ -66,29 +66,45 @@ function CreateProductForm({ categories }) {
 
   async function onSubmit(data) {
     try {
-      // Normalize for DB
-      const payload = {
-        ...data,
-        sizes:
-          data.sizes && data.sizes.length > 0
-            ? JSON.stringify(data.sizes.filter((s) => s.name && s.price))
-            : null,
-        toppings:
-          data.toppings && data.toppings.length > 0
-            ? JSON.stringify(data.toppings.filter((t) => t.name && t.price))
-            : null,
-        base_price: data.base_price,
-        image: data.image,
-        discount: data.discount ?? 0,
-      };
+      const formData = new FormData();
 
-      await createMenu(payload);
+      formData.append("name", data.name);
+      formData.append("category", data.category);
+      formData.append("base_price", data.base_price);
+      formData.append("ingredients", data.ingredients);
+      formData.append("discount", data.discount ?? 0);
+      formData.append("available", data.available ? "true" : "false");
+
+      if (data.sizes && data.sizes.length > 0) {
+        formData.append(
+          "sizes",
+          JSON.stringify(data.sizes.filter((s) => s.name && s.price))
+        );
+      }
+      if (data.toppings && data.toppings.length > 0) {
+        formData.append(
+          "toppings",
+          JSON.stringify(data.toppings.filter((t) => t.name && t.price))
+        );
+      }
+
+      if (data.image instanceof File) {
+        formData.append("image", data.image);
+      }
+
+      const res = await fetch("/api/menu", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Failed to create menu");
+
       toast.success("Product created successfully!");
       router.push("/admin/products");
-
       reset();
     } catch (err) {
-      toast.error(err.message || " Failed to create product");
+      toast.error(err.message);
     }
   }
 

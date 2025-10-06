@@ -17,7 +17,7 @@ export default async function Page({ searchParams }) {
   const filterValue = searchParams?.category || "all";
 
   // SORT-BY
-  const sorted = searchParams?.sortedBy || "created_at-asc";
+  const sorted = searchParams?.sortedBy || "created_at-desc";
   const [field, direction] = sorted?.split("-");
   const sortBy = { field, direction };
 

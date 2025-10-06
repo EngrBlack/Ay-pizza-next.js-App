@@ -50,20 +50,47 @@ function EditProductForm({ menu, categories }) {
 
   async function onSubmit(data) {
     try {
-      const payload = {
-        ...data,
-        sizes: data.sizes?.filter((s) => s.name && s.price) || [],
-        toppings: data.toppings?.filter((t) => t.name && t.price) || [],
-        base_price: Number(data.base_price),
-        discount: Number(data.discount) || 0,
-      };
+      const formData = new FormData();
 
-      await editMenuById(payload, menu?.id);
-      toast.success("Product updated successfully!");
+      if (data.id) formData.append("id", data.id); // only on edit
+      formData.append("name", data.name);
+      formData.append("category", data.category);
+      formData.append("base_price", data.base_price);
+      formData.append("ingredients", data.ingredients);
+      formData.append("discount", data.discount ?? 0);
+      formData.append("available", data.available ? "true" : "false");
+
+      if (data.sizes?.length > 0)
+        formData.append(
+          "sizes",
+          JSON.stringify(data.sizes.filter((s) => s.name && s.price))
+        );
+
+      if (data.toppings?.length > 0)
+        formData.append(
+          "toppings",
+          JSON.stringify(data.toppings.filter((t) => t.name && t.price))
+        );
+
+      if (data.image instanceof File) {
+        formData.append("image", data.image);
+      } else if (data.image) {
+        // keep old path if no new upload
+        formData.append("existingImage", data.image);
+      }
+
+      const method = data.id ? "PUT" : "POST";
+
+      const res = await fetch("/api/menu", { method, body: formData });
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.error || "Failed");
+
+      toast.success(data.id ? "Product updated!" : "Product created!");
       router.push("/admin/products");
+      reset();
     } catch (err) {
-      console.error("Form submit error:", err);
-      toast.error(err.message || "Failed to update product");
+      toast.error(err.message);
     }
   }
 

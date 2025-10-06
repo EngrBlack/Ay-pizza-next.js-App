@@ -2,12 +2,13 @@
 
 import Button from "@/app/_components/Button";
 import InputGroup from "@/app/_components/InputGroup";
-import { createEditCategory } from "@/app/_libs/categoryActions";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { HiArrowPath, HiPaperAirplane } from "react-icons/hi2";
 
 function AddCategoryForm({ onCloseModal }) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -16,10 +17,23 @@ function AddCategoryForm({ onCloseModal }) {
   } = useForm();
 
   async function onAddCategory(data) {
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("image", data.image[0]);
+
     try {
-      await createEditCategory({ name: data?.name, image: data?.image[0] });
-      onCloseModal?.();
+      const res = await fetch("/api/category", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.error || "Unknown error");
+
       toast.success("Category successfully Created.");
+      router.refresh();
+      onCloseModal?.();
       reset();
     } catch (err) {
       toast.error(`Failed to create category: ${err.message}`);
