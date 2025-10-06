@@ -138,6 +138,7 @@ export async function createMenu(product) {
   revalidatePath("/admin/products");
   return data;
 }
+
 export async function editMenuById(editedMenu, menuId) {
   const session = await auth();
   if (session?.user?.role !== "admin") {

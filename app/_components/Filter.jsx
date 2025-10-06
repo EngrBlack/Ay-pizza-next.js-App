@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import SelectInput from "./SelectInput";
 import { HiFunnel } from "react-icons/hi2";
 
-function Filter({ field, options }) {
+function Filter({ field, options = [], onChange }) {
   const searchParams = useSearchParams();
   const pathName = usePathname();
   const router = useRouter();
@@ -14,9 +14,15 @@ function Filter({ field, options }) {
   function handleFilter(value) {
     if (value === activeValue) return;
 
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(field, value);
-    router.push(`${pathName}?${params.toString()}`, { scroll: false });
+    if (onChange) {
+      // ✅ use callback mode if provided
+      onChange(value);
+    } else {
+      // ✅ fallback to router mode
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(field, value);
+      router.push(`${pathName}?${params.toString()}`, { scroll: false });
+    }
   }
 
   return (

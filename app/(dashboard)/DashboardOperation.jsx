@@ -2,7 +2,7 @@
 
 import Filter from "../_components/Filter";
 
-function DashboardOperation() {
+function DashboardOperation({ onChangeDays }) {
   return (
     <div>
       <Filter
@@ -17,6 +17,7 @@ function DashboardOperation() {
           { label: "Last 6 months", value: "183" },
           { label: "Last 1 year", value: "365" },
         ]}
+        onChange={(val) => onChangeDays?.(val)} // 🔑 call parent
       />
     </div>
   );

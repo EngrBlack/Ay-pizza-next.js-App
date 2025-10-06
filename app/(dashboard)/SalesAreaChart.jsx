@@ -34,7 +34,7 @@ function SalesAreaChart({ numDays, ordersAfterDate }) {
               allDates.at(-1),
               "do MMM yyyy"
             )}`
-          : `today: ${format(allDates.at(0), "do MMM yyyy")}`}
+          : `today: ${format(allDates?.at(0), "do MMM yyyy")}`}
       </h2>
 
       <ResponsiveContainer width="100%" height={240}>

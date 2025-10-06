@@ -2,8 +2,8 @@
 
 import { useOptimistic } from "react";
 import Table from "../_components/Table";
-import RecentSalesItem from "./RecentSalesItem";
 import { deleteOrderById } from "../_libs/orderActions";
+import RecentSalesItem from "./RecentSalesItem";
 
 const headers = ["id", "buyer", "date", "total price", "actions"];
 
