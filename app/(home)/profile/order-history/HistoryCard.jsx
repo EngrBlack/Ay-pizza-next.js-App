@@ -28,7 +28,9 @@ function HistoryCard({ order }) {
     >
       <div className="flex items-center justify-between border-b-1 border-brown-200  px-4 py-3 ">
         <p className="text-sm">{formatDate(createdAt)}</p>
-        <p className=" text-cream-200 bg-brown-200 p-0.5 px-2.5 rounded-full text-xs">
+        <p
+          className={`text-cream-200  p-0.5 px-2.5 rounded-full text-xs ${isDelivered ? "bg-brown-200" : "bg-orangered-100"}`}
+        >
           {isDelivered ? "Delivered" : "Not delivered"}
         </p>
       </div>

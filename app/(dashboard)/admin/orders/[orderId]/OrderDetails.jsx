@@ -9,7 +9,7 @@ import Button from "@/app/_components/Button";
 import { HiArrowLeft } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 
-function OrderDetails({ order, updatePaymentStatus }) {
+function OrderDetails({ order }) {
   const router = useRouter();
 
   return (
@@ -28,7 +28,7 @@ function OrderDetails({ order, updatePaymentStatus }) {
       </div>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col  gap-6 lg:flex-row">
-          <OrderInfo order={order} updatePaymentStatus={updatePaymentStatus} />
+          <OrderInfo order={order} />
           <CustomerInfo order={order} />
         </div>
         <ItemOrdered order={order} />

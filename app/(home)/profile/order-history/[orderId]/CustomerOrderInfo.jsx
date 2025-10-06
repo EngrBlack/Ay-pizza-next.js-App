@@ -29,15 +29,11 @@ function CustomerOrderInfo({ order }) {
         {maskId(orderId, 8)}
       </Flexitem>
       <Flexitem label="Status:" className="mb-1.5 text-sm lg:text-base">
-        {isDelivered ? (
-          <span className="bg-amber-300 text-cream-100 rounded-full py-1.5 px-4">
-            Delivered
-          </span>
-        ) : (
-          <span className=" bg-orange-400 text-cream-100 rounded-full py-1.5 px-4">
-            In Progress
-          </span>
-        )}
+        <span
+          className={`text-cream-100 rounded-full py-1.5 px-4 ${isDelivered ? "bg-brown-200" : "bg-orangered-100"}  `}
+        >
+          {isDelivered ? "Delivered" : "In Progress"}
+        </span>
       </Flexitem>
       <Flexitem
         label="Payment Status:"

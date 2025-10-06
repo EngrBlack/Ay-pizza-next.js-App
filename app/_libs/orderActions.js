@@ -105,19 +105,27 @@ export async function getUserOrderByOrdeId(orderId) {
   return data;
 }
 
-export async function updateOrderToPaid(orderId) {
-  // const userProfile = await getUserProfile();
-  // const user = userProfile;
-  // if (user?.role !== "admin") throw new Error("User is not authorized");
-  // const { data, error } = await supabase
-  //   .from("orders")
-  //   .update({ is_paid: true })
-  //   .eq("id", orderId)
-  //   .select()
-  //   .maybeSingle();
-  // if (error) throw new Error(error.message);
-  // revalidatePath(`/admin/orders/${orderId}`);
-  // return data;
+export async function updateOrderById(orderId, newUpdates) {
+  const userProfile = await getUserProfile();
+  const user = userProfile;
+  if (user?.role !== "admin") throw new Error("User is not authorized");
+
+  const { data, error } = await supabase
+    .from("orders")
+    .update({
+      ...newUpdates,
+      delivered_at: newUpdates.is_delivered ? new Date().toISOString() : null,
+      is_delivered: newUpdates.is_delivered,
+      paid_at: newUpdates.is_paid ? new Date().toISOString() : null,
+      is_paid: newUpdates.is_paid,
+    })
+    .eq("id", orderId)
+    .select()
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+
+  revalidatePath(`/admin/orders/${orderId}`);
+  return data;
 }
 
 export async function getAllOrders(sortBy, page) {

@@ -1,8 +1,13 @@
 import Button from "@/app/_components/Button";
 import Flexitem from "@/app/_components/Flexitem";
 import { formatDate, formatDateTime, maskId } from "@/app/_helper/helper";
+import { updateOrderById } from "@/app/_libs/orderActions";
+import { useTransition } from "react";
+import { HiArrowPath } from "react-icons/hi2";
 
-function OrderInfo({ order, updatePaymentStatus }) {
+function OrderInfo({ order }) {
+  const [isPending, startTransition] = useTransition();
+
   const {
     id: orderId,
     created_at: createdAt,
@@ -10,6 +15,18 @@ function OrderInfo({ order, updatePaymentStatus }) {
     is_delivered: isDelivered,
     payment_method: paymentMethod,
   } = order;
+
+  function handleDeliverered() {
+    startTransition(async () => {
+      updateOrderById(orderId, { is_delivered: true });
+    });
+  }
+
+  function handlePaid() {
+    startTransition(async () => {
+      updateOrderById(orderId, { is_paid: true });
+    });
+  }
 
   return (
     <div className="basis-1/2 shadow-md border-2 border-cream-100 rounded-md p-4 flex flex-col gap-2">
@@ -19,7 +36,7 @@ function OrderInfo({ order, updatePaymentStatus }) {
       <Flexitem label="Order ID:">{maskId(orderId, 8)}</Flexitem>
       <Flexitem label="Status:" className="mb-1.5">
         {isDelivered ? (
-          <span className="bg-amber-300 text-cream-100 rounded-full py-1.5 px-4">
+          <span className="bg-brown-200 text-cream-100 rounded-full py-1.5 px-4">
             Delivered
           </span>
         ) : (
@@ -41,14 +58,28 @@ function OrderInfo({ order, updatePaymentStatus }) {
       </Flexitem>
       {!isPaid && paymentMethod === "cod" && (
         <Flexitem className="">
-          <form action={updatePaymentStatus}>
-            <Button
-              type="danger"
-              className=" font-rowdies mt-4 justify-self-end w-full "
-            >
-              Mark as Paid
-            </Button>
-          </form>
+          <Button
+            type="danger"
+            icon={isPending ? <HiArrowPath className="animate-spin" /> : null}
+            className=" font-rowdies mt-4 justify-self-end w-full "
+            onClick={handlePaid}
+            disabled={isPending}
+          >
+            {isPending ? "Updating..." : "Mark as Paid"}
+          </Button>
+        </Flexitem>
+      )}
+      {isPaid && !isDelivered && (
+        <Flexitem className="">
+          <Button
+            type="danger"
+            icon={isPending ? <HiArrowPath className="animate-spin" /> : null}
+            className=" font-rowdies mt-4 justify-self-end w-full "
+            onClick={handleDeliverered}
+            disabled={isPending}
+          >
+            {isPending ? "Updating..." : "Mark as Delivered"}
+          </Button>
         </Flexitem>
       )}
     </div>
