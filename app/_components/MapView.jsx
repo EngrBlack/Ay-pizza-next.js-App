@@ -1,23 +1,22 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import "leaflet/dist/leaflet.css";
+import { useEffect } from "react";
 import {
   MapContainer,
-  TileLayer,
   Marker,
   Popup,
+  TileLayer,
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
 
-import L from "leaflet";
-import { useGeolocate } from "@/app/_hooks/useGeolocate";
 import Button from "@/app/_components/Button";
-import { HiArrowPath } from "react-icons/hi2";
-import { useRouter } from "next/navigation";
+import { useGeolocate } from "@/app/_hooks/useGeolocate";
 import { getAddress } from "@/app/_libs/data-utils";
+import L from "leaflet";
 import toast from "react-hot-toast";
+import { HiArrowPath } from "react-icons/hi2";
 
 // Set default icon globally using CDN URLs
 L.Icon.Default.mergeOptions({
@@ -27,12 +26,12 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
 });
 
-export default function MapView() {
+export default function MapView({
+  mapPosition,
+  setMapPosition,
+  onAddressSelect,
+}) {
   const { isLoading, error, lat, lng, getPosition } = useGeolocate();
-  const [mapPosition, setMapPosition] = useState([
-    lat || 6.5244,
-    lng || 3.3792,
-  ]);
 
   useEffect(() => {
     if (lat && lng) setMapPosition([lat, lng]);
@@ -43,7 +42,7 @@ export default function MapView() {
       try {
         if (!lat || !lng) return; // guard
         const data = await getAddress(lat, lng);
-        console.log("Address:", data);
+        if (data && onAddressSelect) onAddressSelect(data);
       } catch (err) {
         toast.error(err.message);
       }
@@ -64,7 +63,7 @@ export default function MapView() {
     );
 
   return (
-    <div className="relative my-20" style={{ height: "100vh", width: "100%" }}>
+    <div className="relative h-[calc(100vh-70vh)] lg:h-full w-full shadow shadow-brown-200/30 rounded overflow-hidden border border-brown-100">
       <MapContainer
         center={mapPosition}
         zoom={14}
@@ -81,20 +80,19 @@ export default function MapView() {
           </Popup>
         </Marker>
         <ChangeCenter mapPosition={mapPosition} />
-        <DetectClick setMapPosition={setMapPosition} />
+        <DetectClick
+          setMapPosition={setMapPosition}
+          onAddressSelect={onAddressSelect}
+        />
       </MapContainer>
       {!lat && !lng && (
-        <div className="absolute top-4 right-4  z-40">
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-40">
           <Button
             type="danger"
             onClick={handlePosition}
             icon={isLoading && <HiArrowPath className="animate-spin" />}
           >
-            {isLoading ? (
-              <span className="font-bold ">Getting location...</span>
-            ) : (
-              <span className="font-bold uppercase">Get My Position</span>
-            )}
+            <span>{isLoading ? "Getting address..." : "Get My Address"}</span>
           </Button>
         </div>
       )}
@@ -108,16 +106,17 @@ function ChangeCenter({ mapPosition }) {
   return null;
 }
 
-function DetectClick({ setMapPosition }) {
-  const router = useRouter();
+function DetectClick({ setMapPosition, onAddressSelect }) {
   useMapEvents({
-    click(e) {
+    click: async (e) => {
       const { lat, lng } = e.latlng;
-      router.push(`/map?lat=${lat}&lng=${lng}`);
       setMapPosition([lat, lng]);
-      getAddress(lat, lng).then((data) => {
-        console.log("Clicked address:", data);
-      });
+      try {
+        const data = await getAddress(lat, lng);
+        if (data && onAddressSelect) onAddressSelect(data);
+      } catch (error) {
+        toast.error("Could not fetch address from map click");
+      }
     },
   });
 }

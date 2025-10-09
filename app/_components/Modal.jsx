@@ -43,7 +43,12 @@ function Open({ openWindowName, children }) {
   });
 }
 
-function Window({ children, openWindowName, showCloseButton = true }) {
+function Window({
+  children,
+  openWindowName,
+  showCloseButton = true,
+  scrollType = "",
+}) {
   const { close, openName } = useModalContext();
   const ref = useOutsideClick(close, true);
 
@@ -56,7 +61,7 @@ function Window({ children, openWindowName, showCloseButton = true }) {
     >
       <div
         ref={ref}
-        className="relative bg-cream-200 p-6 lg:p-8 rounded shadow-lg max-w-lg w-[90%]"
+        className="relative bg-cream-200 p-6 lg:p-8 rounded shadow-lg max-w-4xl w-fit"
       >
         {showCloseButton && (
           <button
@@ -67,7 +72,11 @@ function Window({ children, openWindowName, showCloseButton = true }) {
             <HiMiniXMark />
           </button>
         )}
-        <div>
+        <div
+          className={
+            scrollType === "scroll" ? "max-h-[80vh] overflow-y-auto" : ""
+          }
+        >
           {isValidElement(children)
             ? cloneElement(children, { onCloseModal: close })
             : children}

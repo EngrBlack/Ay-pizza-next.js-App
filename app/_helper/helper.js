@@ -37,6 +37,16 @@ export function maskId(value, distance = 4) {
   return `....${visible}`;
 }
 
+export function sanitizeAddress(address = "") {
+  if (typeof address !== "string") return "";
+
+  return address
+    .replace(/\b\d{6}\b/g, "") // remove any 6-digit postal code
+    .replace(/,\s*,/g, ",") // collapse double commas
+    .replace(/,\s*$/, "") // remove trailing commas
+    .trim(); // clean up spaces
+}
+
 export const locations = [
   { name: "Others", price: 3500 },
   { name: "Inside UniLag ", price: 500 },

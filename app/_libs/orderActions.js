@@ -34,6 +34,17 @@ export async function placeOrder() {
         message: "No delivery address",
         redirectTo: "/checkout",
       };
+
+    if (
+      userProfile.delivery_method === "delivery" &&
+      !userProfile?.closest_location
+    )
+      return {
+        success: false,
+        message: "Select Closest Location for Delivery.",
+        redirectTo: "/checkout",
+      };
+
     if (!userProfile.payment_method)
       return {
         success: false,

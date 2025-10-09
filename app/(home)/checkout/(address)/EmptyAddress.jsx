@@ -14,7 +14,7 @@ function EmptyAddress() {
             <HiPencilSquare />
           </button>
         </Modal.Open>
-        <Modal.Window openWindowName="address">
+        <Modal.Window openWindowName="address" scrollType="scroll">
           <CreateAddressForm />
         </Modal.Window>
       </Modal>
